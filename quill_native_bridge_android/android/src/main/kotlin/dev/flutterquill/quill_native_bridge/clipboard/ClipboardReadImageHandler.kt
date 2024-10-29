@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
-import androidx.core.graphics.decodeBitmap
 import dev.flutterquill.quill_native_bridge.generated.FlutterError
 import java.io.ByteArrayOutputStream
 import java.io.FileNotFoundException
