@@ -19,7 +19,8 @@ object ClipboardWriteImageHandler {
         val bitmap: Bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             // Api 29 and above (use a newer API)
             try {
-                ImageDecoder.decodeBitmap(ImageDecoder.createSource(imageBytes))
+                val source = ImageDecoder.createSource(imageBytes)
+                ImageDecoder.decodeBitmap(source)
             } catch (e: Exception) {
                 throw FlutterError(
                     "INVALID_IMAGE",
