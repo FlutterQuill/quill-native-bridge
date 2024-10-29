@@ -175,7 +175,7 @@ object ClipboardReadImageHandler {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 // Api 29 and above (use a newer API)
                 val source = ImageDecoder.createSource(context.contentResolver, imageUri)
-                source.decodeBitmap { _, _ -> }
+                ImageDecoder.decodeBitmap(source)
             } else {
                 // Backward compatibility with older versions
                 checkNotNull(context.contentResolver.openInputStream(imageUri)) {
