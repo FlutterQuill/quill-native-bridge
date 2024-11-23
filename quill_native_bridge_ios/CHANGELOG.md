@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.0.1-dev.5
+
+- Support Swift Package Manager.
+
 ## 0.0.1-dev.4
 
 - Added support for WebP image format in `getClipboardImage()`

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 10.7.10
+
+- Support Swift package manager.
+- Update minimum required versions for Android, iOS, macOS and web implementation packages.
+
 ## 10.7.9
 
 - Require `quill_native_bridge_platform_interface` minimum version `0.0.1-dev.4`.
