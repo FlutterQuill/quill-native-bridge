@@ -2,7 +2,8 @@ import 'package:pigeon/pigeon.dart';
 
 @ConfigurePigeon(PigeonOptions(
   dartOut: 'lib/src/messages.g.dart',
-  swiftOut: 'macos/Classes/Messages.g.swift',
+  swiftOut:
+      'macos/quill_native_bridge_macos/Sources/quill_native_bridge_macos/Messages.g.swift',
   dartPackageName: 'quill_native_bridge_macos',
 ))
 @HostApi()
