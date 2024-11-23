@@ -31,7 +31,7 @@ An exception with less details will be thrown in production mode.
 
 **1. Update `AndroidManifest.xml`**
 
-Open `your_project/android/app/src/main/AndroidManifest.xml` and add the following inside the `<application>` tag:
+Open `android/app/src/main/AndroidManifest.xml` and add the following inside the `<application>` tag:
 
 ```xml
 <manifest>
@@ -53,7 +53,7 @@ Open `your_project/android/app/src/main/AndroidManifest.xml` and add the followi
 
 **2. Create `file_paths.xml`**
 
-Create the file `your_project/android/app/src/main/res/xml/file_paths.xml` with the following content:
+Create the file `android/app/src/main/res/xml/file_paths.xml` with the following content:
 
 ```xml
 <paths>
