@@ -1,9 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Required for saving images to the gallery on Android 9 (API 28) and earlier https://pub.dev/packages/quill_native_bridge#-setup -->
+    <!-- START: Required for saving images to the gallery on Android 9 (API 28) and earlier -->
+    <!-- More details: https://pub.dev/packages/quill_native_bridge#-setup -->
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
+    <!-- END: Required for saving images to the gallery on Android 9 (API 28) and earlier -->
 
     <application
         android:label="quill_native_bridge_example"
@@ -37,7 +39,8 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
-        <!-- Required for copying images to the system clipboard https://pub.dev/packages/quill_native_bridge#-setup -->
+        <!-- START: Required for copying images to the system clipboard -->
+        <!-- More details: https://pub.dev/packages/quill_native_bridge#-setup -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -47,6 +50,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+        <!-- END: Required for copying images to the system clipboard -->
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
