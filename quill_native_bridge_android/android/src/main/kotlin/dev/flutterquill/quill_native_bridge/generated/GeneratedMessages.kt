@@ -43,38 +43,12 @@ class FlutterError (
   override val message: String? = null,
   val details: Any? = null
 ) : Throwable()
-
-enum class GalleryImageType(val raw: Int) {
-  JPEG(0),
-  PNG(1),
-  GIF(2),
-  WEBP(3);
-
-  companion object {
-    fun ofRaw(raw: Int): GalleryImageType? {
-      return values().firstOrNull { it.raw == raw }
-    }
-  }
-}
 private open class GeneratedMessagesPigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
-    return when (type) {
-      129.toByte() -> {
-        return (readValue(buffer) as Long?)?.let {
-          GalleryImageType.ofRaw(it.toInt())
-        }
-      }
-      else -> super.readValueOfType(type, buffer)
-    }
+    return     super.readValueOfType(type, buffer)
   }
   override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
-    when (value) {
-      is GalleryImageType -> {
-        stream.write(129)
-        writeValue(stream, value.raw)
-      }
-      else -> super.writeValue(stream, value)
-    }
+    super.writeValue(stream, value)
   }
 }
 
