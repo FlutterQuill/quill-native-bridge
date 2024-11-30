@@ -112,8 +112,6 @@ await QuillNativeBridge.saveImage(imageBytes, options: ImageSaveOptions(name: 'E
 
 ## 🔧 Setup
 
-<!-- TODO(save-image): Update image URLs source to GitHub instead of relative path to work on pub.dev -->
-
 Certain functionalities require a platform-specific configuration.
 If this configuration is not properly set up in:
 
@@ -194,7 +192,7 @@ when `saveImageToGallery` is called and permission is not granted yet,
 
 An example of the permission dialog on **Android 9 (API 28) and earlier**, requesting write access to the external storage:
 
-![Android 9 dialog requesting external storage write permission](readme_assets/android_9_write_to_external_storage_permission_dialog.png)
+<img src="https://github.com/FlutterQuill/quill-native-bridge/blob/main/quill_native_bridge/readme_assets/android_9_write_to_external_storage_permission_dialog.png?raw=true" alt="Android 9 dialog requesting write-to external storage permission">
 
 #### iOS
 
@@ -223,12 +221,12 @@ Open the file `/ios/Runner/Info.plist` and add the following keys inside the `<d
 
 An example of the permission dialog on iOS 18, requesting access to **add-only** to the photo library without specifying the album name:
 
-![iOS dialog requesting permission to add photos](readme_assets/ios_add_to_photos_permission_dialog.png)
+<img src="https://github.com/FlutterQuill/quill-native-bridge/blob/main/quill_native_bridge/readme_assets/ios_add_to_photos_permission_dialog.png?raw=true" alt="iOS dialog requesting permission to add photos">
 
 An example of the permission dialog on iOS 18, requesting
 access to **read-write** when the app already has **add-only**, **read-write** is required when specifying the album name:
 
-<img src="readme_assets/ios_add_to_photos_with_album_read_write_permission_dialog.png" alt="iOS dialog requesting read-write permission to the photos library" height="350">
+<img src="https://github.com/FlutterQuill/quill-native-bridge/blob/main/quill_native_bridge/readme_assets/ios_add_to_photos_with_album_read_write_permission_dialog.png?raw=true" alt="iOS dialog requesting read-write permission to the photos library" height="350">
 
 > [!TIP]
 > If you've followed the [image_picker iOS setup](https://pub.dev/packages/image_picker#ios) instructions, you might have already added the `NSPhotoLibraryUsageDescription` key.
@@ -263,12 +261,12 @@ Open the file `/macos/Runner/Info.plist` and add the following keys inside the `
 
 An example of the permission dialog on macOS 14, requesting access to **add-only** to the photo library without specifying the album name:
 
-<img src="readme_assets/macos_add_to_photos_permission_dialog.png" alt="macOS dialog requesting permission to add photos" width="250">
+<img src="https://github.com/FlutterQuill/quill-native-bridge/blob/main/quill_native_bridge/readme_assets/macos_add_to_photos_permission_dialog.png?raw=true" alt="macOS dialog requesting permission to add photos" width="250">
 
 An example of the permission dialog on macOS 14, requesting
 access to **read-write** when the macOS supports **add-only**, but **read-write** is always required when specifying the album name:
 
-<img src="readme_assets/macos_add_to_photos_with_album_read_write_permission_dialog.png" alt="macOS dialog requesting read-write permission to the photos library" width="250">
+<img src="https://github.com/FlutterQuill/quill-native-bridge/blob/main/quill_native_bridge/readme_assets/macos_add_to_photos_with_album_read_write_permission_dialog.png?raw=true" alt="macOS dialog requesting read-write permission to the photos library" width="250">
 
 > [!WARNING]
 > The permission is **always denied on macOS** while testing if you're running the app with [Android Studio IDE](https://developer.android.com/studio) or [VS Code](https://code.visualstudio.com/) even with the built-in terminal. This restriction is imposed by Apple macOS. However, this is not an issue when running the production app or in development using **Xcode** or **macOS terminal** (`flutter run -d macos`). See [flutter#134191](https://github.com/flutter/flutter/issues/134191) for more details.
@@ -296,7 +294,7 @@ The implementation is using [`NSSavePanel`](https://developer.apple.com/document
 <true/>
 ```
 
-<img src="./readme_assets/macos_save_image_dialog.png" alt="A screenshot of the native save dialog on macOS that's backed by NSSavePanel" width="350">
+<img src="https://github.com/FlutterQuill/quill-native-bridge/blob/main/quill_native_bridge/readme_assets/macos_save_image_dialog.png?raw=true" alt="A screenshot of the native save dialog on macOS that's backed by NSSavePanel" width="350">
 
 > [!NOTE]
 > No runtime permission is required.
