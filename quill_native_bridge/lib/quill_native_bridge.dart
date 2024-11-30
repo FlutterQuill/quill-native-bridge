@@ -21,19 +21,24 @@ abstract final class QuillNativeBridge {
 
   /// Checks if the specified [feature] is supported in the current implementation.
   ///
-  /// Will verify if this is supported in the platform and the device:
+  /// Will verify if the platform supports this feature, the platform
+  /// implementation of the plugin, and the current running OS version.
   ///
-  /// - If [feature] is supported on **Android API 21** (as an example) and the
+  /// For example if [feature] is:
+  ///
+  /// - Supported on **Android API 21** (as an example) and the
   /// current Android API is `19` then will return `false`.
   ///
-  /// - If [feature] is supported on the web if Clipboard API (as another example)
+  /// - Supported on the web if Clipboard API (as another example)
   /// available in the current browser, and the current browser doesn't support it,
   /// will return `false` too. For this specific example, you will need
   /// to fallback to **Clipboard events** on **Firefox** or browsers that doesn't
   /// support **Clipboard API**.
   ///
-  /// Always check the docs of the method you're calling to see if there
-  /// are special notes.
+  /// - Supported by the platform itself but the plugin currently implements it,
+  /// then return `false`.
+  ///
+  /// Always review the doc comment of a method before use for special notes.
   ///
   /// See also: [QuillNativeBridgeFeature]
   static Future<bool> isSupported(QuillNativeBridgeFeature feature) =>
