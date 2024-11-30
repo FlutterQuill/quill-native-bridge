@@ -2,9 +2,13 @@
 // Make sure to update pubspec.yaml to the new location.
 
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:ffi/ffi.dart';
+import 'package:file_selector_platform_interface/file_selector_platform_interface.dart';
+import 'package:flutter/foundation.dart';
 import 'package:quill_native_bridge_platform_interface/quill_native_bridge_platform_interface.dart';
+import 'package:quill_native_bridge_windows/src/image_saver.dart';
 import 'package:win32/win32.dart';
 
 import 'src/clipboard_html_format.dart';
@@ -23,6 +27,7 @@ class QuillNativeBridgeWindows extends QuillNativeBridgePlatform {
   Future<bool> isSupported(QuillNativeBridgeFeature feature) async => {
         QuillNativeBridgeFeature.getClipboardHtml,
         QuillNativeBridgeFeature.copyHtmlToClipboard,
+        QuillNativeBridgeFeature.saveImage,
       }.contains(feature);
 
   // TODO: Cleanup this code here
@@ -180,5 +185,50 @@ class QuillNativeBridgeWindows extends QuillNativeBridgePlatform {
       CloseClipboard();
       calloc.free(htmlPointer);
     }
+  }
+
+  @visibleForTesting
+  static ImageSaver imageSaver = ImageSaver();
+
+  @override
+  Future<String?> saveImage(
+    Uint8List imageBytes, {
+    required String name,
+    required String extension,
+  }) async {
+    final typeGroup = XTypeGroup(
+      label: 'Images',
+      // Only `extensions` is supported on Windows. See https://pub.dev/packages/file_selector#filtering-by-file-types
+      extensions: [extension],
+      mimeTypes: ['image/${extension}'],
+    );
+
+    final saveLocation = await imageSaver.fileSelector.getSaveLocation(
+      options: SaveDialogOptions(
+        suggestedName: '${name}.${extension}',
+        initialDirectory: imageSaver.picturesDirectoryPath,
+      ),
+      acceptedTypeGroups: [typeGroup],
+    );
+    final imageFilePath = saveLocation?.path;
+    if (imageFilePath == null) {
+      return null;
+    }
+    final imageFile = File(imageFilePath);
+    await imageFile.writeAsBytes(imageBytes);
+
+    return imageFile.path;
+  }
+
+  @override
+  Future<void> openGalleryApp() async {
+    final uriPtr = TEXT('ms-photos:');
+    final openPtr = 'open'.toNativeUtf16();
+
+    ShellExecute(
+        NULL, openPtr, uriPtr, nullptr, nullptr, SHOW_WINDOW_CMD.SW_SHOWNORMAL);
+
+    free(uriPtr);
+    free(openPtr);
   }
 }

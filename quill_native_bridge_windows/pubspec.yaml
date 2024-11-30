@@ -17,11 +17,15 @@ dependencies:
   quill_native_bridge_platform_interface: ^0.0.1-dev.4
   win32: ^5.5.0
   ffi: ^2.1.0
+  file_selector_windows: ^0.9.1+5
+  file_selector_platform_interface: ^2.4.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  mockito: ^5.4.4
+  build_runner: ^2.4.13
 
 flutter:
   plugin:

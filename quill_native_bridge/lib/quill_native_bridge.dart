@@ -2,13 +2,14 @@
 /// package to access platform-specific APIs.
 library;
 
-import 'package:flutter/foundation.dart'
-    show TargetPlatform, Uint8List, defaultTargetPlatform, kIsWeb;
+import 'package:flutter/foundation.dart';
 
 import 'package:quill_native_bridge_platform_interface/quill_native_bridge_platform_interface.dart';
 
 export 'package:quill_native_bridge_platform_interface/src/platform_feature.dart'
     show QuillNativeBridgeFeature;
+
+// TODO: https://medium.com/flutter/writing-a-good-flutter-plugin-1a561b986c9c (see the section 'Avoid writing static (or global) methods')
 
 /// An internal plugin for [`flutter_quill`](https://pub.dev/packages/flutter_quill)
 /// package to access platform-specific APIs.
@@ -18,18 +19,13 @@ abstract final class QuillNativeBridge {
   static QuillNativeBridgePlatform get _platform =>
       QuillNativeBridgePlatform.instance;
 
-  /// Check if the app is running on [iOS Simulator](https://developer.apple.com/documentation/xcode/running-your-app-in-simulator-or-on-a-device).
-  ///
-  /// Should only be called when [defaultTargetPlatform]
-  /// is [TargetPlatform.iOS] and [kIsWeb] is `false`.
-  static Future<bool> isIOSSimulator() => _platform.isIOSSimulator();
-
   /// Checks if the specified [feature] is supported in the current implementation.
   ///
-  /// Will verify if this is supported in the platform itself:
+  /// Will verify if this is supported in the platform and the device:
   ///
   /// - If [feature] is supported on **Android API 21** (as an example) and the
-  /// current Android API is `19` then will return `false`
+  /// current Android API is `19` then will return `false`.
+  ///
   /// - If [feature] is supported on the web if Clipboard API (as another example)
   /// available in the current browser, and the current browser doesn't support it,
   /// will return `false` too. For this specific example, you will need
@@ -39,67 +35,164 @@ abstract final class QuillNativeBridge {
   /// Always check the docs of the method you're calling to see if there
   /// are special notes.
   ///
-  /// Also see: [QuillNativeBridgeFeature]
+  /// See also: [QuillNativeBridgeFeature]
   static Future<bool> isSupported(QuillNativeBridgeFeature feature) =>
       _platform.isSupported(feature);
 
-  /// Return HTML from the Clipboard.
+  /// Checks if the app runs on [iOS Simulator](https://developer.apple.com/documentation/xcode/running-your-app-in-simulator-or-on-a-device).
+  ///
+  /// Should be called only on an iOS app.
+  static Future<bool> isIOSSimulator() => _platform.isIOSSimulator();
+
+  /// Returns a HTML from the system clipboard. The HTML can be platform-dependent.
   ///
   /// **Important for web**: If [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API)
   /// is not supported on the web browser, should fallback to [Clipboard Events](https://developer.mozilla.org/en-US/docs/Web/API/ClipboardEvent)
   /// such as the [paste_event](https://developer.mozilla.org/en-US/docs/Web/API/Element/paste_event).
   ///
-  /// The HTML can be platform-dependent.
-  ///
   /// Returns `null` if the HTML content is not available or if the user has not granted
-  /// permission for pasting (on some platforms such as iOS).
-  ///
-  /// Currently only supports **Android**, **iOS**, **macOS**, **Windows**, **Linux**, and the **Web**.
+  /// permission for pasting on iOS.
+  @Category(['Clipboard'])
   static Future<String?> getClipboardHtml() => _platform.getClipboardHtml();
 
-  /// Copy the [html] to the clipboard to be pasted on other apps.
+  /// Copies an HTML to the system clipboard to be pasted on other apps.
   ///
-  /// **Important for web**: If [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API)
-  /// is not supported on the web browser, should fallback to [Clipboard Events](https://developer.mozilla.org/en-US/docs/Web/API/ClipboardEvent)
-  /// such as the [copy_event](https://developer.mozilla.org/en-US/docs/Web/API/Element/copy_event).
-  ///
-  /// Currently only supports **Android**, **iOS**, **macOS**, **Linux**, **Windows** and the **Web**.
+  /// **Important for web**: Should fallback to [Clipboard Events](https://developer.mozilla.org/en-US/docs/Web/API/ClipboardEvent)
+  /// if [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API) is unsupported,
+  /// not available or restricted (the case for Firefox and Safari). See [copy_event](https://developer.mozilla.org/en-US/docs/Web/API/Element/copy_event).
+  @Category(['Clipboard'])
   static Future<void> copyHtmlToClipboard(String html) =>
       _platform.copyHtmlToClipboard(html);
 
-  /// Copy the [imageBytes] to Clipboard to be pasted on other apps.
+  /// Copies an image to the system clipboard to be pasted on other apps.
   ///
-  /// Require modifying `AndroidManifest.xml` to work on **Android**.
-  /// Otherwise, you will get a warning available only on debug-builds.
-  /// See: https://github.com/FlutterQuill/quill-native-bridge/tree/main/quill_native_bridge#-platform-configuration
+  /// Requires modifying `AndroidManifest.xml` to work on **Android**.
+  /// See [Copying images to the system clipboard](https://pub.dev/packages/quill_native_bridge#-copying-images-to-the-system-clipboard).
   ///
   /// **Important for web**: If [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API)
   /// is not supported on the web browser, should fallback to [Clipboard Events](https://developer.mozilla.org/en-US/docs/Web/API/ClipboardEvent)
   /// such as the [copy_event](https://developer.mozilla.org/en-US/docs/Web/API/Element/copy_event).
   ///
-  ///
-  /// Currently only supports **Android**, **iOS**, **macOS**, **Linux**, and the **Web**.
+  /// Currently, it's not supported on **Windows**.
+  @Category(['Clipboard'])
   static Future<void> copyImageToClipboard(Uint8List imageBytes) =>
       _platform.copyImageToClipboard(imageBytes);
 
-  /// Return the copied image from the Clipboard.
+  /// Returns the copied image from the system clipboard.
   ///
   /// **Important for web**: If [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API)
   /// is not supported on the web browser, should fallback to [Clipboard Events](https://developer.mozilla.org/en-US/docs/Web/API/ClipboardEvent)
   /// such as the [paste_event](https://developer.mozilla.org/en-US/docs/Web/API/Element/paste_event).
   ///
-  /// Currently only supports **Android**, **iOS**, **macOS**, **Linux**, and the **Web**.
+  /// Currently, it's not supported on **Windows**.
+  @Category(['Clipboard'])
   static Future<Uint8List?> getClipboardImage() =>
       _platform.getClipboardImage();
 
   /// Return the copied gif from the Clipboard.
   ///
-  /// Currently only supports **Android**, **iOS**.
+  /// **Supports Android and iOS only.**
+  @Category(['Clipboard'])
   static Future<Uint8List?> getClipboardGif() => _platform.getClipboardGif();
 
   /// Return the file paths from the Clipboard.
   ///
-  /// Currently only supports **macOS** and **Linux**.
+  /// Supports **macOS** and **Linux**.
+  /// **Windows** and the web are currently unsupported.
+  @Category(['Clipboard'])
   static Future<List<String>> getClipboardFiles() =>
       _platform.getClipboardFiles();
+
+  /// Opens the system gallery app.
+  /// **Supports Android, iOS, Windows and macOS only.**
+  ///
+  /// Calling this on unsupported platforms will throw [UnimplementedError].
+  @Category(['Gallery'])
+  static Future<void> openGalleryApp() => _platform.openGalleryApp();
+
+  /// Saves an image to the gallery app on supported platforms.
+  /// **Supports Android, iOS, and macOS**.
+  ///
+  /// **Requires Android, iOS and macOS setup.**
+  /// See [Saving images to the gallery](https://pub.dev/packages/quill_native_bridge#-saving-images-to-the-gallery)
+  /// for more details.
+  ///
+  /// Requests necessary permission if not
+  /// already granted on Android 9 (API 28) and earlier, iOS, and macOS.
+  /// On Android 10 (Api 29) and later, the plugin makes use
+  /// of the [Android scoped storage](https://source.android.com/docs/core/storage/scoped).
+  ///
+  /// NOTE: On macOS, permission is denied if the app is running using
+  /// sources other than Xcode or macOS terminal such as Android Studio or VS Code.
+  /// However, this does not affect the final production app.
+  ///
+  /// The [name] is the image's name without the extension (e.g., `image`).
+  /// It doesn't need to be unique, as it's handled by the gallery/system.
+  ///
+  /// The [extension] is the image's file extension (e.g., `png`).
+  /// This is silently ignored on macOS and iOS.
+  ///
+  /// The [albumName] sets the album in the gallery app.
+  /// A new album will be created if it doesn't exist.
+  /// If `null`, the default album is used.
+  /// **If not `null`, read-write access to the photos library is always
+  /// required on iOS and macOS (even on newer versions where add-only is supported).**
+  ///
+  /// Calling this on unsupported platforms will throw [UnimplementedError].
+  /// Calling this on **macOS 10.14 and earlier** will throw [UnsupportedError] (unsupported by the platform).
+  ///
+  /// Use [isSupported] to check before calling:
+  ///
+  /// ```dart
+  /// if (await isSupported(QuillNativeBridgeFeature.saveImageToGallery)) {
+  /// // The method saveImageToGallery() is both implemented and supported by the device / OS version.
+  /// // Call saveImageToGallery()
+  /// }
+  /// ```
+  ///
+  /// See also [saveImage] to save the image on desktop and web platforms.
+  @Category(['Gallery'])
+  static Future<void> saveImageToGallery(
+    Uint8List imageBytes, {
+    required String name,
+    required String extension,
+    required String? albumName,
+  }) =>
+      _platform.saveImageToGallery(imageBytes,
+          name: name, extension: extension, albumName: albumName);
+
+  /// Saves an image to the user's device based on the platform:
+  ///
+  /// - **Web**: Downloads the image using the browser's download functionality.
+  /// Returns the blob object URL (e.g., `blob:http://localhost:64030/e58f63d4-2890-469c-9c8e-69e839da6a93`),
+  /// **which will be revoked before returning it**.
+  /// - **macOS**: Opens the native save dialog using [`NSSavePanel`](https://developer.apple.com/documentation/appkit/nssavepanel),
+  /// defaulting to the user's `Pictures` directory.
+  /// **Requires platform setup**. Refer to [Saving images](pub.dev/packages/quill_native_bridge#-saving-images).
+  /// - **Linux** and **Windows**: Opens the native save dialog, defaulting to the user's `Pictures` directory.
+  /// The plugin delegates to [file_selector_linux](https://pub.dev/packages/file_selector_linux) or
+  /// [file_selector_windows](https://pub.dev/packages/file_selector_windows) with the appropriate file
+  /// type set.
+  ///
+  /// Not supported on mobile platforms (use [saveImageToGallery] instead).
+  /// Calling this on unsupported platforms will throw [UnimplementedError].
+  ///
+  /// The [name] represents the image name without the extension (e.g., `image`).
+  /// On web, the browser handles name conflicts.
+  /// On macOS and Windows, prompts the user to confirm file overwrite.
+  /// On Linux, behavior depends on the desktop environment (e.g., Gnome, KDE),
+  /// and **file overwrite confirmation may be skipped**.
+  ///
+  /// The [extension] is the image's file extension (e.g., `png`).
+  ///
+  /// Returns `null` if the user cancels the operation on desktop platforms
+  /// while selecting the destination using the system file picker.
+  ///
+  /// See also [saveImageToGallery] for platforms with a native gallery app.
+  static Future<String?> saveImage(
+    Uint8List imageBytes, {
+    required String name,
+    required String extension,
+  }) =>
+      _platform.saveImage(imageBytes, name: name, extension: extension);
 }

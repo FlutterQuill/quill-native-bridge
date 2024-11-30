@@ -31,6 +31,11 @@ class QuillNativeBridgeWeb extends QuillNativeBridgePlatform {
         return false;
       case QuillNativeBridgeFeature.getClipboardFiles:
         return false;
+      case QuillNativeBridgeFeature.openGalleryApp:
+      case QuillNativeBridgeFeature.saveImageToGallery:
+        return false;
+      case QuillNativeBridgeFeature.saveImage:
+        return true;
     }
     // Without this default, adding a new item to the enum will be a breaking change.
     // ignore: dead_code
@@ -129,5 +134,29 @@ class QuillNativeBridgeWeb extends QuillNativeBridgePlatform {
     throw UnsupportedError(
       'Retrieving gif image from the clipboard is unsupported regardless of the browser.',
     );
+  }
+
+  @override
+  Future<String> saveImage(
+    Uint8List imageBytes, {
+    required String name,
+    required String extension,
+  }) async {
+    // TODO(save-image): image/jpg is not supported, should be always image/jpeg
+    final blob = Blob(
+      [imageBytes.toJS].toJS,
+      BlobPropertyBag(type: 'image/${extension}'),
+    );
+    final url = URL.createObjectURL(blob);
+
+    final link = document.createElement('a') as HTMLAnchorElement;
+    link.setAttribute('href', url);
+    link.setAttribute('download', '$name.${extension}');
+
+    link.click();
+
+    URL.revokeObjectURL(url);
+
+    return url;
   }
 }

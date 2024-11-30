@@ -2,6 +2,7 @@ import 'package:pigeon/pigeon.dart';
 
 @ConfigurePigeon(PigeonOptions(
   dartOut: 'lib/src/messages.g.dart',
+  dartTestOut: 'test/test_api.g.dart',
   // Using `GeneratedMessages.kt` instead of `Messages.g.kt` to follow
   // Kotlin conventions: https://kotlinlang.org/docs/coding-conventions.html#source-file-names
   kotlinOut:
@@ -11,7 +12,7 @@ import 'package:pigeon/pigeon.dart';
   ),
   dartPackageName: 'quill_native_bridge_android',
 ))
-@HostApi()
+@HostApi(dartHostTestHandler: 'TestQuillNativeBridgeApi')
 abstract class QuillNativeBridgeApi {
   // HTML
   String? getClipboardHtml();
@@ -21,4 +22,14 @@ abstract class QuillNativeBridgeApi {
   Uint8List? getClipboardImage();
   void copyImageToClipboard(Uint8List imageBytes);
   Uint8List? getClipboardGif();
+
+  void openGalleryApp();
+
+  @async
+  void saveImageToGallery(
+    Uint8List imageBytes, {
+    required String name,
+    required String extension,
+    required String? albumName,
+  });
 }

@@ -4,40 +4,25 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
-import android.os.Build
 import androidx.core.content.FileProvider
 import dev.flutterquill.quill_native_bridge.generated.FlutterError
+import dev.flutterquill.quill_native_bridge.util.ImageDecoderCompat
 import java.io.File
+import java.io.IOException
 
 object ClipboardWriteImageHandler {
     fun copyImageToClipboard(
         context: Context,
         imageBytes: ByteArray,
     ) {
-        val bitmap: Bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            // Api 29 and above (use a newer API)
-            try {
-                val source = ImageDecoder.createSource(imageBytes)
-                ImageDecoder.decodeBitmap(source)
-            } catch (e: Exception) {
-                throw FlutterError(
-                    "INVALID_IMAGE",
-                    "The provided image bytes are invalid, image could not be decoded: ${e.message}",
-                    e.toString(),
-                )
-            }
-        } else {
-            // Backward compatibility with older versions
-            val bitmap: Bitmap =
-                BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-                    ?: throw FlutterError(
-                        "INVALID_IMAGE",
-                        "The provided image bytes are invalid. Image could not be decoded.",
-                        null,
-                    )
-            bitmap
+        val bitmap: Bitmap = try {
+            ImageDecoderCompat.decodeBitmapFromBytes(imageBytes)
+        } catch (e: IOException) {
+            throw FlutterError(
+                "INVALID_IMAGE",
+                "The provided image bytes are invalid, image could not be decoded: ${e.message}",
+                e.toString(),
+            )
         }
 
         val tempImageFile = File(context.cacheDir, "temp_clipboard_image.png")

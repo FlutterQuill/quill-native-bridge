@@ -1,6 +1,6 @@
 name: quill_native_bridge_android
 description: "Android implementation of the quill_native_bridge plugin."
-version: 0.0.1-dev.5
+version: 0.0.1-dev.6
 homepage: https://github.com/FlutterQuill/quill-native-bridge/tree/main/quill_native_bridge_android
 repository: https://github.com/FlutterQuill/quill-native-bridge/tree/main/quill_native_bridge_android
 issue_tracker: https://github.com/FlutterQuill/quill-native-bridge/issues?q=is%3Aissue+is%3Aopen+label%3A%22platform-android%22
@@ -20,7 +20,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
-  pigeon: ^22.4.1
+  pigeon: ^22.6.2
+  mockito: ^5.4.4
+  build_runner: ^2.4.13
 
 flutter:
   plugin:

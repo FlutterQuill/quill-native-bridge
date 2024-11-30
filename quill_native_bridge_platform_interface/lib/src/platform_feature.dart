@@ -6,5 +6,8 @@ enum QuillNativeBridgeFeature {
   copyImageToClipboard,
   getClipboardImage,
   getClipboardGif,
-  getClipboardFiles;
+  getClipboardFiles,
+  openGalleryApp,
+  saveImageToGallery,
+  saveImage;
 }

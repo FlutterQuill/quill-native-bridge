@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## 10.8.0
+
+- Improves `README.md`. Adds more details to `README.md`.
+- Updates the section `Platform configuration` to `Setup` in `README.md`.
+- Improves doc comments.
+- Adds unit tests for `QuillNativeBridge`.
+- Adds support for saving images.
+- Updates Java compatibility version to 11. Related [flutter#156111](https://github.com/flutter/flutter/issues/156111).
+
 ## 10.7.11
 
 - Adds pub topics to package metadata.

@@ -1,12 +1,18 @@
 package dev.flutterquill.quill_native_bridge
 
 import android.content.Context
+import android.content.Intent
+import android.provider.MediaStore
 import dev.flutterquill.quill_native_bridge.clipboard.ClipboardReadImageHandler
 import dev.flutterquill.quill_native_bridge.clipboard.ClipboardRichTextHandler
 import dev.flutterquill.quill_native_bridge.clipboard.ClipboardWriteImageHandler
 import dev.flutterquill.quill_native_bridge.generated.QuillNativeBridgeApi
+import dev.flutterquill.quill_native_bridge.saveImage.SaveImageHandler
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 
 class QuillNativeBridgeImpl(private val context: Context) : QuillNativeBridgeApi {
+    private var activityPluginBinding: ActivityPluginBinding? = null
+
     override fun getClipboardHtml(): String? = ClipboardRichTextHandler.getClipboardHtml(context)
 
     override fun copyHtmlToClipboard(html: String) =
@@ -25,4 +31,38 @@ class QuillNativeBridgeImpl(private val context: Context) : QuillNativeBridgeApi
         context,
         imageType = ClipboardReadImageHandler.ImageType.Gif,
     )
+
+    override fun openGalleryApp() {
+        // TODO(save-image): Test on Android marshmallow (API 23)
+        val intent =
+            Intent(Intent.ACTION_VIEW, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+        getActivityPluginBindingOrThrow().activity.startActivity(intent)
+    }
+
+    override fun saveImageToGallery(
+        imageBytes: ByteArray,
+        name: String,
+        extension: String,
+        albumName: String?,
+        callback: (Result<Unit>) -> Unit
+    ) = SaveImageHandler.saveImageToGallery(
+        context,
+        getActivityPluginBindingOrThrow(),
+        imageBytes = imageBytes,
+        name = name,
+        extension = extension,
+        albumName = albumName,
+        callback = callback
+    )
+
+    private fun getActivityPluginBindingOrThrow(): ActivityPluginBinding {
+        return activityPluginBinding
+            ?: throw IllegalStateException("The Flutter activity binding was not set. This indicates a bug in `${QuillNativeBridgePlugin::class.simpleName}`.")
+    }
+
+    fun setActivityPluginBinding(activityPluginBinding: ActivityPluginBinding?) {
+        this.activityPluginBinding = activityPluginBinding
+    }
 }

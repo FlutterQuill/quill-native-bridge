@@ -4,7 +4,9 @@
 import 'dart:convert' show utf8;
 import 'dart:io' show Process, File hide exitCode;
 
-import 'package:flutter/services.dart' show Uint8List;
+import 'package:file_selector_platform_interface/file_selector_platform_interface.dart';
+import 'package:flutter/foundation.dart';
+import 'package:quill_native_bridge_linux/src/image_saver.dart';
 import 'package:quill_native_bridge_platform_interface/quill_native_bridge_platform_interface.dart';
 
 import 'src/binary_runner.dart';
@@ -25,6 +27,7 @@ class QuillNativeBridgeLinux extends QuillNativeBridgePlatform {
         QuillNativeBridgeFeature.copyImageToClipboard,
         QuillNativeBridgeFeature.getClipboardImage,
         QuillNativeBridgeFeature.getClipboardFiles,
+        QuillNativeBridgeFeature.saveImage,
       }.contains(feature);
 
   // TODO: Improve error handling
@@ -233,5 +236,38 @@ class QuillNativeBridgeLinux extends QuillNativeBridgePlatform {
     } finally {
       await xclipFile.delete();
     }
+  }
+
+  @visibleForTesting
+  static ImageSaver imageSaver = ImageSaver();
+
+  @override
+  Future<String?> saveImage(
+    Uint8List imageBytes, {
+    required String name,
+    required String extension,
+  }) async {
+    final typeGroup = XTypeGroup(
+      label: 'Images',
+      // The arguments `extensions` and `mimeTypes` are both supported on Linux. See https://pub.dev/packages/file_selector#filtering-by-file-types
+      extensions: [extension],
+      mimeTypes: ['image/${extension}'],
+    );
+
+    final saveLocation = await imageSaver.fileSelector.getSaveLocation(
+      options: SaveDialogOptions(
+        suggestedName: '${name}.${extension}',
+        initialDirectory: imageSaver.picturesDirectoryPath,
+      ),
+      acceptedTypeGroups: [typeGroup],
+    );
+    final imageFilePath = saveLocation?.path;
+    if (imageFilePath == null) {
+      return null;
+    }
+    final imageFile = File(imageFilePath);
+    await imageFile.writeAsBytes(imageBytes);
+
+    return imageFile.path;
   }
 }

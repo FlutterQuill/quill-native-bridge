@@ -28,5 +28,17 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+
+	<!-- START: Add-only permission: Required on macOS 11 and later if the album name is not specified -->
+	<!-- More details: https://pub.dev/packages/quill_native_bridge#-setup -->
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Used to demonstrate quill_native_bridge plugin</string>
+	<!-- END: Add-only permission: Required on macOS 11 and later if the album name is not specified -->
+
+	<!-- START: Read-write permission: Always required on macOS 10.15 and earlier, and also required on macOS 11 and later if the album name is specified -->
+	<!-- More details: https://pub.dev/packages/quill_native_bridge#-setup -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Used to demonstrate quill_native_bridge plugin on macOS 10.15 and earlier or if the album was specified</string>
+	<!-- END: Read-write permission: Always required on macOS 10.15 and earlier, and also required on macOS 11 and later if the album name is specified -->
 </dict>
 </plist>

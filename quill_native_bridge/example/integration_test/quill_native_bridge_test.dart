@@ -1,5 +1,5 @@
-import 'package:flutter/services.dart' as services
-    show Clipboard, ClipboardData;
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_compare/image_compare.dart';
 import 'package:integration_test/integration_test.dart';
@@ -107,12 +107,11 @@ void main() {
 
         // Plain text clipboard item
         const plainTextExample = 'Flutter Quill';
-        services.Clipboard.setData(
-          const services.ClipboardData(text: plainTextExample),
+        Clipboard.setData(
+          const ClipboardData(text: plainTextExample),
         );
         expect(
-          (await services.Clipboard.getData(services.Clipboard.kTextPlain))
-              ?.text,
+          (await Clipboard.getData(Clipboard.kTextPlain))?.text,
           plainTextExample,
         );
 
@@ -150,4 +149,31 @@ void main() {
       },
     );
   });
+
+  group(
+    'saveImageToGallery',
+    () {
+      test('throws an error if image bytes are invalid', () async {
+        if (!(await QuillNativeBridge.isSupported(
+            QuillNativeBridgeFeature.saveImageToGallery))) {
+          markTestSkipped(
+              'The platform $defaultTargetPlatform does not apply to save images to the gallery feature');
+          return;
+        }
+        await expectLater(
+          QuillNativeBridge.saveImageToGallery(
+            Uint8List.fromList([1, 0, 1]),
+            name: 'ExampleImageName',
+            extension: 'png',
+            albumName: null,
+          ),
+          throwsA(isA<PlatformException>().having(
+            (e) => e.code,
+            'code',
+            equals('INVALID_IMAGE'),
+          )),
+        );
+      });
+    },
+  );
 }

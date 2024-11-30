@@ -20,7 +20,7 @@ abstract class QuillNativeBridgePlatform extends PlatformInterface {
   /// Constructs a [QuillNativeBridgePlatform].
   QuillNativeBridgePlatform() : super(token: _token);
 
-  /// Avoid using `const` when creating the `Object` for `_token`
+  // Avoid using `const` when creating the [Object] for [_token].
   static final Object _token = Object();
 
   static QuillNativeBridgePlatform _instance = PlaceholderImplementation();
@@ -84,4 +84,31 @@ abstract class QuillNativeBridgePlatform extends PlatformInterface {
   /// Return the file paths from the system clipboard.
   Future<List<String>> getClipboardFiles() =>
       throw UnimplementedError('getClipboardFiles() has not been implemented.');
+
+  /// Opens the system gallery app.
+  Future<void> openGalleryApp() => throw UnimplementedError(
+        'openGalleryApp() has not been implemented.',
+      );
+
+  /// Saves an image to the gallery app.
+  Future<void> saveImageToGallery(
+    Uint8List imageBytes, {
+    required String name,
+    required String extension,
+    required String? albumName,
+  }) =>
+      throw UnimplementedError(
+        'saveImageToGallery() has not been implemented.',
+      );
+
+  /// Saves an image to the user's device.
+  /// Returns `null` if the operation was cancelled.
+  Future<String?> saveImage(
+    Uint8List imageBytes, {
+    required String name,
+    required String extension,
+  }) =>
+      throw UnimplementedError(
+        'saveImage() has not been implemented.',
+      );
 }

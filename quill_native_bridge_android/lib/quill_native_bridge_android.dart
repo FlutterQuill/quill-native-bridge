@@ -23,6 +23,8 @@ class QuillNativeBridgeAndroid extends QuillNativeBridgePlatform {
         QuillNativeBridgeFeature.copyImageToClipboard,
         QuillNativeBridgeFeature.getClipboardImage,
         QuillNativeBridgeFeature.getClipboardGif,
+        QuillNativeBridgeFeature.openGalleryApp,
+        QuillNativeBridgeFeature.saveImageToGallery,
       }.contains(feature);
 
   @override
@@ -52,21 +54,18 @@ class QuillNativeBridgeAndroid extends QuillNativeBridgePlatform {
     try {
       await _hostApi.copyImageToClipboard(imageBytes);
     } on PlatformException catch (e) {
-      if (kDebugMode && e.code == 'ANDROID_MANIFEST_NOT_CONFIGURED') {
-        debugPrint(
-          'It looks like your AndroidManifest.xml is not configured properly '
-          'to support copying images to the clipboard on Android.\n'
-          "If you're interested in this feature, refer to https://github.com/FlutterQuill/quill-native-bridge/tree/main/quill_native_bridge#-platform-configuration\n"
-          'This message will only shown in debug mode.\n'
-          'Platform details: ${e.toString()}',
-        );
-        throw AssertionError(
-          'Optional AndroidManifest configuration is missing. '
-          'Copying images to the clipboard on Android require modifying `AndroidManifest.xml`. '
-          'A message was shown above this error for more details. This'
-          'error will only arise in debug mode.',
-        );
-      }
+      assert(() {
+        if (e.code == 'ANDROID_MANIFEST_NOT_CONFIGURED') {
+          throw StateError(
+            '\nThe AndroidManifest.xml file was not configured to support copying images to the clipboard on Android\n'
+            'For more details, refer to https://pub.dev/packages/quill_native_bridge#-copying-images-to-the-system-clipboard\n'
+            'This exception will be only thrown in debug mode.\n\n'
+            'Platform error details: ${e.toString()}',
+          );
+        }
+        return true;
+      }());
+
       rethrow;
     }
   }
@@ -96,14 +95,6 @@ class QuillNativeBridgeAndroid extends QuillNativeBridgePlatform {
   ///
   /// See [#2243](https://github.com/singerdmx/flutter-quill/issues/2243) for more details.
   void _printAndroidClipboardImageAccessKnownIssue(PlatformException e) {
-    assert(
-      defaultTargetPlatform == TargetPlatform.android,
-      '_printAndroidClipboardImageAccessKnownIssue() should be only used for Android.',
-    );
-    assert(
-      kDebugMode,
-      '_printAndroidClipboardImageAccessKnownIssue() should be only called in debug mode',
-    );
     if (kDebugMode) {
       debugPrint(
         'Could not retrieve the image from clipbaord as the app no longer have access to the image.\n'
@@ -111,8 +102,42 @@ class QuillNativeBridgeAndroid extends QuillNativeBridgePlatform {
         'This is known issue on Android and this message will be only shown in debug mode.\n'
         'Refer to https://github.com/singerdmx/flutter-quill/issues/2243 for discussion.\n'
         'A similar but unrelated issue in Flutter `imager_picker`: https://github.com/flutter/flutter/issues/100025'
-        'Platform details: ${e.toString()}',
+        'Platform error details: ${e.toString()}',
       );
+    }
+  }
+
+  @override
+  Future<void> openGalleryApp() => _hostApi.openGalleryApp();
+
+  @override
+  Future<void> saveImageToGallery(
+    Uint8List imageBytes, {
+    required String name,
+    required String extension,
+    required String? albumName,
+  }) async {
+    try {
+      await _hostApi.saveImageToGallery(
+        imageBytes,
+        name: name,
+        extension: extension,
+        albumName: albumName,
+      );
+    } on PlatformException catch (e) {
+      assert(() {
+        if (e.code == 'ANDROID_MANIFEST_NOT_CONFIGURED') {
+          throw StateError(
+            '\nThe AndroidManifest.xml file was not configured to support saving images to the gallery on Android 9 (API 28).\n'
+            'The `WRITE_EXTERNAL_STORAGE` permission is required only on previous versions of Android.\n'
+            'For more details, refer to https://pub.dev/packages/quill_native_bridge#-saving-images-to-the-gallery\n'
+            'This exception will be only thrown in debug mode.\n\n'
+            'Platform error details: ${e.toString()}',
+          );
+        }
+        return true;
+      }());
+      rethrow;
     }
   }
 }

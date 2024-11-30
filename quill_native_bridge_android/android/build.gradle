@@ -25,22 +25,18 @@ apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
 android {
-    if (project.android.hasProperty("namespace")) {
-        namespace = "dev.flutterquill.quill_native_bridge"
-    }
+    namespace = "dev.flutterquill.quill_native_bridge"
 
-    // Using outdated compileSdk can prevent apps
-    // from build using newer API
-    // https://github.com/flutter/flutter/issues/63533
+    // Using outdated compileSdk can prevent apps from targeting newer versions. See https://github.com/flutter/flutter/issues/63533
     compileSdk = 34
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = JavaVersion.VERSION_11
     }
 
     sourceSets {

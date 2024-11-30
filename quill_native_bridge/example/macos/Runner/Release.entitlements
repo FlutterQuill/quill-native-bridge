@@ -4,5 +4,10 @@
 <dict>
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
+	<!-- START: Required to save the image using the system save dialog -->
+	<!-- More details: https://pub.dev/packages/quill_native_bridge#-setup -->
+	<key>com.apple.security.files.user-selected.read-write</key>
+  	<true/>
+	<!-- END: Required to save the image using the system save dialog -->
 </dict>
 </plist>

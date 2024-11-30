@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.0.1-dev.6
+
+- Deregister platform method channel correctly in `onDetachedFromEngine`.
+- Adds Dart unit tests.
+- Supports saving an image to the system gallery app.
+- Supports opening the system gallery app.
+- Updates Java compatibility version to 11. Related [flutter#156111](https://github.com/flutter/flutter/issues/156111).
+
 ## 0.0.1-dev.5
 
 - Adds pub topics to package metadata.

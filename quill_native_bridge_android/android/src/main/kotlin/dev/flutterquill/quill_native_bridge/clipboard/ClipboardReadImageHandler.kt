@@ -4,13 +4,16 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
 import android.net.Uri
-import android.os.Build
+import dev.flutterquill.quill_native_bridge.clipboard.ClipboardReadImageHandler.ImageType.AnyExceptGif
+import dev.flutterquill.quill_native_bridge.clipboard.ClipboardReadImageHandler.ImageType.Gif
+import dev.flutterquill.quill_native_bridge.clipboard.ClipboardReadImageHandler.ImageType.Jpeg
+import dev.flutterquill.quill_native_bridge.clipboard.ClipboardReadImageHandler.ImageType.Png
 import dev.flutterquill.quill_native_bridge.generated.FlutterError
+import dev.flutterquill.quill_native_bridge.util.ImageDecoderCompat
 import java.io.ByteArrayOutputStream
 import java.io.FileNotFoundException
+import java.io.IOException
 
 object ClipboardReadImageHandler {
     private const val MIME_TYPE_IMAGE_ALL = "image/*"
@@ -153,6 +156,7 @@ object ClipboardReadImageHandler {
                 )
             }
         }
+        // TODO: Remove redundant qualifier name in this file
         val imageBytes = when (imageType) {
             ImageType.Png, ImageType.Jpeg,
             ImageType.AnyExceptGif -> getClipboardImageAsPng(context, imageUri)
@@ -170,22 +174,9 @@ object ClipboardReadImageHandler {
         context: Context,
         imageUri: Uri
     ): ByteArray {
-        val bitmap = try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                // Api 29 and above (use a newer API)
-                val source = ImageDecoder.createSource(context.contentResolver, imageUri)
-                ImageDecoder.decodeBitmap(source)
-            } else {
-                // Backward compatibility with older versions
-                checkNotNull(context.contentResolver.openInputStream(imageUri)) {
-                    "Input stream is null, the provider might have recently crashed."
-                }.use { inputStream ->
-                    val bitmap: Bitmap? = BitmapFactory.decodeStream(inputStream)
-                    checkNotNull(bitmap) { "The image could not be decoded" }
-                    bitmap
-                }
-            }
-        } catch (e: Exception) {
+        val bitmap: Bitmap = try {
+            ImageDecoderCompat.decodeBitmapFromUri(context.contentResolver, imageUri)
+        } catch (e: IOException) {
             throw FlutterError(
                 "COULD_NOT_DECODE_IMAGE",
                 "Could not decode bitmap from Uri: ${e.message}",

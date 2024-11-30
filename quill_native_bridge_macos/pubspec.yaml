@@ -21,6 +21,8 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^5.0.0
   pigeon: ^22.6.2
+  mockito: ^5.4.4
+  build_runner: ^2.4.13
 
 flutter:
   plugin:

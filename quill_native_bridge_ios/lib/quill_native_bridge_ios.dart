@@ -1,7 +1,7 @@
 // This file is referenced by pubspec.yaml. If you plan on moving this file
 // Make sure to update pubspec.yaml to the new location.
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:quill_native_bridge_platform_interface/quill_native_bridge_platform_interface.dart';
 
 import 'src/messages.g.dart';
@@ -23,6 +23,8 @@ class QuillNativeBridgeIos extends QuillNativeBridgePlatform {
         QuillNativeBridgeFeature.copyImageToClipboard,
         QuillNativeBridgeFeature.getClipboardImage,
         QuillNativeBridgeFeature.getClipboardGif,
+        QuillNativeBridgeFeature.openGalleryApp,
+        QuillNativeBridgeFeature.saveImageToGallery,
       }.contains(feature);
 
   @override
@@ -44,4 +46,34 @@ class QuillNativeBridgeIos extends QuillNativeBridgePlatform {
 
   @override
   Future<Uint8List?> getClipboardGif() => _hostApi.getClipboardGif();
+
+  @override
+  Future<void> openGalleryApp() => _hostApi.openGalleryApp();
+
+  @override
+  Future<void> saveImageToGallery(
+    Uint8List imageBytes, {
+    required String name,
+    required String extension,
+    required String? albumName,
+  }) async {
+    try {
+      await _hostApi.saveImageToGallery(imageBytes,
+          name: name, albumName: albumName);
+    } on PlatformException catch (e) {
+      assert(() {
+        if (e.code == 'IOS_INFO_PLIST_NOT_CONFIGURED') {
+          throw StateError(
+            '\nThe Info.plist file was not configured to support saving images to the gallery on iOS.\n'
+            'For more details, refer to https://pub.dev/packages/quill_native_bridge#-saving-images-to-the-gallery\n'
+            'This exception will be only thrown in debug mode.\n\n'
+            'Platform error details: ${e.toString()}',
+          );
+        }
+        return true;
+      }());
+
+      rethrow;
+    }
+  }
 }
