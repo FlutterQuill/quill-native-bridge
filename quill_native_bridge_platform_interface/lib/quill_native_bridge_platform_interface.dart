@@ -104,7 +104,9 @@ abstract class QuillNativeBridgePlatform extends PlatformInterface {
       );
 
   /// Saves an image to the user's device.
-  /// Returns `null` if the operation was cancelled.
+  ///
+  /// Returns `ImageSaveResult` with [ImageSaveResult.filePath]
+  /// null if the operation was canceled and always `null` on web platforms.
   Future<ImageSaveResult> saveImage(
     Uint8List imageBytes, {
     required ImageSaveOptions options,
