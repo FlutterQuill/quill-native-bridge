@@ -493,7 +493,7 @@ packages:
     source: hosted
     version: "3.1.6"
   plugin_platform_interface:
-    dependency: "direct dev"
+    dependency: transitive
     description:
       name: plugin_platform_interface
       sha256: "4820fbfdb9478b1ebae27888254d445073732dae3d6ea81f0b7e06d5dedc3f02"
@@ -538,7 +538,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "10.8.0"
+    version: "11.0.0"
   quill_native_bridge_android:
     dependency: "direct overridden"
     description:
@@ -568,7 +568,7 @@ packages:
     source: path
     version: "0.0.1-dev.5"
   quill_native_bridge_platform_interface:
-    dependency: "direct dev"
+    dependency: "direct overridden"
     description:
       path: "../../quill_native_bridge_platform_interface"
       relative: true

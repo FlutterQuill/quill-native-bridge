@@ -2,30 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:quill_native_bridge/quill_native_bridge.dart';
 import 'package:quill_native_bridge_example/main.dart';
-import 'package:quill_native_bridge_platform_interface/quill_native_bridge_platform_interface.dart';
 
-// IMPORTANT: Currently, this is not the most straightforward way to mock QuillNativeBridge.
-// Since all methods are static, this workaround is required for now.
-// In the future this issue will be addressed.
-
-@GenerateMocks([], customMocks: [MockSpec<QuillNativeBridgePlatform>()])
-import 'example_test.mocks.dart' as base_mock;
-
-// Add the mixin to make the platform interface accept the mock.
-// For more details, refer to https://pub.dev/packages/plugin_platform_interface#mocking-or-faking-platform-interfaces
-class _MockQuillNativeBridgePlatform extends base_mock
-    .MockQuillNativeBridgePlatform with MockPlatformInterfaceMixin {}
+@GenerateMocks([QuillNativeBridge])
+import 'example_test.mocks.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  late _MockQuillNativeBridgePlatform mockQuillNativeBridgePlatform;
+  late MockQuillNativeBridge mockQuillNativeBridge;
 
   setUp(() {
-    mockQuillNativeBridgePlatform = _MockQuillNativeBridgePlatform();
-    QuillNativeBridgePlatform.instance = mockQuillNativeBridgePlatform;
+    mockQuillNativeBridge = MockQuillNativeBridge();
+    quillNativeBridge = mockQuillNativeBridge;
   });
 
   testWidgets(
@@ -35,11 +25,11 @@ void main() {
 
       Future<void> runIsIOSSimulatorTest(
           {required bool isIOSSimulator, expectedSnackbarMessage}) async {
-        when(mockQuillNativeBridgePlatform
+        when(mockQuillNativeBridge
                 .isSupported(QuillNativeBridgeFeature.isIOSSimulator))
             .thenAnswer((_) async => true);
 
-        when(mockQuillNativeBridgePlatform.isIOSSimulator())
+        when(mockQuillNativeBridge.isIOSSimulator())
             .thenAnswer((_) async => isIOSSimulator);
 
         final isIOSButton = find.text('Is iOS Simulator');
@@ -68,7 +58,7 @@ void main() {
       (tester) async {
     await tester.pumpWidget(const MainApp());
 
-    when(mockQuillNativeBridgePlatform
+    when(mockQuillNativeBridge
             .isSupported(QuillNativeBridgeFeature.isIOSSimulator))
         .thenAnswer((_) async => false);
 

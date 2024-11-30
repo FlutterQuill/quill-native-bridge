@@ -34,7 +34,7 @@ Always review the doc comment of a method before use for special notes.
 Check if a method is supported on the platform/os version before using it:
 
 ```dart
-if (await QuillNativeBridge.isSupported(QuillNativeBridgeFeature.copyHtmlToClipboard)) {
+if (await QuillNativeBridge().isSupported(QuillNativeBridgeFeature.copyHtmlToClipboard)) {
 // Replace copyHtmlToClipboard with the method or functionality name
 }
 ```
@@ -46,7 +46,7 @@ import 'package:flutter/foundation.dart';
 
 final isIOSApp = !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
 
-if (isIOSApp && await QuillNativeBridge.isIOSSimulator()) {
+if (isIOSApp && await QuillNativeBridge().isIOSSimulator()) {
     // The app is running on an iOS simulator.
 }
 ```
@@ -54,14 +54,14 @@ if (isIOSApp && await QuillNativeBridge.isIOSSimulator()) {
 **To retrive the HTML from the system clipboard**:
 
 ```dart
-final String? html = await QuillNativeBridge.getClipboardHtml(); // Null in case permission denied on iOS or HTML is not available
+final String? html = await QuillNativeBridge().getClipboardHtml(); // Null in case permission denied on iOS or HTML is not available
 ```
 
 **To copy an HTML to the system clipboard**:
 
 ```dart
 const exampleHtml = '<bold>Bold text</bold>';
-await QuillNativeBridge.copyHtmlToClipboard(exampleHtml);
+await QuillNativeBridge().copyHtmlToClipboard(exampleHtml);
 ```
 
 **To copy an image to the system clipboard**:
@@ -69,29 +69,29 @@ await QuillNativeBridge.copyHtmlToClipboard(exampleHtml);
 ```dart
 final Uint8List imageBytes = ...; // Load the image bytes
 
-await QuillNativeBridge.copyImageToClipboard(imageBytes);
+await QuillNativeBridge().copyImageToClipboard(imageBytes);
 ```
 
 **To retrive the image from the system clipboard**:
 
 ```dart
-final Uint8List? imageBytes = await QuillNativeBridge.getClipboardImage(); // Null if the image is not available
+final Uint8List? imageBytes = await QuillNativeBridge().getClipboardImage(); // Null if the image is not available
 
 // OR a GIF image
 
-final Uint8List? gifBytes = await QuillNativeBridge.getClipboardGif(); // Null if the image is not available
+final Uint8List? gifBytes = await QuillNativeBridge().getClipboardGif(); // Null if the image is not available
 ```
 
 **To retrive copied files from the system clipboard on desktop**:
 
 ```dart
-final List<String> filePaths = await QuillNativeBridge.getClipboardFiles(); // Empty list if no files are available
+final List<String> filePaths = await QuillNativeBridge().getClipboardFiles(); // Empty list if no files are available
 ```
 
 **To open the system gallery app**:
 
 ```dart
-await QuillNativeBridge.openGalleryApp(); // Work only for platforms that have a system gallery app
+await QuillNativeBridge().openGalleryApp(); // Work only for platforms that have a system gallery app
 ```
 
 **To save an image to the system gallery**:
@@ -99,7 +99,7 @@ await QuillNativeBridge.openGalleryApp(); // Work only for platforms that have a
 ```dart
 final Uint8List imageBytes = ...; // Load the image bytes
 
-await QuillNativeBridge.saveImageToGallery(imageBytes, options: GalleryImageSaveOptions(name: 'ExampleImageName', fileExtension: 'png', albumName: null)); // Work only for platforms that have a system gallery app
+await QuillNativeBridge().saveImageToGallery(imageBytes, options: GalleryImageSaveOptions(name: 'ExampleImageName', fileExtension: 'png', albumName: null)); // Work only for platforms that have a system gallery app
 ```
 
 **To save an image using save dialog on desktop or download it on web**:
@@ -107,7 +107,7 @@ await QuillNativeBridge.saveImageToGallery(imageBytes, options: GalleryImageSave
 ```dart
 final Uint8List imageBytes = ...; // Load the image bytes
 
-await QuillNativeBridge.saveImage(imageBytes, options: ImageSaveOptions(name: 'ExampleImageName', fileExtension: 'png')); // Doesn't work on mobile platforms
+await QuillNativeBridge().saveImage(imageBytes, options: ImageSaveOptions(name: 'ExampleImageName', fileExtension: 'png')); // Doesn't work on mobile platforms
 ```
 
 ## 🔧 Setup

@@ -13,13 +13,12 @@ export 'package:quill_native_bridge_platform_interface/quill_native_bridge_platf
         GalleryImageSaveOptions,
         ImageSaveResult;
 
-// TODO: https://medium.com/flutter/writing-a-good-flutter-plugin-1a561b986c9c (see the section 'Avoid writing static (or global) methods')
-
 /// An internal plugin for [`flutter_quill`](https://pub.dev/packages/flutter_quill)
 /// package to access platform-specific APIs.
 ///
 /// Use [QuillNativeBridge.isSupported] to check whether a feature is supported.
-abstract final class QuillNativeBridge {
+class QuillNativeBridge {
+  /// The platform interface that drives this plugin.
   static QuillNativeBridgePlatform get _platform =>
       QuillNativeBridgePlatform.instance;
 
@@ -45,13 +44,13 @@ abstract final class QuillNativeBridge {
   /// Always review the doc comment of a method before use for special notes.
   ///
   /// See also: [QuillNativeBridgeFeature]
-  static Future<bool> isSupported(QuillNativeBridgeFeature feature) =>
+  Future<bool> isSupported(QuillNativeBridgeFeature feature) =>
       _platform.isSupported(feature);
 
   /// Checks if the app runs on [iOS Simulator](https://developer.apple.com/documentation/xcode/running-your-app-in-simulator-or-on-a-device).
   ///
   /// Should be called only on an iOS app.
-  static Future<bool> isIOSSimulator() => _platform.isIOSSimulator();
+  Future<bool> isIOSSimulator() => _platform.isIOSSimulator();
 
   /// Returns a HTML from the system clipboard. The HTML can be platform-dependent.
   ///
@@ -62,7 +61,7 @@ abstract final class QuillNativeBridge {
   /// Returns `null` if the HTML content is not available or if the user has not granted
   /// permission for pasting on iOS.
   @Category(['Clipboard'])
-  static Future<String?> getClipboardHtml() => _platform.getClipboardHtml();
+  Future<String?> getClipboardHtml() => _platform.getClipboardHtml();
 
   /// Copies an HTML to the system clipboard to be pasted on other apps.
   ///
@@ -70,7 +69,7 @@ abstract final class QuillNativeBridge {
   /// if [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API) is unsupported,
   /// not available or restricted (the case for Firefox and Safari). See [copy_event](https://developer.mozilla.org/en-US/docs/Web/API/Element/copy_event).
   @Category(['Clipboard'])
-  static Future<void> copyHtmlToClipboard(String html) =>
+  Future<void> copyHtmlToClipboard(String html) =>
       _platform.copyHtmlToClipboard(html);
 
   /// Copies an image to the system clipboard to be pasted on other apps.
@@ -84,7 +83,7 @@ abstract final class QuillNativeBridge {
   ///
   /// Currently, it's not supported on **Windows**.
   @Category(['Clipboard'])
-  static Future<void> copyImageToClipboard(Uint8List imageBytes) =>
+  Future<void> copyImageToClipboard(Uint8List imageBytes) =>
       _platform.copyImageToClipboard(imageBytes);
 
   /// Returns the copied image from the system clipboard.
@@ -95,29 +94,27 @@ abstract final class QuillNativeBridge {
   ///
   /// Currently, it's not supported on **Windows**.
   @Category(['Clipboard'])
-  static Future<Uint8List?> getClipboardImage() =>
-      _platform.getClipboardImage();
+  Future<Uint8List?> getClipboardImage() => _platform.getClipboardImage();
 
   /// Returns the copied GIF image from the system clipboard.
   ///
   /// **Supports Android and iOS only.**
   @Category(['Clipboard'])
-  static Future<Uint8List?> getClipboardGif() => _platform.getClipboardGif();
+  Future<Uint8List?> getClipboardGif() => _platform.getClipboardGif();
 
   /// Returns the file paths from the system clipboard.
   ///
   /// Supports **macOS** and **Linux**.
   /// **Windows** and the web are currently unsupported.
   @Category(['Clipboard'])
-  static Future<List<String>> getClipboardFiles() =>
-      _platform.getClipboardFiles();
+  Future<List<String>> getClipboardFiles() => _platform.getClipboardFiles();
 
   /// Opens the system gallery app.
   /// **Supports Android, iOS, Windows and macOS only.**
   ///
   /// Calling this on unsupported platforms will throw [UnimplementedError].
   @Category(['Gallery'])
-  static Future<void> openGalleryApp() => _platform.openGalleryApp();
+  Future<void> openGalleryApp() => _platform.openGalleryApp();
 
   /// Saves an image to the gallery app on supported platforms.
   /// **Supports Android, iOS, and macOS**.
@@ -161,7 +158,7 @@ abstract final class QuillNativeBridge {
   ///
   /// See also [saveImage] to save the image on desktop and web platforms.
   @Category(['Gallery'])
-  static Future<void> saveImageToGallery(
+  Future<void> saveImageToGallery(
     Uint8List imageBytes, {
     required GalleryImageSaveOptions options,
   }) =>
@@ -199,7 +196,7 @@ abstract final class QuillNativeBridge {
   /// **which will be revoked before returning it**. Always `null` on non-web platforms.
   ///
   /// See also [saveImageToGallery] for platforms with a native gallery app.
-  static Future<ImageSaveResult> saveImage(
+  Future<ImageSaveResult> saveImage(
     Uint8List imageBytes, {
     required ImageSaveOptions options,
   }) =>

@@ -4,16 +4,11 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i4;
-import 'dart:typed_data' as _i6;
+import 'dart:typed_data' as _i5;
 
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:quill_native_bridge/quill_native_bridge.dart' as _i3;
 import 'package:quill_native_bridge_platform_interface/quill_native_bridge_platform_interface.dart'
-    as _i3;
-import 'package:quill_native_bridge_platform_interface/src/platform_feature.dart'
-    as _i5;
-import 'package:quill_native_bridge_platform_interface/src/types/image_save_options.dart'
-    as _i7;
-import 'package:quill_native_bridge_platform_interface/src/types/image_save_result.dart'
     as _i2;
 
 // ignore_for_file: type=lint
@@ -40,17 +35,16 @@ class _FakeImageSaveResult_0 extends _i1.SmartFake
         );
 }
 
-/// A class which mocks [QuillNativeBridgePlatform].
+/// A class which mocks [QuillNativeBridge].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockQuillNativeBridgePlatform extends _i1.Mock
-    implements _i3.QuillNativeBridgePlatform {
-  MockQuillNativeBridgePlatform() {
+class MockQuillNativeBridge extends _i1.Mock implements _i3.QuillNativeBridge {
+  MockQuillNativeBridge() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Future<bool> isSupported(_i5.QuillNativeBridgeFeature? feature) =>
+  _i4.Future<bool> isSupported(_i2.QuillNativeBridgeFeature? feature) =>
       (super.noSuchMethod(
         Invocation.method(
           #isSupported,
@@ -88,7 +82,7 @@ class MockQuillNativeBridgePlatform extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  _i4.Future<void> copyImageToClipboard(_i6.Uint8List? imageBytes) =>
+  _i4.Future<void> copyImageToClipboard(_i5.Uint8List? imageBytes) =>
       (super.noSuchMethod(
         Invocation.method(
           #copyImageToClipboard,
@@ -99,22 +93,22 @@ class MockQuillNativeBridgePlatform extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  _i4.Future<_i6.Uint8List?> getClipboardImage() => (super.noSuchMethod(
+  _i4.Future<_i5.Uint8List?> getClipboardImage() => (super.noSuchMethod(
         Invocation.method(
           #getClipboardImage,
           [],
         ),
-        returnValue: _i4.Future<_i6.Uint8List?>.value(),
-      ) as _i4.Future<_i6.Uint8List?>);
+        returnValue: _i4.Future<_i5.Uint8List?>.value(),
+      ) as _i4.Future<_i5.Uint8List?>);
 
   @override
-  _i4.Future<_i6.Uint8List?> getClipboardGif() => (super.noSuchMethod(
+  _i4.Future<_i5.Uint8List?> getClipboardGif() => (super.noSuchMethod(
         Invocation.method(
           #getClipboardGif,
           [],
         ),
-        returnValue: _i4.Future<_i6.Uint8List?>.value(),
-      ) as _i4.Future<_i6.Uint8List?>);
+        returnValue: _i4.Future<_i5.Uint8List?>.value(),
+      ) as _i4.Future<_i5.Uint8List?>);
 
   @override
   _i4.Future<List<String>> getClipboardFiles() => (super.noSuchMethod(
@@ -137,8 +131,8 @@ class MockQuillNativeBridgePlatform extends _i1.Mock
 
   @override
   _i4.Future<void> saveImageToGallery(
-    _i6.Uint8List? imageBytes, {
-    required _i7.GalleryImageSaveOptions? options,
+    _i5.Uint8List? imageBytes, {
+    required _i2.GalleryImageSaveOptions? options,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -152,8 +146,8 @@ class MockQuillNativeBridgePlatform extends _i1.Mock
 
   @override
   _i4.Future<_i2.ImageSaveResult> saveImage(
-    _i6.Uint8List? imageBytes, {
-    required _i7.ImageSaveOptions? options,
+    _i5.Uint8List? imageBytes, {
+    required _i2.ImageSaveOptions? options,
   }) =>
       (super.noSuchMethod(
         Invocation.method(

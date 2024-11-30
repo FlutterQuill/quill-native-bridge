@@ -15,6 +15,7 @@ class _MockQuillNativeBridgePlatform extends base_mock
     .MockQuillNativeBridgePlatform with MockPlatformInterfaceMixin {}
 
 void main() {
+  final plugin = QuillNativeBridge();
   late _MockQuillNativeBridgePlatform mockQuillNativeBridgePlatform;
 
   setUp(() {
@@ -32,7 +33,7 @@ void main() {
           when(mockQuillNativeBridgePlatform.isSupported(exampleFeature))
               .thenAnswer((_) async => isSupported);
 
-          final result = await QuillNativeBridge.isSupported(exampleFeature);
+          final result = await plugin.isSupported(exampleFeature);
           verify(mockQuillNativeBridgePlatform.isSupported(exampleFeature))
               .called(1);
           expect(result, isSupported);
@@ -47,7 +48,7 @@ void main() {
           when(mockQuillNativeBridgePlatform.isSupported(any))
               .thenAnswer((_) async => false);
 
-          await QuillNativeBridge.isSupported(feature);
+          await plugin.isSupported(feature);
           verify(mockQuillNativeBridgePlatform.isSupported(feature)).called(1);
         }
       },
@@ -59,7 +60,7 @@ void main() {
     for (final isSimulator in {true, false}) {
       when(mockQuillNativeBridgePlatform.isIOSSimulator())
           .thenAnswer((_) async => isSimulator);
-      final result = await QuillNativeBridge.isIOSSimulator();
+      final result = await plugin.isIOSSimulator();
       verify(mockQuillNativeBridgePlatform.isIOSSimulator()).called(1);
       expect(result, isSimulator);
     }
@@ -71,7 +72,7 @@ void main() {
     for (final html in {'<center></center>', '<html></html>'}) {
       when(mockQuillNativeBridgePlatform.getClipboardHtml())
           .thenAnswer((_) async => html);
-      final result = await QuillNativeBridge.getClipboardHtml();
+      final result = await plugin.getClipboardHtml();
       verify(mockQuillNativeBridgePlatform.getClipboardHtml()).called(1);
       expect(result, html);
     }
@@ -84,7 +85,7 @@ void main() {
       when(mockQuillNativeBridgePlatform.copyHtmlToClipboard(any))
           .thenAnswer((_) async {});
 
-      await QuillNativeBridge.copyHtmlToClipboard(exampleHtml);
+      await plugin.copyHtmlToClipboard(exampleHtml);
       verify(mockQuillNativeBridgePlatform.copyHtmlToClipboard(exampleHtml))
           .called(1);
     },
@@ -97,7 +98,7 @@ void main() {
       when(mockQuillNativeBridgePlatform.copyImageToClipboard(any))
           .thenAnswer((_) async {});
 
-      await QuillNativeBridge.copyImageToClipboard(imageBytes);
+      await plugin.copyImageToClipboard(imageBytes);
       verify(mockQuillNativeBridgePlatform.copyImageToClipboard(imageBytes))
           .called(1);
     },
@@ -109,7 +110,7 @@ void main() {
     final imageBytes = Uint8List.fromList([1, 0, 1]);
     when(mockQuillNativeBridgePlatform.getClipboardImage())
         .thenAnswer((_) async => imageBytes);
-    final result = await QuillNativeBridge.getClipboardImage();
+    final result = await plugin.getClipboardImage();
     verify(mockQuillNativeBridgePlatform.getClipboardImage()).called(1);
     expect(result, imageBytes);
   });
@@ -119,7 +120,7 @@ void main() {
     final imageBytes = Uint8List.fromList([1, 0, 1]);
     when(mockQuillNativeBridgePlatform.getClipboardGif())
         .thenAnswer((_) async => imageBytes);
-    final result = await QuillNativeBridge.getClipboardGif();
+    final result = await plugin.getClipboardGif();
     verify(mockQuillNativeBridgePlatform.getClipboardGif()).called(1);
     expect(result, imageBytes);
   });
@@ -130,7 +131,7 @@ void main() {
     final clipboardFiles = ['/path/to/file', '/foo/bar'];
     when(mockQuillNativeBridgePlatform.getClipboardFiles())
         .thenAnswer((_) async => clipboardFiles);
-    final result = await QuillNativeBridge.getClipboardFiles();
+    final result = await plugin.getClipboardFiles();
     verify(mockQuillNativeBridgePlatform.getClipboardFiles()).called(1);
     expect(result, clipboardFiles);
   });
@@ -141,7 +142,7 @@ void main() {
       when(mockQuillNativeBridgePlatform.openGalleryApp())
           .thenAnswer((_) async {});
 
-      await QuillNativeBridge.openGalleryApp();
+      await plugin.openGalleryApp();
       verify(mockQuillNativeBridgePlatform.openGalleryApp()).called(1);
     },
   );
@@ -157,7 +158,7 @@ void main() {
             options: anyNamed('options'),
           )).thenAnswer((_) async {});
 
-          await QuillNativeBridge.saveImageToGallery(
+          await plugin.saveImageToGallery(
             Uint8List.fromList([0, 1, 0]),
             options: const GalleryImageSaveOptions(
               name: 'ExampleImage',
@@ -182,7 +183,7 @@ void main() {
           options: anyNamed('options'),
         )).thenAnswer((_) async {});
 
-        await QuillNativeBridge.saveImageToGallery(
+        await plugin.saveImageToGallery(
           imageBytes,
           options: options,
         );
@@ -209,7 +210,7 @@ void main() {
             options: anyNamed('options'),
           )).thenAnswer((_) async => ImageSaveResult.io(filePath: null));
 
-          await QuillNativeBridge.saveImage(Uint8List.fromList([0, 1, 0]),
+          await plugin.saveImage(Uint8List.fromList([0, 1, 0]),
               options: const ImageSaveOptions(
                   name: 'ExampleImage', fileExtension: 'jpg'));
           verify(mockQuillNativeBridgePlatform.saveImage(
@@ -230,7 +231,7 @@ void main() {
           options: anyNamed('options'),
         )).thenAnswer((_) async => ImageSaveResult.io(filePath: null));
 
-        await QuillNativeBridge.saveImage(
+        await plugin.saveImage(
           imageBytes,
           options: options,
         );

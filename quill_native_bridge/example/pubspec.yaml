@@ -40,10 +40,6 @@ dev_dependencies:
   mockito: ^5.4.4
   build_runner: ^2.4.13
 
-  # TODO: Fix this issue, this is a workaround and needed only for tests since all methods in QuillNativeBridge are static. See test/example_test.dart
-  quill_native_bridge_platform_interface: ^0.0.1-dev.5
-  plugin_platform_interface: ^2.1.8
-
 flutter:
   uses-material-design: true
   assets:

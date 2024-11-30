@@ -6,6 +6,9 @@ import 'album_name_input_dialog.dart';
 import 'assets.dart';
 import 'select_image_dialog.dart';
 
+/// Creates a global instance of [QuillNativeBridge], allowing it to be overridden in tests.
+QuillNativeBridge quillNativeBridge = QuillNativeBridge();
+
 void main() => runApp(const MainApp());
 
 class MainApp extends StatelessWidget {
@@ -130,7 +133,7 @@ Future<void> _onButtonPressed(
 }) async {
   final scaffoldMessenger = ScaffoldMessenger.of(context);
 
-  final isFeatureUnsupported = !(await QuillNativeBridge.isSupported(feature));
+  final isFeatureUnsupported = !(await quillNativeBridge.isSupported(feature));
 
   switch (feature) {
     case QuillNativeBridgeFeature.isIOSSimulator:
@@ -142,7 +145,7 @@ Future<void> _onButtonPressed(
         );
         return;
       }
-      final result = await QuillNativeBridge.isIOSSimulator();
+      final result = await quillNativeBridge.isIOSSimulator();
       scaffoldMessenger.showText(result
           ? "You're running the app on iOS simulator."
           : "You're running the app on a real iOS device.");
@@ -156,7 +159,7 @@ Future<void> _onButtonPressed(
         );
         return;
       }
-      final result = await QuillNativeBridge.getClipboardHtml();
+      final result = await quillNativeBridge.getClipboardHtml();
       if (result == null) {
         scaffoldMessenger
             .showText('The HTML is not available on the clipboard.');
@@ -181,7 +184,7 @@ Future<void> _onButtonPressed(
           <span style="color:red;">Red text</span>
           <span style="background-color:yellow;">Highlighted text</span>
         ''';
-      await QuillNativeBridge.copyHtmlToClipboard(html);
+      await quillNativeBridge.copyHtmlToClipboard(html);
       scaffoldMessenger.showText('HTML copied to the clipboard: $html');
       break;
     case QuillNativeBridgeFeature.copyImageToClipboard:
@@ -194,7 +197,7 @@ Future<void> _onButtonPressed(
         return;
       }
       final imageBytes = await loadAssetFile(kFlutterQuillAssetImage);
-      await QuillNativeBridge.copyImageToClipboard(imageBytes);
+      await quillNativeBridge.copyImageToClipboard(imageBytes);
 
       // Not widely supported but some apps copy the image as text:
       // final file = File(
@@ -220,7 +223,7 @@ Future<void> _onButtonPressed(
         );
         return;
       }
-      final imageBytes = await QuillNativeBridge.getClipboardImage();
+      final imageBytes = await quillNativeBridge.getClipboardImage();
       if (imageBytes == null) {
         scaffoldMessenger
             .showText('The image is not available on the clipboard.');
@@ -245,7 +248,7 @@ Future<void> _onButtonPressed(
         );
         return;
       }
-      final gifBytes = await QuillNativeBridge.getClipboardGif();
+      final gifBytes = await quillNativeBridge.getClipboardGif();
       if (gifBytes == null) {
         scaffoldMessenger.showText(
           'The gif is not available on the clipboard.',
@@ -271,7 +274,7 @@ Future<void> _onButtonPressed(
         );
         return;
       }
-      final files = await QuillNativeBridge.getClipboardFiles();
+      final files = await quillNativeBridge.getClipboardFiles();
       if (files.isEmpty) {
         scaffoldMessenger.showText('There are no files on the clipboard.');
         return;
@@ -290,7 +293,7 @@ Future<void> _onButtonPressed(
         );
         return;
       }
-      await QuillNativeBridge.openGalleryApp();
+      await quillNativeBridge.openGalleryApp();
       break;
     case QuillNativeBridgeFeature.saveImageToGallery:
       if (isFeatureUnsupported) {
@@ -318,7 +321,7 @@ Future<void> _onButtonPressed(
         return;
       }
 
-      await QuillNativeBridge.saveImageToGallery(
+      await quillNativeBridge.saveImageToGallery(
         imageBytes,
         options: GalleryImageSaveOptions(
           name: selectedImage.description,
@@ -329,8 +332,8 @@ Future<void> _onButtonPressed(
       );
       scaffoldMessenger.showText(
         'The image has been saved to the gallery.',
-        action: const SnackBarAction(
-            label: 'Open Gallery', onPressed: QuillNativeBridge.openGalleryApp),
+        action: SnackBarAction(
+            label: 'Open Gallery', onPressed: quillNativeBridge.openGalleryApp),
       );
       break;
     case QuillNativeBridgeFeature.saveImage:
@@ -352,7 +355,7 @@ Future<void> _onButtonPressed(
       }
       final imageBytes = await loadAssetFile(selectedImage.assetPath);
 
-      final imagePath = (await QuillNativeBridge.saveImage(
+      final imagePath = (await quillNativeBridge.saveImage(
         imageBytes,
         options: ImageSaveOptions(
           name: selectedImage.description,
