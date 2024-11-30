@@ -5,10 +5,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
-import dev.flutterquill.quill_native_bridge.clipboard.ClipboardReadImageHandler.ImageType.AnyExceptGif
-import dev.flutterquill.quill_native_bridge.clipboard.ClipboardReadImageHandler.ImageType.Gif
-import dev.flutterquill.quill_native_bridge.clipboard.ClipboardReadImageHandler.ImageType.Jpeg
-import dev.flutterquill.quill_native_bridge.clipboard.ClipboardReadImageHandler.ImageType.Png
 import dev.flutterquill.quill_native_bridge.generated.FlutterError
 import dev.flutterquill.quill_native_bridge.util.ImageDecoderCompat
 import java.io.ByteArrayOutputStream
@@ -156,7 +152,6 @@ object ClipboardReadImageHandler {
                 )
             }
         }
-        // TODO: Remove redundant qualifier name in this file
         val imageBytes = when (imageType) {
             ImageType.Png, ImageType.Jpeg,
             ImageType.AnyExceptGif -> getClipboardImageAsPng(context, imageUri)
