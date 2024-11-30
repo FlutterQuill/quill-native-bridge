@@ -123,7 +123,6 @@ class QuillNativeBridgeImpl: QuillNativeBridgeApi {
             }
         } else {
             // For iOS 13 and previous versions
-            
             let currentStatus = PHPhotoLibrary.authorizationStatus()
             
             guard !isAccessBlocked(status: currentStatus) else {

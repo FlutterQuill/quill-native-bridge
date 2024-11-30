@@ -78,7 +78,7 @@ class QuillNativeBridgeImpl: QuillNativeBridgeApi  {
         return true
     }
     
-    func saveImageToGallery(imageBytes: FlutterStandardTypedData, name: String, extension: String, albumName: String?, completion: @escaping (Result<Void, any Error>) -> Void) {
+    func saveImageToGallery(imageBytes: FlutterStandardTypedData, name: String, albumName: String?, completion: @escaping (Result<Void, any Error>) -> Void) {
         guard NSImage(data: imageBytes.data) != nil else {
             completion(.failure(PigeonError(code: "INVALID_IMAGE", message: "Unable to create NSImage from image bytes.", details: nil)))
             return
@@ -157,7 +157,7 @@ class QuillNativeBridgeImpl: QuillNativeBridgeApi  {
                     }
                 }
             }
-                        
+            
             do {
                 try await PHPhotoLibrary.shared().performChanges({
                     let assetRequest = PHAssetCreationRequest.forAsset()
@@ -195,7 +195,7 @@ class QuillNativeBridgeImpl: QuillNativeBridgeApi  {
         }
     }
     
-    func saveImage(imageBytes: FlutterStandardTypedData, name: String, extension: String, completion: @escaping (Result<String?, any Error>) -> Void) {
+    func saveImage(imageBytes: FlutterStandardTypedData, name: String, fileExtension: String, completion: @escaping (Result<String?, any Error>) -> Void) {
         guard let picturesDirectory = FileManager.default.urls(for: .picturesDirectory, in: .userDomainMask).first else {
             completion(.failure(PigeonError(
                 code: "DIRECTORY_NOT_FOUND",
@@ -207,13 +207,13 @@ class QuillNativeBridgeImpl: QuillNativeBridgeApi  {
         
         // TODO(save-image) The entitlement com.apple.security.files.user-selected.read-write is required, check if set to avoid crash
         let savePanel = NSSavePanel()
-        savePanel.nameFieldStringValue = "\(name).\(`extension`)"
+        savePanel.nameFieldStringValue = "\(name).\(fileExtension)"
         savePanel.directoryURL = picturesDirectory
         
         if #available(macOS 11.0, *) {
             savePanel.allowedContentTypes = [.image]
         } else {
-            savePanel.allowedFileTypes = [`extension`]
+            savePanel.allowedFileTypes = [fileExtension]
         }
         
         savePanel.begin { result in
