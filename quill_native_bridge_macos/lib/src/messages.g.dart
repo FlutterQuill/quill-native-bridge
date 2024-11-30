@@ -293,10 +293,11 @@ class QuillNativeBridgeApi {
     }
   }
 
+  /// The [fileExtension] is only required for macOS versions before 11.0.
   Future<String?> saveImage(
     Uint8List imageBytes, {
     required String name,
-    required String extension,
+    required String fileExtension,
   }) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.quill_native_bridge_macos.QuillNativeBridgeApi.saveImage$pigeonVar_messageChannelSuffix';
@@ -307,7 +308,7 @@ class QuillNativeBridgeApi {
       binaryMessenger: pigeonVar_binaryMessenger,
     );
     final List<Object?>? pigeonVar_replyList = await pigeonVar_channel
-        .send(<Object?>[imageBytes, name, extension]) as List<Object?>?;
+        .send(<Object?>[imageBytes, name, fileExtension]) as List<Object?>?;
     if (pigeonVar_replyList == null) {
       throw _createConnectionError(pigeonVar_channelName);
     } else if (pigeonVar_replyList.length > 1) {

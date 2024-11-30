@@ -11,7 +11,7 @@ import 'test_api.g.dart';
 import 'quill_native_bridge_macos_test.mocks.dart';
 
 void main() {
-  // Required when calling TestQuillNativeBridgeApi.setUp(mockApi)
+  // Required when calling TestQuillNativeBridgeApi.setUp()
   TestWidgetsFlutterBinding.ensureInitialized();
 
   late QuillNativeBridgeMacOS plugin;
@@ -31,7 +31,7 @@ void main() {
     when(mockHostApi.saveImage(
       any,
       name: anyNamed('name'),
-      extension: anyNamed('extension'),
+      fileExtension: anyNamed('fileExtension'),
     )).thenAnswer((_) async => null);
   });
 
@@ -169,12 +169,12 @@ void main() {
       test(
         'delegates to _hostApi.saveImageToGallery',
         () async {
-          await plugin.saveImageToGallery(
-            Uint8List.fromList([1, 0, 1]),
-            name: 'ExampleImage',
-            extension: 'png',
-            albumName: null,
-          );
+          await plugin.saveImageToGallery(Uint8List.fromList([1, 0, 1]),
+              options: GalleryImageSaveOptions(
+                name: 'ExampleImage',
+                fileExtension: 'png',
+                albumName: null,
+              ));
           verify(mockHostApi.saveImageToGallery(
             any,
             name: anyNamed('name'),
@@ -197,7 +197,11 @@ void main() {
           )).thenAnswer((_) async => null);
 
           await plugin.saveImageToGallery(imageBytes,
-              name: imageName, extension: 'png', albumName: imageAlbumName);
+              options: GalleryImageSaveOptions(
+                name: imageName,
+                fileExtension: 'png',
+                albumName: imageAlbumName,
+              ));
 
           final capturedOptions = verify(mockHostApi.saveImageToGallery(
             captureAny,
@@ -215,27 +219,26 @@ void main() {
         'passes the arguments correctly to the platform host API',
         () async {
           final imageBytes = Uint8List.fromList([1, 0, 1]);
-          final imageName = 'ExampleImage';
-          final imageExtension = 'png';
+          final options =
+              ImageSaveOptions(name: 'ExampleImage', fileExtension: 'png');
 
           when(mockHostApi.saveImage(
             imageBytes,
             name: anyNamed('name'),
-            extension: anyNamed('extension'),
+            fileExtension: anyNamed('fileExtension'),
           )).thenAnswer((_) async => null);
 
-          await plugin.saveImage(imageBytes,
-              name: imageName, extension: imageExtension);
+          await plugin.saveImage(imageBytes, options: options);
 
           final capturedOptions = verify(mockHostApi.saveImage(
             captureAny,
             name: captureAnyNamed('name'),
-            extension: captureAnyNamed('extension'),
+            fileExtension: captureAnyNamed('fileExtension'),
           )).captured;
 
           expect(capturedOptions[0] as Uint8List, imageBytes);
-          expect(capturedOptions[1] as String, imageName);
-          expect(capturedOptions[2] as String, imageExtension);
+          expect(capturedOptions[1] as String, options.name);
+          expect(capturedOptions[2] as String, options.fileExtension);
         },
       );
 
@@ -248,12 +251,12 @@ void main() {
             albumName: anyNamed('albumName'),
           )).thenThrow(PlatformException(code: 'UNSUPPORTED'));
           expect(
-            plugin.saveImageToGallery(
-              Uint8List.fromList([1, 0, 1]),
-              name: 'ExampleImage',
-              extension: 'png',
-              albumName: null,
-            ),
+            plugin.saveImageToGallery(Uint8List.fromList([1, 0, 1]),
+                options: GalleryImageSaveOptions(
+                  name: 'ExampleImage',
+                  fileExtension: 'png',
+                  albumName: null,
+                )),
             throwsUnsupportedError,
           );
         },
@@ -270,12 +273,12 @@ void main() {
               albumName: anyNamed('albumName'),
             )).thenThrow(PlatformException(code: errorCode));
             expect(
-              plugin.saveImageToGallery(
-                Uint8List.fromList([1, 0, 1]),
-                name: 'ExampleImage',
-                extension: 'png',
-                albumName: null,
-              ),
+              plugin.saveImageToGallery(Uint8List.fromList([1, 0, 1]),
+                  options: GalleryImageSaveOptions(
+                    name: 'ExampleImage',
+                    fileExtension: 'png',
+                    albumName: null,
+                  )),
               throwsA(isA<StateError>().having(
                 (e) => e.message,
                 'message',
@@ -312,9 +315,8 @@ void main() {
         expect(
           plugin.saveImageToGallery(
             Uint8List.fromList([1, 0, 1]),
-            name: 'ExampleImage',
-            extension: 'png',
-            albumName: null,
+            options: GalleryImageSaveOptions(
+                name: 'ExampleImage', fileExtension: 'png', albumName: null),
           ),
           throwsA(isA<PlatformException>()
               .having((e) => e.code, 'code', errorCode)),
@@ -328,9 +330,11 @@ void main() {
         await expectLater(
           plugin.saveImageToGallery(
             Uint8List.fromList([1, 0, 1]),
-            name: 'ExampleImage',
-            extension: 'png',
-            albumName: null,
+            options: GalleryImageSaveOptions(
+              name: 'ExampleImage',
+              fileExtension: 'png',
+              albumName: null,
+            ),
           ),
           completes,
         );
@@ -340,16 +344,42 @@ void main() {
     test(
       'saveImage delegates to _hostApi.saveImage',
       () async {
-        await plugin.saveImage(
-          Uint8List.fromList([1, 0, 1]),
-          name: 'ExampleImage',
-          extension: 'png',
-        );
+        await plugin.saveImage(Uint8List.fromList([1, 0, 1]),
+            options: ImageSaveOptions(
+              name: 'ExampleImage',
+              fileExtension: 'png',
+            ));
         verify(mockHostApi.saveImage(
           any,
           name: anyNamed('name'),
-          extension: anyNamed('extension'),
+          fileExtension: anyNamed('fileExtension'),
         )).called(1);
+      },
+    );
+
+    test(
+      'saveImage always passes null to blob URL on non-web platforms',
+      () async {
+        final result = await plugin.saveImage(Uint8List.fromList([1, 0, 1]),
+            options: ImageSaveOptions(
+              name: 'ExampleImage',
+              fileExtension: 'png',
+            ));
+        expect(result.blobUrl, isNull);
+
+        final examplePath = 'path/to/file';
+        when(mockHostApi.saveImage(
+          any,
+          name: anyNamed('name'),
+          fileExtension: anyNamed('fileExtension'),
+        )).thenAnswer((_) async => examplePath);
+        final result2 = await plugin.saveImage(Uint8List.fromList([1, 0, 1]),
+            options: ImageSaveOptions(
+              name: 'ExampleImage',
+              fileExtension: 'png',
+            ));
+        expect(result2.blobUrl, isNull);
+        expect(result2.filePath, examplePath);
       },
     );
   });

@@ -191,33 +191,31 @@ class QuillNativeBridgeWindows extends QuillNativeBridgePlatform {
   static ImageSaver imageSaver = ImageSaver();
 
   @override
-  Future<String?> saveImage(
+  Future<ImageSaveResult> saveImage(
     Uint8List imageBytes, {
-    required String name,
-    required String extension,
+    required ImageSaveOptions options,
   }) async {
     final typeGroup = XTypeGroup(
       label: 'Images',
       // Only `extensions` is supported on Windows. See https://pub.dev/packages/file_selector#filtering-by-file-types
-      extensions: [extension],
-      mimeTypes: ['image/${extension}'],
+      extensions: [options.fileExtension],
     );
 
     final saveLocation = await imageSaver.fileSelector.getSaveLocation(
       options: SaveDialogOptions(
-        suggestedName: '${name}.${extension}',
+        suggestedName: '${options.name}.${options.fileExtension}',
         initialDirectory: imageSaver.picturesDirectoryPath,
       ),
       acceptedTypeGroups: [typeGroup],
     );
     final imageFilePath = saveLocation?.path;
     if (imageFilePath == null) {
-      return null;
+      return ImageSaveResult.io(filePath: null);
     }
     final imageFile = File(imageFilePath);
     await imageFile.writeAsBytes(imageBytes);
 
-    return imageFile.path;
+    return ImageSaveResult.io(filePath: imageFile.path);
   }
 
   @override

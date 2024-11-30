@@ -61,7 +61,8 @@ interface QuillNativeBridgeApi {
   fun copyImageToClipboard(imageBytes: ByteArray)
   fun getClipboardGif(): ByteArray?
   fun openGalleryApp()
-  fun saveImageToGallery(imageBytes: ByteArray, name: String, extension: String, albumName: String?, callback: (Result<Unit>) -> Unit)
+  /** The [fileExtension] is only required for Android APIs before 29. */
+  fun saveImageToGallery(imageBytes: ByteArray, name: String, fileExtension: String, mimeType: String, albumName: String?, callback: (Result<Unit>) -> Unit)
 
   companion object {
     /** The codec used by QuillNativeBridgeApi. */
@@ -176,9 +177,10 @@ interface QuillNativeBridgeApi {
             val args = message as List<Any?>
             val imageBytesArg = args[0] as ByteArray
             val nameArg = args[1] as String
-            val extensionArg = args[2] as String
-            val albumNameArg = args[3] as String?
-            api.saveImageToGallery(imageBytesArg, nameArg, extensionArg, albumNameArg) { result: Result<Unit> ->
+            val fileExtensionArg = args[2] as String
+            val mimeTypeArg = args[3] as String
+            val albumNameArg = args[4] as String?
+            api.saveImageToGallery(imageBytesArg, nameArg, fileExtensionArg, mimeTypeArg, albumNameArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(wrapError(error))

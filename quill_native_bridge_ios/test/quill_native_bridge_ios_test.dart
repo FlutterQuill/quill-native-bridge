@@ -11,7 +11,7 @@ import 'test_api.g.dart';
 import 'quill_native_bridge_ios_test.mocks.dart';
 
 void main() {
-  // Required when calling TestQuillNativeBridgeApi.setUp(mockApi)
+  // Required when calling TestQuillNativeBridgeApi.setUp()
   TestWidgetsFlutterBinding.ensureInitialized();
 
   late QuillNativeBridgeIos plugin;
@@ -141,9 +141,11 @@ void main() {
         () async {
           await plugin.saveImageToGallery(
             Uint8List.fromList([1, 0, 1]),
-            name: 'ExampleImage',
-            extension: 'png',
-            albumName: null,
+            options: GalleryImageSaveOptions(
+              name: 'ExampleImage',
+              fileExtension: 'png',
+              albumName: null,
+            ),
           );
           verify(mockHostApi.saveImageToGallery(
             any,
@@ -167,7 +169,11 @@ void main() {
           )).thenAnswer((_) async => null);
 
           await plugin.saveImageToGallery(imageBytes,
-              name: imageName, extension: 'png', albumName: imageAlbumName);
+              options: GalleryImageSaveOptions(
+                name: imageName,
+                fileExtension: 'png',
+                albumName: imageAlbumName,
+              ));
 
           final capturedOptions = verify(mockHostApi.saveImageToGallery(
             captureAny,
@@ -192,12 +198,12 @@ void main() {
               albumName: anyNamed('albumName'),
             )).thenThrow(PlatformException(code: errorCode));
             expect(
-              plugin.saveImageToGallery(
-                Uint8List.fromList([1, 0, 1]),
-                name: 'ExampleImage',
-                extension: 'png',
-                albumName: null,
-              ),
+              plugin.saveImageToGallery(Uint8List.fromList([1, 0, 1]),
+                  options: GalleryImageSaveOptions(
+                    name: 'ExampleImage',
+                    fileExtension: 'png',
+                    albumName: null,
+                  )),
               throwsA(isA<StateError>().having(
                 (e) => e.message,
                 'message',
@@ -229,9 +235,11 @@ void main() {
         expect(
           plugin.saveImageToGallery(
             Uint8List.fromList([1, 0, 1]),
-            name: 'ExampleImage',
-            extension: 'png',
-            albumName: null,
+            options: GalleryImageSaveOptions(
+              name: 'ExampleImage',
+              fileExtension: 'png',
+              albumName: null,
+            ),
           ),
           throwsA(isA<PlatformException>()
               .having((e) => e.code, 'code', errorCode)),
@@ -243,12 +251,12 @@ void main() {
           albumName: anyNamed('albumName'),
         )).thenAnswer((_) async {});
         await expectLater(
-          plugin.saveImageToGallery(
-            Uint8List.fromList([1, 0, 1]),
-            name: 'ExampleImage',
-            extension: 'png',
-            albumName: null,
-          ),
+          plugin.saveImageToGallery(Uint8List.fromList([1, 0, 1]),
+              options: GalleryImageSaveOptions(
+                name: 'ExampleImage',
+                fileExtension: 'png',
+                albumName: null,
+              )),
           completes,
         );
       });

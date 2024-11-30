@@ -53,13 +53,11 @@ class QuillNativeBridgeIos extends QuillNativeBridgePlatform {
   @override
   Future<void> saveImageToGallery(
     Uint8List imageBytes, {
-    required String name,
-    required String extension,
-    required String? albumName,
+    required GalleryImageSaveOptions options,
   }) async {
     try {
       await _hostApi.saveImageToGallery(imageBytes,
-          name: name, albumName: albumName);
+          name: options.name, albumName: options.albumName);
     } on PlatformException catch (e) {
       assert(() {
         if (e.code == 'IOS_INFO_PLIST_NOT_CONFIGURED') {

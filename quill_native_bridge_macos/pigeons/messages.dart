@@ -33,10 +33,11 @@ abstract class QuillNativeBridgeApi {
     required String? albumName,
   });
 
+  /// The [fileExtension] is only required for macOS versions before 11.0.
   @async
   String? saveImage(
     Uint8List imageBytes, {
     required String name,
-    required String extension,
+    required String fileExtension,
   });
 }

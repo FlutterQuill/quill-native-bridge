@@ -206,10 +206,12 @@ class QuillNativeBridgeApi {
     }
   }
 
+  /// The [fileExtension] is only required for Android APIs before 29.
   Future<void> saveImageToGallery(
     Uint8List imageBytes, {
     required String name,
-    required String extension,
+    required String fileExtension,
+    required String mimeType,
     required String? albumName,
   }) async {
     final String pigeonVar_channelName =
@@ -220,8 +222,8 @@ class QuillNativeBridgeApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final List<Object?>? pigeonVar_replyList = await pigeonVar_channel
-            .send(<Object?>[imageBytes, name, extension, albumName])
+    final List<Object?>? pigeonVar_replyList = await pigeonVar_channel.send(
+            <Object?>[imageBytes, name, fileExtension, mimeType, albumName])
         as List<Object?>?;
     if (pigeonVar_replyList == null) {
       throw _createConnectionError(pigeonVar_channelName);

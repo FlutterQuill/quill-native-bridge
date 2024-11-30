@@ -33,7 +33,8 @@ void main() {
   });
 
   group('$ImageSaver', () {
-    late File imageFile;
+    // A file that always exists during tests
+    late File imageTestFile;
     late MockEnvironmentProvider mockEnvironmentProvider;
     late MockFileSelectorPlatform mockFileSelectorPlatform;
     late ImageSaver imageSaver;
@@ -49,9 +50,9 @@ void main() {
       mockEnvironmentProvider = MockEnvironmentProvider();
       EnvironmentProvider.instance = mockEnvironmentProvider;
 
-      imageFile = File(
+      imageTestFile = File(
           '${Directory.systemTemp.path}/tempImageTest_${DateTime.now().millisecondsSinceEpoch}.png');
-      await imageFile.create();
+      await imageTestFile.create();
 
       when(mockFileSelectorPlatform.getSaveLocation(
         acceptedTypeGroups: anyNamed('acceptedTypeGroups'),
@@ -61,7 +62,7 @@ void main() {
     });
 
     tearDown(() async {
-      await imageFile.delete();
+      await imageTestFile.delete();
     });
 
     test(
@@ -76,13 +77,16 @@ void main() {
     });
 
     test(
-      'saveImage should return null if user cancels the save dialog',
+      'saveImage should return null for the file path if user cancels the save dialog',
       () async {
-        final result = await plugin.saveImage(
+        final result = (await plugin.saveImage(
           Uint8List.fromList([1, 0, 1]),
-          name: 'ExampleImage',
-          extension: 'png',
-        );
+          options: ImageSaveOptions(
+            name: 'ExampleImage',
+            fileExtension: 'png',
+          ),
+        ))
+            .filePath;
         expect(result, isNull);
       },
     );
@@ -155,40 +159,45 @@ void main() {
     );
 
     test(
-      'saveImage should return path if save is successful',
+      'saveImage should return file path if save is successful',
       () async {
-        final saveLocation = FileSaveLocation(imageFile.path);
+        final saveLocation = FileSaveLocation(imageTestFile.path);
 
         when(mockFileSelectorPlatform.getSaveLocation(
           acceptedTypeGroups: anyNamed('acceptedTypeGroups'),
           options: anyNamed('options'),
         )).thenAnswer((_) async => saveLocation);
 
-        final result = await plugin.saveImage(
+        final filePath = (await plugin.saveImage(
           Uint8List.fromList([1, 0, 1]),
-          name: 'ExampleImage',
-          extension: 'png',
-        );
+          options: ImageSaveOptions(
+            name: 'ExampleImage',
+            fileExtension: 'png',
+          ),
+        ))
+            .filePath;
 
-        expect(result, equals(saveLocation.path));
+        expect(filePath, equals(saveLocation.path));
       },
     );
     test(
       'saveImage passes the arguments correctly to fileSelector.getSaveLocation',
       () async {
         final imageBytes = Uint8List.fromList([1, 0, 1]);
-        final imageName = 'ExampleImage';
-        final imageExtension = 'png';
+        final options = ImageSaveOptions(
+          name: 'ExampleImage',
+          fileExtension: 'jpg',
+        );
 
         when(mockFileSelectorPlatform.getSaveLocation(
           acceptedTypeGroups: anyNamed('acceptedTypeGroups'),
           options: anyNamed('options'),
-        )).thenAnswer((invocation) async => FileSaveLocation(imageFile.path));
+        )).thenAnswer(
+            (invocation) async => FileSaveLocation(imageTestFile.path));
 
         await plugin.saveImage(
           imageBytes,
-          name: imageName,
-          extension: imageExtension,
+          options: options,
         );
 
         final capturedOptions = verify(mockFileSelectorPlatform.getSaveLocation(
@@ -201,22 +210,27 @@ void main() {
         List<XTypeGroup> passedAcceptedTypeGroups =
             capturedOptions[1] as List<XTypeGroup>;
 
-        expect(passedOptions.suggestedName, '${imageName}.${imageExtension}');
+        expect(passedOptions.suggestedName,
+            '${options.name}.${options.fileExtension}');
         expect(
             passedOptions.initialDirectory, imageSaver.picturesDirectoryPath);
         expect(passedAcceptedTypeGroups.map((e) => e.toJSON()), [
           XTypeGroup(
             label: 'Images',
-            extensions: [imageExtension],
-            mimeTypes: ['image/${imageExtension}'],
+            extensions: [options.fileExtension],
           ).toJSON()
         ]);
       },
     );
 
     test('saveImage calls fileSelector.getSaveLocation only once', () async {
-      await plugin.saveImage(Uint8List.fromList([1, 0, 1]),
-          name: 'ExampleImage', extension: 'png');
+      await plugin.saveImage(
+        Uint8List.fromList([1, 0, 1]),
+        options: ImageSaveOptions(
+          name: 'ExampleImage',
+          fileExtension: 'png',
+        ),
+      );
       verify(mockFileSelectorPlatform.getSaveLocation(
         acceptedTypeGroups: anyNamed('acceptedTypeGroups'),
         options: anyNamed('options'),
@@ -224,18 +238,21 @@ void main() {
     });
 
     test(
-      'saveImage returns null when $FileSaveLocation from fileSelector.getSaveLocation is null',
+      'saveImage returns null for the file path when $FileSaveLocation from fileSelector.getSaveLocation is null',
       () async {
         when(mockFileSelectorPlatform.getSaveLocation(
           acceptedTypeGroups: anyNamed('acceptedTypeGroups'),
           options: anyNamed('options'),
         )).thenAnswer((_) async => null);
 
-        final imageFilePath = await plugin.saveImage(
+        final imageFilePath = (await plugin.saveImage(
           Uint8List.fromList([1, 0, 1]),
-          name: 'ExampleImage',
-          extension: 'png',
-        );
+          options: ImageSaveOptions(
+            name: 'ExampleImage',
+            fileExtension: 'png',
+          ),
+        ))
+            .filePath;
 
         expect(imageFilePath, isNull);
       },
@@ -247,24 +264,56 @@ void main() {
         when(mockFileSelectorPlatform.getSaveLocation(
           acceptedTypeGroups: anyNamed('acceptedTypeGroups'),
           options: anyNamed('options'),
-        )).thenAnswer((_) async => FileSaveLocation(imageFile.path));
+        )).thenAnswer((_) async => FileSaveLocation(imageTestFile.path));
 
         final imageBytes = Uint8List.fromList([1, 0, 1]);
 
-        expect(imageFile.existsSync(), isTrue,
-            reason: 'The $setUp should create the file');
+        expect(imageTestFile.existsSync(), isTrue,
+            reason: 'The $setUp should create the test file');
 
-        final result = await plugin.saveImage(
+        final filePath = (await plugin.saveImage(
           imageBytes,
-          name: 'ExampleImage',
-          extension: 'png',
-        );
-        if (result == null) {
+          options: ImageSaveOptions(
+            name: 'ExampleImage',
+            fileExtension: 'png',
+          ),
+        ))
+            .filePath;
+        if (filePath == null) {
           fail('Expected the operation to succeed.');
         }
 
-        expect(imageFile.readAsBytesSync(), imageBytes);
-        expect(File(result).readAsBytesSync(), imageBytes);
+        expect(imageTestFile.readAsBytesSync(), imageBytes);
+        expect(File(filePath).readAsBytesSync(), imageBytes);
+      },
+    );
+
+    test(
+      'saveImage always passes null to blob URL on non-web platforms',
+      () async {
+        when(mockFileSelectorPlatform.getSaveLocation(
+          acceptedTypeGroups: anyNamed('acceptedTypeGroups'),
+          options: anyNamed('acceptedTypeGroups'),
+        )).thenAnswer((_) async => null);
+        final result = await plugin.saveImage(Uint8List.fromList([1, 0, 1]),
+            options: ImageSaveOptions(
+              name: 'ExampleImage',
+              fileExtension: 'png',
+            ));
+        expect(result.blobUrl, isNull);
+
+        when(mockFileSelectorPlatform.getSaveLocation(
+          acceptedTypeGroups: anyNamed('acceptedTypeGroups'),
+          options: anyNamed('options'),
+        )).thenAnswer((_) async => FileSaveLocation(imageTestFile.path));
+
+        final result2 = await plugin.saveImage(Uint8List.fromList([1, 0, 1]),
+            options: ImageSaveOptions(
+              name: 'ExampleImage',
+              fileExtension: 'png',
+            ));
+        expect(result2.blobUrl, isNull);
+        expect(result2.filePath, imageTestFile.path);
       },
     );
   });

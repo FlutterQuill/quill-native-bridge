@@ -100,7 +100,7 @@ class MockTestQuillNativeBridgeApi extends _i1.Mock
   _i4.Future<String?> saveImage(
     _i3.Uint8List? imageBytes, {
     required String? name,
-    required String? extension,
+    required String? fileExtension,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -108,7 +108,7 @@ class MockTestQuillNativeBridgeApi extends _i1.Mock
           [imageBytes],
           {
             #name: name,
-            #extension: extension,
+            #fileExtension: fileExtension,
           },
         ),
         returnValue: _i4.Future<String?>.value(),

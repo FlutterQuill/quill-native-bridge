@@ -97,7 +97,8 @@ protocol QuillNativeBridgeApi {
   /// Supports macOS 10.15 and later
   func supportsGallerySave() throws -> Bool
   func saveImageToGallery(imageBytes: FlutterStandardTypedData, name: String, albumName: String?, completion: @escaping (Result<Void, Error>) -> Void)
-  func saveImage(imageBytes: FlutterStandardTypedData, name: String, extension: String, completion: @escaping (Result<String?, Error>) -> Void)
+  /// The [fileExtension] is only required for macOS versions before 11.0.
+  func saveImage(imageBytes: FlutterStandardTypedData, name: String, fileExtension: String, completion: @escaping (Result<String?, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -234,14 +235,15 @@ class QuillNativeBridgeApiSetup {
     } else {
       saveImageToGalleryChannel.setMessageHandler(nil)
     }
+    /// The [fileExtension] is only required for macOS versions before 11.0.
     let saveImageChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.quill_native_bridge_macos.QuillNativeBridgeApi.saveImage\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       saveImageChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let imageBytesArg = args[0] as! FlutterStandardTypedData
         let nameArg = args[1] as! String
-        let extensionArg = args[2] as! String
-        api.saveImage(imageBytes: imageBytesArg, name: nameArg, extension: extensionArg) { result in
+        let fileExtensionArg = args[2] as! String
+        api.saveImage(imageBytes: imageBytesArg, name: nameArg, fileExtension: fileExtensionArg) { result in
           switch result {
           case .success(let res):
             reply(wrapResult(res))

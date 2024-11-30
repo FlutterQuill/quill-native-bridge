@@ -4,6 +4,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:quill_native_bridge_platform_interface/quill_native_bridge_platform_interface.dart';
+import 'package:quill_native_bridge_platform_interface/src/image_mime_utils.dart';
 
 import 'src/messages.g.dart';
 
@@ -113,16 +114,15 @@ class QuillNativeBridgeAndroid extends QuillNativeBridgePlatform {
   @override
   Future<void> saveImageToGallery(
     Uint8List imageBytes, {
-    required String name,
-    required String extension,
-    required String? albumName,
+    required GalleryImageSaveOptions options,
   }) async {
     try {
       await _hostApi.saveImageToGallery(
         imageBytes,
-        name: name,
-        extension: extension,
-        albumName: albumName,
+        name: options.name,
+        fileExtension: options.fileExtension,
+        mimeType: getImageMimeType(options.fileExtension),
+        albumName: options.albumName,
       );
     } on PlatformException catch (e) {
       assert(() {

@@ -6,8 +6,12 @@ import 'package:flutter/foundation.dart';
 
 import 'package:quill_native_bridge_platform_interface/quill_native_bridge_platform_interface.dart';
 
-export 'package:quill_native_bridge_platform_interface/src/platform_feature.dart'
-    show QuillNativeBridgeFeature;
+export 'package:quill_native_bridge_platform_interface/quill_native_bridge_platform_interface.dart'
+    show
+        QuillNativeBridgeFeature,
+        ImageSaveOptions,
+        GalleryImageSaveOptions,
+        ImageSaveResult;
 
 // TODO: https://medium.com/flutter/writing-a-good-flutter-plugin-1a561b986c9c (see the section 'Avoid writing static (or global) methods')
 
@@ -94,13 +98,13 @@ abstract final class QuillNativeBridge {
   static Future<Uint8List?> getClipboardImage() =>
       _platform.getClipboardImage();
 
-  /// Return the copied gif from the Clipboard.
+  /// Returns the copied GIF image from the system clipboard.
   ///
   /// **Supports Android and iOS only.**
   @Category(['Clipboard'])
   static Future<Uint8List?> getClipboardGif() => _platform.getClipboardGif();
 
-  /// Return the file paths from the Clipboard.
+  /// Returns the file paths from the system clipboard.
   ///
   /// Supports **macOS** and **Linux**.
   /// **Windows** and the web are currently unsupported.
@@ -131,13 +135,13 @@ abstract final class QuillNativeBridge {
   /// sources other than Xcode or macOS terminal such as Android Studio or VS Code.
   /// However, this does not affect the final production app.
   ///
-  /// The [name] is the image's name without the extension (e.g., `image`).
+  /// The [GalleryImageSaveOptions.name] is the image's name without the extension (e.g., `image`).
   /// It doesn't need to be unique, as it's handled by the gallery/system.
   ///
-  /// The [extension] is the image's file extension (e.g., `png`).
+  /// The [GalleryImageSaveOptions.fileExtension] is the image's file extension (e.g., `png`).
   /// This is silently ignored on macOS and iOS.
   ///
-  /// The [albumName] sets the album in the gallery app.
+  /// The [GalleryImageSaveOptions.albumName] sets the album in the gallery app.
   /// A new album will be created if it doesn't exist.
   /// If `null`, the default album is used.
   /// **If not `null`, read-write access to the photos library is always
@@ -159,18 +163,13 @@ abstract final class QuillNativeBridge {
   @Category(['Gallery'])
   static Future<void> saveImageToGallery(
     Uint8List imageBytes, {
-    required String name,
-    required String extension,
-    required String? albumName,
+    required GalleryImageSaveOptions options,
   }) =>
-      _platform.saveImageToGallery(imageBytes,
-          name: name, extension: extension, albumName: albumName);
+      _platform.saveImageToGallery(imageBytes, options: options);
 
   /// Saves an image to the user's device based on the platform:
   ///
   /// - **Web**: Downloads the image using the browser's download functionality.
-  /// Returns the blob object URL (e.g., `blob:http://localhost:64030/e58f63d4-2890-469c-9c8e-69e839da6a93`),
-  /// **which will be revoked before returning it**.
   /// - **macOS**: Opens the native save dialog using [`NSSavePanel`](https://developer.apple.com/documentation/appkit/nssavepanel),
   /// defaulting to the user's `Pictures` directory.
   /// **Requires platform setup**. Refer to [Saving images](pub.dev/packages/quill_native_bridge#-saving-images).
@@ -182,22 +181,27 @@ abstract final class QuillNativeBridge {
   /// Not supported on mobile platforms (use [saveImageToGallery] instead).
   /// Calling this on unsupported platforms will throw [UnimplementedError].
   ///
-  /// The [name] represents the image name without the extension (e.g., `image`).
+  /// The [ImageSaveOptions.name] represents the image name without the extension (e.g., `image`).
   /// On web, the browser handles name conflicts.
   /// On macOS and Windows, prompts the user to confirm file overwrite.
   /// On Linux, behavior depends on the desktop environment (e.g., Gnome, KDE),
   /// and **file overwrite confirmation may be skipped**.
   ///
-  /// The [extension] is the image's file extension (e.g., `png`).
+  /// The [ImageSaveOptions.fileExtension] is the image's file extension (e.g., `png`).
   ///
-  /// Returns `null` if the user cancels the operation on desktop platforms
-  /// while selecting the destination using the system file picker.
+  /// Returns [ImageSaveResult] where:
+  ///
+  /// * [ImageSaveResult.filePath]: For desktop platforms, `null` if the user
+  /// cancels the operation while selecting the destination using the system file picker.
+  /// Always `null` on web platforms.
+  ///
+  /// * [ImageSaveResult.blobUrl]: For web platforms, returns the blob object URL (e.g., `blob:http://localhost:64030/e58f63d4-2890-469c-9c8e-69e839da6a93`),
+  /// **which will be revoked before returning it**. Always `null` on non-web platforms.
   ///
   /// See also [saveImageToGallery] for platforms with a native gallery app.
-  static Future<String?> saveImage(
+  static Future<ImageSaveResult> saveImage(
     Uint8List imageBytes, {
-    required String name,
-    required String extension,
+    required ImageSaveOptions options,
   }) =>
-      _platform.saveImage(imageBytes, name: name, extension: extension);
+      _platform.saveImage(imageBytes, options: options);
 }

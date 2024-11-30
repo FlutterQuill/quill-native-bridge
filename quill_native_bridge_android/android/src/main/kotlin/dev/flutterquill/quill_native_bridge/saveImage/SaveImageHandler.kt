@@ -58,7 +58,7 @@ object SaveImageHandler {
         imageBytes: ByteArray,
         name: String,
         albumName: String?,
-        extension: String,
+        fileExtension: String,
         callback: (Result<Unit>) -> Unit,
         mimeType: String,
         context: Context,
@@ -85,7 +85,7 @@ object SaveImageHandler {
         val imageFile =
             File(
                 imageSaveDirectory,
-                "${name}-${System.currentTimeMillis()}-${UUID.randomUUID()}.${extension}"
+                "${name}-${System.currentTimeMillis()}-${UUID.randomUUID()}.${fileExtension}"
             )
         if (imageFile.exists()) {
             callback.respondFlutterPigeonError(
@@ -124,7 +124,8 @@ object SaveImageHandler {
         activityPluginBinding: ActivityPluginBinding,
         imageBytes: ByteArray,
         name: String,
-        extension: String,
+        fileExtension: String,
+        mimeType: String,
         albumName: String?,
         callback: (Result<Unit>) -> Unit
     ) {
@@ -135,10 +136,6 @@ object SaveImageHandler {
             )
             return
         }
-
-        // TODO(save-image): Probably need to improve this check, might move it to the Dart side
-        // The mime type image/jpg is unsupported
-        val mimeType = if (extension == "jpg") "image/jpeg" else "image/$extension"
 
         if (!supportsScopedStorage()) {
             if (!isWriteExternalStoragePermissionDeclared(context)) {
@@ -196,7 +193,7 @@ object SaveImageHandler {
                                 imageBytes = imageBytes,
                                 name = name,
                                 albumName = albumName,
-                                extension = extension,
+                                fileExtension = fileExtension,
                                 callback = callback,
                                 mimeType = mimeType,
                                 context = context,
@@ -214,7 +211,7 @@ object SaveImageHandler {
                 imageBytes = imageBytes,
                 name = name,
                 albumName = albumName,
-                extension = extension,
+                fileExtension = fileExtension,
                 callback = callback,
                 mimeType = mimeType,
                 context = context,

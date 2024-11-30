@@ -99,7 +99,7 @@ await QuillNativeBridge.openGalleryApp(); // Work only for platforms that have a
 ```dart
 final Uint8List imageBytes = ...; // Load the image bytes
 
-await QuillNativeBridge.saveImageToGallery(imageBytes, name: 'ExampleImageName', extension: 'png', albumName: null); // Work only for platforms that have a system gallery app
+await QuillNativeBridge.saveImageToGallery(imageBytes, options: GalleryImageSaveOptions(name: 'ExampleImageName', fileExtension: 'png', albumName: null)); // Work only for platforms that have a system gallery app
 ```
 
 **To save an image using save dialog on desktop or download it on web**:
@@ -107,7 +107,7 @@ await QuillNativeBridge.saveImageToGallery(imageBytes, name: 'ExampleImageName',
 ```dart
 final Uint8List imageBytes = ...; // Load the image bytes
 
-await QuillNativeBridge.saveImage(imageBytes, name: 'ExampleImageName', extension: 'png'); // Doesn't work on mobile platforms
+await QuillNativeBridge.saveImage(imageBytes, options: ImageSaveOptions(name: 'ExampleImageName', fileExtension: 'png')); // Doesn't work on mobile platforms
 ```
 
 ## 🔧 Setup

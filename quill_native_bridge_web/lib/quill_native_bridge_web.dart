@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart' show Uint8List, debugPrint;
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:quill_native_bridge_platform_interface/quill_native_bridge_platform_interface.dart';
 import 'package:web/web.dart';
+import 'package:quill_native_bridge_platform_interface/src/image_mime_utils.dart';
 
 import 'src/clipboard_api_support_unsafe.dart';
 import 'src/mime_types_constants.dart';
@@ -137,26 +138,25 @@ class QuillNativeBridgeWeb extends QuillNativeBridgePlatform {
   }
 
   @override
-  Future<String> saveImage(
+  Future<ImageSaveResult> saveImage(
     Uint8List imageBytes, {
-    required String name,
-    required String extension,
+    required ImageSaveOptions options,
   }) async {
-    // TODO(save-image): image/jpg is not supported, should be always image/jpeg
     final blob = Blob(
       [imageBytes.toJS].toJS,
-      BlobPropertyBag(type: 'image/${extension}'),
+      BlobPropertyBag(type: getImageMimeType(options.fileExtension)),
     );
     final url = URL.createObjectURL(blob);
 
     final link = document.createElement('a') as HTMLAnchorElement;
     link.setAttribute('href', url);
-    link.setAttribute('download', '$name.${extension}');
+    link.setAttribute(
+        'download', '${options.fileExtension}.${options.fileExtension}');
 
     link.click();
 
     URL.revokeObjectURL(url);
 
-    return url;
+    return ImageSaveResult.web(blobUrl: url);
   }
 }

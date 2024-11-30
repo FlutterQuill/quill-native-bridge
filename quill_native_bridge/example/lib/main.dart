@@ -320,10 +320,12 @@ Future<void> _onButtonPressed(
 
       await QuillNativeBridge.saveImageToGallery(
         imageBytes,
-        name: selectedImage.description,
-        extension: selectedImage.fileType,
-        // On iOS and macOS, read-write permission (instead of add-only even when supported) is required to save to an album.
-        albumName: albumName.isNotEmpty ? albumName : null,
+        options: GalleryImageSaveOptions(
+          name: selectedImage.description,
+          fileExtension: selectedImage.fileType,
+          // On iOS and macOS, read-write permission (instead of add-only even when supported) is required to save to an album.
+          albumName: albumName.isNotEmpty ? albumName : null,
+        ),
       );
       scaffoldMessenger.showText(
         'The image has been saved to the gallery.',
@@ -350,12 +352,15 @@ Future<void> _onButtonPressed(
       }
       final imageBytes = await loadAssetFile(selectedImage.assetPath);
 
-      final imagePath = await QuillNativeBridge.saveImage(
+      final imagePath = (await QuillNativeBridge.saveImage(
         imageBytes,
-        name: selectedImage.description,
-        extension: selectedImage.fileType,
-      );
-      if (imagePath == null) {
+        options: ImageSaveOptions(
+          name: selectedImage.description,
+          fileExtension: selectedImage.fileType,
+        ),
+      ))
+          .filePath;
+      if (!kIsWeb && imagePath == null) {
         scaffoldMessenger.showText('Image save was canceled.');
         return;
       }

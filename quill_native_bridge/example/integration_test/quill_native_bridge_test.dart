@@ -161,12 +161,12 @@ void main() {
           return;
         }
         await expectLater(
-          QuillNativeBridge.saveImageToGallery(
-            Uint8List.fromList([1, 0, 1]),
-            name: 'ExampleImageName',
-            extension: 'png',
-            albumName: null,
-          ),
+          QuillNativeBridge.saveImageToGallery(Uint8List.fromList([1, 0, 1]),
+              options: const GalleryImageSaveOptions(
+                name: 'ExampleImageName',
+                fileExtension: 'png',
+                albumName: null,
+              )),
           throwsA(isA<PlatformException>().having(
             (e) => e.code,
             'code',

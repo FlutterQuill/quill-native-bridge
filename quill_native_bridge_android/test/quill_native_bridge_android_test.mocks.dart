@@ -63,7 +63,8 @@ class MockTestQuillNativeBridgeApi extends _i1.Mock
   _i4.Future<void> saveImageToGallery(
     _i3.Uint8List? imageBytes, {
     required String? name,
-    required String? extension,
+    required String? fileExtension,
+    required String? mimeType,
     required String? albumName,
   }) =>
       (super.noSuchMethod(
@@ -72,7 +73,8 @@ class MockTestQuillNativeBridgeApi extends _i1.Mock
           [imageBytes],
           {
             #name: name,
-            #extension: extension,
+            #fileExtension: fileExtension,
+            #mimeType: mimeType,
             #albumName: albumName,
           },
         ),

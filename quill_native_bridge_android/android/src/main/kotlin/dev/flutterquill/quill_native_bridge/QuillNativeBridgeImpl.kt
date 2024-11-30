@@ -44,7 +44,8 @@ class QuillNativeBridgeImpl(private val context: Context) : QuillNativeBridgeApi
     override fun saveImageToGallery(
         imageBytes: ByteArray,
         name: String,
-        extension: String,
+        fileExtension: String,
+        mimeType: String,
         albumName: String?,
         callback: (Result<Unit>) -> Unit
     ) = SaveImageHandler.saveImageToGallery(
@@ -52,7 +53,8 @@ class QuillNativeBridgeImpl(private val context: Context) : QuillNativeBridgeApi
         getActivityPluginBindingOrThrow(),
         imageBytes = imageBytes,
         name = name,
-        extension = extension,
+        fileExtension = fileExtension,
+        mimeType = mimeType,
         albumName = albumName,
         callback = callback
     )

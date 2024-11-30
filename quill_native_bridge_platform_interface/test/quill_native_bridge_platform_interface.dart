@@ -49,34 +49,33 @@ class MockQuillNativeBridgePlatform
     return ['/path/to/file.html', 'path/to/file.md'];
   }
 
+  GalleryImageSaveOptions? galleryImageSaveOptions;
+  Uint8List? savedGalleryImageBytes;
+
   Uint8List? savedImageBytes;
-  String? savedImageName;
-  String? savedImageExtension;
-  String? savedImageAlbumName;
+  ImageSaveOptions? imageSaveOptions;
 
   @override
   Future<void> saveImageToGallery(
     Uint8List imageBytes, {
-    required String name,
-    required String extension,
-    required String? albumName,
+    required GalleryImageSaveOptions options,
   }) async {
-    savedImageBytes = imageBytes;
-    savedImageName = name;
-    savedImageExtension = extension;
-    savedImageAlbumName = albumName;
+    savedGalleryImageBytes = imageBytes;
+    galleryImageSaveOptions = options;
   }
 
   @override
-  Future<String> saveImage(
+  Future<ImageSaveResult> saveImage(
     Uint8List imageBytes, {
-    required String name,
-    required String extension,
+    required ImageSaveOptions options,
   }) async {
     savedImageBytes = imageBytes;
-    savedImageName = name;
-    savedImageExtension = extension;
-    return '/path/to/image.png';
+    imageSaveOptions = options;
+    return ImageSaveResult(
+      filePath: '/path/to/file',
+      blobUrl:
+          'blob:http://localhost:64030/e58f63d4-2890-469c-9c8e-69e839da6a93',
+    );
   }
 
   var _galleryAppOpened = false;
@@ -157,30 +156,38 @@ void main() {
   test(
     'saveImage',
     () async {
-      final imagePath = await QuillNativeBridgePlatform.instance.saveImage(
+      final options =
+          ImageSaveOptions(name: 'image name', fileExtension: 'png');
+      final result = await QuillNativeBridgePlatform.instance.saveImage(
         Uint8List.fromList([9, 3, 5]),
-        name: 'image name',
-        extension: 'png',
+        options: options,
       );
-      expect(imagePath, '/path/to/image.png');
+      expect(
+        result,
+        ImageSaveResult(
+          filePath: '/path/to/file',
+          blobUrl:
+              'blob:http://localhost:64030/e58f63d4-2890-469c-9c8e-69e839da6a93',
+        ),
+      );
       expect(fakePlatform.savedImageBytes, [9, 3, 5]);
-      expect(fakePlatform.savedImageName, 'image name');
-      expect(fakePlatform.savedImageExtension, 'png');
+      expect(fakePlatform.imageSaveOptions, options);
     },
   );
   test(
     'saveImageToGallery',
     () async {
-      await QuillNativeBridgePlatform.instance.saveImageToGallery(
-        Uint8List.fromList([9, 3, 5]),
+      final galleryImageSaveOptions = GalleryImageSaveOptions(
         name: 'image name',
-        extension: 'png',
+        fileExtension: 'png',
         albumName: 'example album',
       );
-      expect(fakePlatform.savedImageBytes, [9, 3, 5]);
-      expect(fakePlatform.savedImageName, 'image name');
-      expect(fakePlatform.savedImageExtension, 'png');
-      expect(fakePlatform.savedImageAlbumName, 'example album');
+      await QuillNativeBridgePlatform.instance.saveImageToGallery(
+        Uint8List.fromList([9, 3, 5]),
+        options: galleryImageSaveOptions,
+      );
+      expect(fakePlatform.savedGalleryImageBytes, [9, 3, 5]);
+      expect(fakePlatform.galleryImageSaveOptions, galleryImageSaveOptions);
     },
   );
 

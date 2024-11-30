@@ -4,6 +4,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:quill_native_bridge_android/quill_native_bridge_android.dart';
 import 'package:quill_native_bridge_platform_interface/quill_native_bridge_platform_interface.dart';
+import 'package:quill_native_bridge_platform_interface/src/image_mime_utils.dart';
 
 import 'test_api.g.dart';
 
@@ -11,7 +12,7 @@ import 'test_api.g.dart';
 import 'quill_native_bridge_android_test.mocks.dart';
 
 void main() {
-  // Required when calling TestQuillNativeBridgeApi.setUp(mockApi)
+  // Required when calling TestQuillNativeBridgeApi.setUp()
   TestWidgetsFlutterBinding.ensureInitialized();
 
   late QuillNativeBridgeAndroid plugin;
@@ -27,7 +28,8 @@ void main() {
       any,
       name: anyNamed('name'),
       albumName: anyNamed('albumName'),
-      extension: anyNamed('extension'),
+      fileExtension: anyNamed('fileExtension'),
+      mimeType: anyNamed('mimeType'),
     )).thenAnswer((_) async {});
   });
 
@@ -172,17 +174,18 @@ void main() {
       test(
         'delegates to _hostApi.saveImageToGallery',
         () async {
-          await plugin.saveImageToGallery(
-            Uint8List.fromList([1, 0, 1]),
-            name: 'ExampleImage',
-            extension: 'png',
-            albumName: null,
-          );
+          await plugin.saveImageToGallery(Uint8List.fromList([1, 0, 1]),
+              options: GalleryImageSaveOptions(
+                name: 'ExampleImage',
+                fileExtension: 'png',
+                albumName: null,
+              ));
           verify(mockHostApi.saveImageToGallery(
             any,
             name: anyNamed('name'),
-            extension: anyNamed('extension'),
+            fileExtension: anyNamed('fileExtension'),
             albumName: anyNamed('albumName'),
+            mimeType: anyNamed('mimeType'),
           )).called(1);
         },
       );
@@ -191,33 +194,65 @@ void main() {
         'passes the arguments correctly to the platform host API',
         () async {
           final imageBytes = Uint8List.fromList([1, 0, 1]);
-          final imageName = 'ExampleImage';
-          final imageAlbumName = 'ExampleAlbum';
-          final imageExtension = 'png';
+
+          final options = GalleryImageSaveOptions(
+            name: 'ExampleImage',
+            fileExtension: 'jpg',
+            albumName: 'ExampleAlbum',
+          );
 
           when(mockHostApi.saveImageToGallery(
             imageBytes,
             name: anyNamed('name'),
             albumName: anyNamed('albumName'),
-            extension: anyNamed('extension'),
+            fileExtension: anyNamed('fileExtension'),
+            mimeType: anyNamed('mimeType'),
           )).thenAnswer((_) async => null);
 
-          await plugin.saveImageToGallery(imageBytes,
-              name: imageName,
-              extension: imageExtension,
-              albumName: imageAlbumName);
+          await plugin.saveImageToGallery(imageBytes, options: options);
 
           final capturedOptions = verify(mockHostApi.saveImageToGallery(
             captureAny,
             name: captureAnyNamed('name'),
             albumName: captureAnyNamed('albumName'),
-            extension: captureAnyNamed('extension'),
+            fileExtension: captureAnyNamed('fileExtension'),
+            mimeType: captureAnyNamed('mimeType'),
           )).captured;
 
           expect(capturedOptions[0] as Uint8List, imageBytes);
-          expect(capturedOptions[1] as String, imageName);
-          expect(capturedOptions[2] as String, imageAlbumName);
-          expect(capturedOptions[3] as String, imageExtension);
+          expect(capturedOptions[1] as String, options.name);
+          expect(capturedOptions[2] as String, options.albumName);
+          expect(capturedOptions[3] as String, options.fileExtension);
+          expect(capturedOptions[4] as String,
+              getImageMimeType(options.fileExtension));
+        },
+      );
+
+      test(
+        'passes the mime type correctly to the platform host API',
+        () async {
+          final options = GalleryImageSaveOptions(
+            name: 'ImageName',
+            // IMPORTANT: Use jpg specifically instead of jpeg or png
+            // since the "image/jpg" is invalid and it will verify behavior,
+            // ensuring the mimeType is passed correctly.
+            fileExtension: 'jpg',
+            albumName: 'ExampleAlbum',
+          );
+          await plugin.saveImageToGallery(Uint8List.fromList([]),
+              options: options);
+
+          final capturedOptions = verify(mockHostApi.saveImageToGallery(
+            any,
+            name: anyNamed('name'),
+            albumName: anyNamed('albumName'),
+            fileExtension: anyNamed('fileExtension'),
+            mimeType: captureAnyNamed('mimeType'),
+          )).captured;
+          expect(
+            capturedOptions[0] as String,
+            getImageMimeType(options.fileExtension),
+          );
         },
       );
 
@@ -230,15 +265,16 @@ void main() {
               any,
               name: anyNamed('name'),
               albumName: anyNamed('albumName'),
-              extension: anyNamed('extension'),
+              fileExtension: anyNamed('fileExtension'),
+              mimeType: anyNamed('mimeType'),
             )).thenThrow(PlatformException(code: errorCode));
             expect(
-              plugin.saveImageToGallery(
-                Uint8List.fromList([1, 0, 1]),
-                name: 'ExampleImage',
-                extension: 'png',
-                albumName: null,
-              ),
+              plugin.saveImageToGallery(Uint8List.fromList([1, 0, 1]),
+                  options: GalleryImageSaveOptions(
+                    name: 'ExampleImage',
+                    fileExtension: 'png',
+                    albumName: null,
+                  )),
               throwsA(isA<StateError>().having(
                 (e) => e.message,
                 'message',
@@ -264,14 +300,17 @@ void main() {
           any,
           name: anyNamed('name'),
           albumName: anyNamed('albumName'),
-          extension: anyNamed('extension'),
+          fileExtension: anyNamed('fileExtension'),
+          mimeType: anyNamed('mimeType'),
         )).thenThrow(PlatformException(code: errorCode));
         expect(
           plugin.saveImageToGallery(
             Uint8List.fromList([1, 0, 1]),
-            name: 'ExampleImage',
-            extension: 'png',
-            albumName: null,
+            options: GalleryImageSaveOptions(
+              name: 'ExampleImage',
+              fileExtension: 'png',
+              albumName: null,
+            ),
           ),
           throwsA(isA<PlatformException>()
               .having((e) => e.code, 'code', errorCode)),
@@ -281,15 +320,16 @@ void main() {
           any,
           name: anyNamed('name'),
           albumName: anyNamed('albumName'),
-          extension: anyNamed('extension'),
+          fileExtension: anyNamed('fileExtension'),
+          mimeType: anyNamed('mimeType'),
         )).thenAnswer((_) async {});
         await expectLater(
-          plugin.saveImageToGallery(
-            Uint8List.fromList([1, 0, 1]),
-            name: 'ExampleImage',
-            extension: 'png',
-            albumName: null,
-          ),
+          plugin.saveImageToGallery(Uint8List.fromList([1, 0, 1]),
+              options: GalleryImageSaveOptions(
+                name: 'ExampleImage',
+                fileExtension: 'png',
+                albumName: null,
+              )),
           completes,
         );
       });

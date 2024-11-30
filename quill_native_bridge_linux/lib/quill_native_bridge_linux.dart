@@ -8,6 +8,7 @@ import 'package:file_selector_platform_interface/file_selector_platform_interfac
 import 'package:flutter/foundation.dart';
 import 'package:quill_native_bridge_linux/src/image_saver.dart';
 import 'package:quill_native_bridge_platform_interface/quill_native_bridge_platform_interface.dart';
+import 'package:quill_native_bridge_platform_interface/src/image_mime_utils.dart';
 
 import 'src/binary_runner.dart';
 import 'src/constants.dart';
@@ -242,32 +243,31 @@ class QuillNativeBridgeLinux extends QuillNativeBridgePlatform {
   static ImageSaver imageSaver = ImageSaver();
 
   @override
-  Future<String?> saveImage(
+  Future<ImageSaveResult> saveImage(
     Uint8List imageBytes, {
-    required String name,
-    required String extension,
+    required ImageSaveOptions options,
   }) async {
     final typeGroup = XTypeGroup(
       label: 'Images',
       // The arguments `extensions` and `mimeTypes` are both supported on Linux. See https://pub.dev/packages/file_selector#filtering-by-file-types
-      extensions: [extension],
-      mimeTypes: ['image/${extension}'],
+      extensions: [options.fileExtension],
+      mimeTypes: [getImageMimeType(options.fileExtension)],
     );
 
     final saveLocation = await imageSaver.fileSelector.getSaveLocation(
       options: SaveDialogOptions(
-        suggestedName: '${name}.${extension}',
+        suggestedName: '${options.name}.${options.fileExtension}',
         initialDirectory: imageSaver.picturesDirectoryPath,
       ),
       acceptedTypeGroups: [typeGroup],
     );
     final imageFilePath = saveLocation?.path;
     if (imageFilePath == null) {
-      return null;
+      return ImageSaveResult.io(filePath: null);
     }
     final imageFile = File(imageFilePath);
     await imageFile.writeAsBytes(imageBytes);
 
-    return imageFile.path;
+    return ImageSaveResult.io(filePath: imageFile.path);
   }
 }

@@ -154,57 +154,46 @@ void main() {
         () async {
           when(mockQuillNativeBridgePlatform.saveImageToGallery(
             any,
-            name: anyNamed('name'),
-            albumName: anyNamed('albumName'),
-            extension: anyNamed('extension'),
+            options: anyNamed('options'),
           )).thenAnswer((_) async {});
 
           await QuillNativeBridge.saveImageToGallery(
             Uint8List.fromList([0, 1, 0]),
-            name: 'ExampleImage',
-            albumName: 'ExampleAlbum',
-            extension: 'jpg',
+            options: const GalleryImageSaveOptions(
+              name: 'ExampleImage',
+              albumName: 'ExampleAlbum',
+              fileExtension: 'jpg',
+            ),
           );
           verify(mockQuillNativeBridgePlatform.saveImageToGallery(
             any,
-            name: anyNamed('name'),
-            albumName: anyNamed('albumName'),
-            extension: anyNamed('extension'),
+            options: anyNamed('options'),
           )).called(1);
         },
       );
       test('passes the arguments to the platform implementation correctly',
           () async {
         final imageBytes = Uint8List.fromList([0, 1, 0]);
-        const imageName = 'Example Image';
-        const albumName = 'AnAlbum';
-        const imageFileExtension = 'jpg';
+        const options = GalleryImageSaveOptions(
+            name: 'Example Image', fileExtension: 'jpg', albumName: 'AnAlbum');
 
         when(mockQuillNativeBridgePlatform.saveImageToGallery(
           any,
-          name: anyNamed('name'),
-          albumName: anyNamed('albumName'),
-          extension: anyNamed('extension'),
+          options: anyNamed('options'),
         )).thenAnswer((_) async {});
 
         await QuillNativeBridge.saveImageToGallery(
           imageBytes,
-          name: imageName,
-          albumName: albumName,
-          extension: imageFileExtension,
+          options: options,
         );
         final capturedOptions =
             verify(mockQuillNativeBridgePlatform.saveImageToGallery(
           captureAny,
-          name: captureAnyNamed('name'),
-          albumName: captureAnyNamed('albumName'),
-          extension: captureAnyNamed('extension'),
+          options: captureAnyNamed('options'),
         )).captured;
 
         expect(capturedOptions[0] as Uint8List, imageBytes);
-        expect(capturedOptions[1] as String, imageName);
-        expect(capturedOptions[2] as String, albumName);
-        expect(capturedOptions[3] as String, imageFileExtension);
+        expect(capturedOptions[1] as GalleryImageSaveOptions, options);
       });
     },
   );
@@ -217,49 +206,41 @@ void main() {
         () async {
           when(mockQuillNativeBridgePlatform.saveImage(
             any,
-            name: anyNamed('name'),
-            extension: anyNamed('extension'),
-          )).thenAnswer((_) async => null);
+            options: anyNamed('options'),
+          )).thenAnswer((_) async => ImageSaveResult.io(filePath: null));
 
-          await QuillNativeBridge.saveImage(
-            Uint8List.fromList([0, 1, 0]),
-            name: 'ExampleImage',
-            extension: 'jpg',
-          );
+          await QuillNativeBridge.saveImage(Uint8List.fromList([0, 1, 0]),
+              options: const ImageSaveOptions(
+                  name: 'ExampleImage', fileExtension: 'jpg'));
           verify(mockQuillNativeBridgePlatform.saveImage(
             any,
-            name: anyNamed('name'),
-            extension: anyNamed('extension'),
+            options: anyNamed('options'),
           )).called(1);
         },
       );
       test('passes the arguments to the platform implementation correctly',
           () async {
         final imageBytes = Uint8List.fromList([0, 1, 0]);
-        const imageName = 'Example Image';
 
-        const imageFileExtension = 'jpg';
+        const options =
+            ImageSaveOptions(name: 'Example Image', fileExtension: 'jpg');
 
         when(mockQuillNativeBridgePlatform.saveImage(
           any,
-          name: anyNamed('name'),
-          extension: anyNamed('extension'),
-        )).thenAnswer((_) async => null);
+          options: anyNamed('options'),
+        )).thenAnswer((_) async => ImageSaveResult.io(filePath: null));
 
         await QuillNativeBridge.saveImage(
           imageBytes,
-          name: imageName,
-          extension: imageFileExtension,
+          options: options,
         );
         final capturedOptions = verify(mockQuillNativeBridgePlatform.saveImage(
           captureAny,
-          name: captureAnyNamed('name'),
-          extension: captureAnyNamed('extension'),
+          options: captureAnyNamed('options'),
         )).captured;
 
         expect(capturedOptions[0] as Uint8List, imageBytes);
-        expect(capturedOptions[1] as String, imageName);
-        expect(capturedOptions[2] as String, imageFileExtension);
+        expect(capturedOptions[1] as ImageSaveOptions, options);
       });
     },
   );

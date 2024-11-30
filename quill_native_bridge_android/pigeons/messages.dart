@@ -25,11 +25,13 @@ abstract class QuillNativeBridgeApi {
 
   void openGalleryApp();
 
+  /// The [fileExtension] is only required for Android APIs before 29.
   @async
   void saveImageToGallery(
     Uint8List imageBytes, {
     required String name,
-    required String extension,
+    required String fileExtension,
+    required String mimeType,
     required String? albumName,
   });
 }

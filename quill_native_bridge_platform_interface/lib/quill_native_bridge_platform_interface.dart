@@ -3,8 +3,12 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'src/placeholder_implementation.dart';
 import 'src/platform_feature.dart';
+import 'src/types/image_save_options.dart';
+import 'src/types/image_save_result.dart';
 
 export 'src/platform_feature.dart';
+export 'src/types/image_save_options.dart';
+export 'src/types/image_save_result.dart';
 
 /// Platform implementations should extend this class rather than implement it
 /// as newly added methods are not considered to be breaking
@@ -93,9 +97,7 @@ abstract class QuillNativeBridgePlatform extends PlatformInterface {
   /// Saves an image to the gallery app.
   Future<void> saveImageToGallery(
     Uint8List imageBytes, {
-    required String name,
-    required String extension,
-    required String? albumName,
+    required GalleryImageSaveOptions options,
   }) =>
       throw UnimplementedError(
         'saveImageToGallery() has not been implemented.',
@@ -103,10 +105,9 @@ abstract class QuillNativeBridgePlatform extends PlatformInterface {
 
   /// Saves an image to the user's device.
   /// Returns `null` if the operation was cancelled.
-  Future<String?> saveImage(
+  Future<ImageSaveResult> saveImage(
     Uint8List imageBytes, {
-    required String name,
-    required String extension,
+    required ImageSaveOptions options,
   }) =>
       throw UnimplementedError(
         'saveImage() has not been implemented.',

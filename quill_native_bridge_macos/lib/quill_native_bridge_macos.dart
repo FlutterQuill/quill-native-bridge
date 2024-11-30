@@ -62,13 +62,11 @@ class QuillNativeBridgeMacOS extends QuillNativeBridgePlatform {
   @override
   Future<void> saveImageToGallery(
     Uint8List imageBytes, {
-    required String name,
-    required String extension,
-    required String? albumName,
+    required GalleryImageSaveOptions options,
   }) async {
     try {
       await _hostApi.saveImageToGallery(imageBytes,
-          name: name, albumName: albumName);
+          name: options.name, albumName: options.albumName);
     } on PlatformException catch (e) {
       if (e.code == 'UNSUPPORTED') {
         throw UnsupportedError(
@@ -114,10 +112,14 @@ class QuillNativeBridgeMacOS extends QuillNativeBridgePlatform {
   }
 
   @override
-  Future<String?> saveImage(
+  Future<ImageSaveResult> saveImage(
     Uint8List imageBytes, {
-    required String name,
-    required String extension,
-  }) =>
-      _hostApi.saveImage(imageBytes, name: name, extension: extension);
+    required ImageSaveOptions options,
+  }) async =>
+      ImageSaveResult.io(
+          filePath: await _hostApi.saveImage(
+        imageBytes,
+        name: options.name,
+        fileExtension: options.fileExtension,
+      ));
 }
