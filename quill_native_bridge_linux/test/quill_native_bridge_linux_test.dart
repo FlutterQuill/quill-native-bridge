@@ -287,7 +287,7 @@ void main() {
         final imageBytes = Uint8List.fromList([1, 0, 1]);
 
         expect(imageTestFile.existsSync(), isTrue,
-            reason: 'The $setUp should create the file');
+            reason: 'The $setUp should create the test file');
 
         final filePath = (await plugin.saveImage(imageBytes,
                 options: ImageSaveOptions(
