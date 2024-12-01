@@ -1,6 +1,6 @@
 name: quill_native_bridge_macos
 description: "macOS implementation of the quill_native_bridge plugin."
-version: 0.0.1-dev.5
+version: 0.0.1
 homepage: https://github.com/FlutterQuill/quill-native-bridge/tree/main/quill_native_bridge_macos
 repository: https://github.com/FlutterQuill/quill-native-bridge/tree/main/quill_native_bridge_macos
 issue_tracker: https://github.com/FlutterQuill/quill-native-bridge/issues?q=is%3Aissue+is%3Aopen+label%3A%22platform-macos%22

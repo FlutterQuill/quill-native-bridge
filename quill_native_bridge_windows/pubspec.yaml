@@ -1,6 +1,6 @@
 name: quill_native_bridge_windows
 description: "Windows implementation of the quill_native_bridge plugin."
-version: 0.0.1-dev.4
+version: 0.0.1
 homepage: https://github.com/FlutterQuill/quill-native-bridge/tree/main/quill_native_bridge_windows
 repository: https://github.com/FlutterQuill/quill-native-bridge/tree/main/quill_native_bridge_windows
 issue_tracker: https://github.com/FlutterQuill/quill-native-bridge/issues?q=is%3Aissue+is%3Aopen+label%3A%22platform-windows%22

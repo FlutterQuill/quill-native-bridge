@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.0.1
+
+- Adds support for saving images.
+
 ## 0.0.1-dev.4
 
 - Improves dependencies constraints.
