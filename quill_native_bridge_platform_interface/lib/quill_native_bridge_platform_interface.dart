@@ -44,48 +44,56 @@ abstract class QuillNativeBridgePlatform extends PlatformInterface {
 
   /// Checks if the specified [feature] is supported in the current implementation.
   ///
-  /// Will verify if this is supported in the platform itself:
+  /// Will verify if the platform supports this feature, the platform
+  /// implementation of the plugin, and the current running OS version.
   ///
-  /// - If [feature] is supported on **Android API 21** (as an example) and the
-  /// current Android API is `19` then will return `false`
-  /// - If [feature] is supported on the web if Clipboard API (as another example)
+  /// For example if [feature] is:
+  ///
+  /// - Supported on **Android API 21** (as an example) and the
+  /// current Android API is `19` then will return `false`.
+  ///
+  /// - Supported on the web if Clipboard API (as another example)
   /// available in the current browser, and the current browser doesn't support it,
   /// will return `false` too. For this specific example, you will need
   /// to fallback to **Clipboard events** on **Firefox** or browsers that doesn't
   /// support **Clipboard API**.
   ///
-  /// Always check the docs of the method you're calling to see if there
-  /// are special notes.
+  /// - Supported by the platform itself but the plugin currently implements it,
+  /// then return `false`.
+  ///
+  /// Always review the doc comment of a method before use for special notes.
+  ///
+  /// See also: [QuillNativeBridgeFeature]
   Future<bool> isSupported(QuillNativeBridgeFeature feature) =>
       throw UnimplementedError('isSupported() has not been implemented.');
 
-  /// Check if the app is running on [iOS Simulator](https://developer.apple.com/documentation/xcode/running-your-app-in-simulator-or-on-a-device).
+  /// Checks if the app is running on [iOS Simulator](https://developer.apple.com/documentation/xcode/running-your-app-in-simulator-or-on-a-device).
   Future<bool> isIOSSimulator() =>
       throw UnimplementedError('isIOSSimulator() has not been implemented.');
 
-  /// Return HTML from the system clipboard.
+  /// Returns HTML from the system clipboard.
   Future<String?> getClipboardHtml() =>
       throw UnimplementedError('getClipboardHtml() has not been implemented.');
 
-  /// Copy the [html] to the system clipboard to be pasted on other apps.
+  /// Copies an HTML to the system clipboard to be pasted on other apps.
   Future<void> copyHtmlToClipboard(String html) => throw UnimplementedError(
       'copyHtmlToClipboard() has not been implemented.');
 
-  /// Copy the [imageBytes] to system clipboard to be pasted on other apps.
+  /// Copies an image to the system clipboard to be pasted on other apps.
   Future<void> copyImageToClipboard(Uint8List imageBytes) =>
       throw UnimplementedError(
         'copyImageToClipboard() has not been implemented.',
       );
 
-  /// Return the copied image from the system clipboard.
+  /// Returns the copied image from the system clipboard.
   Future<Uint8List?> getClipboardImage() =>
       throw UnimplementedError('getClipboardImage() has not been implemented.');
 
-  /// Return the copied gif from the system clipboard.
+  /// Returns the copied GIF from the system clipboard.
   Future<Uint8List?> getClipboardGif() =>
       throw UnimplementedError('getClipboardGif() has not been implemented.');
 
-  /// Return the file paths from the system clipboard.
+  /// Returns the file paths from the system clipboard.
   Future<List<String>> getClipboardFiles() =>
       throw UnimplementedError('getClipboardFiles() has not been implemented.');
 
@@ -103,10 +111,10 @@ abstract class QuillNativeBridgePlatform extends PlatformInterface {
         'saveImageToGallery() has not been implemented.',
       );
 
-  /// Saves an image to the user's device.
+  /// Saves an image to the device.
   ///
-  /// Returns `ImageSaveResult` with [ImageSaveResult.filePath]
-  /// null if the operation was canceled and always `null` on web platforms.
+  /// Returns [ImageSaveResult] with `null` to [ImageSaveResult.filePath]
+  /// if the operation was canceled and always `null` on web platforms.
   Future<ImageSaveResult> saveImage(
     Uint8List imageBytes, {
     required ImageSaveOptions options,

@@ -81,7 +81,6 @@ object SaveImageHandler {
             return
         }
 
-        // TODO(save-image): Might always use .jpg for jpeg images for compatibility
         val imageFile =
             File(
                 imageSaveDirectory,
