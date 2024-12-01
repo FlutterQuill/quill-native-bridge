@@ -1,4 +1,0 @@
-dependency_overrides:
-# TODO(save-image): Removes this file after publishing quill_native_bridge_platform_interface
-  quill_native_bridge_platform_interface:
-    path: ../quill_native_bridge_platform_interface
