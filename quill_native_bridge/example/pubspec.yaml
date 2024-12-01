@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  quill_native_bridge: ^10.7.10
+  quill_native_bridge: ^11.0.0
 
 dependency_overrides:
   quill_native_bridge:

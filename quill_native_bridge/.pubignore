@@ -1,0 +1,12 @@
+readme_assets/
+example/assets/
+
+example/android/
+example/ios/
+example/macos/
+example/web/
+example/windows/
+example/linux/
+example/test_driver/
+example/integration_test/
+test/
