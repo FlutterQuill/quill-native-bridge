@@ -235,7 +235,7 @@ class QuillNativeBridgeApi {
     }
   }
 
-  /// Supports macOS 10.15 and later
+  /// Supports macOS 10.15 and later.
   Future<bool> supportsGallerySave() async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.quill_native_bridge_macos.QuillNativeBridgeApi.supportsGallerySave$pigeonVar_messageChannelSuffix';
@@ -293,7 +293,6 @@ class QuillNativeBridgeApi {
     }
   }
 
-  /// The [fileExtension] is only required for macOS versions before 11.0.
   Future<String?> saveImage(
     Uint8List imageBytes, {
     required String name,

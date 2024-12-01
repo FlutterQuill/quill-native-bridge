@@ -137,6 +137,9 @@ class QuillNativeBridge {
   ///
   /// The [GalleryImageSaveOptions.fileExtension] is the image's file extension (e.g., `png`).
   /// This is silently ignored on macOS and iOS.
+  /// On Android 10 (API 29) and later, it determines the image MIME type.
+  /// On Android 9 (API 28) and earlier, it is used as the file name
+  /// and to extract the MIME type.
   ///
   /// The [GalleryImageSaveOptions.albumName] sets the album in the gallery app.
   /// A new album will be created if it doesn't exist.
@@ -184,7 +187,9 @@ class QuillNativeBridge {
   /// On Linux, behavior depends on the desktop environment (e.g., Gnome, KDE),
   /// and **file overwrite confirmation may be skipped**.
   ///
-  /// The [ImageSaveOptions.fileExtension] is the image's file extension (e.g., `png`).
+  /// The [ImageSaveOptions.fileExtension] specifies the file extension (e.g., `png`)
+  /// for saving the image on all platforms.
+  /// Also used to determine the MIME type on Linux and the web.
   ///
   /// Returns [ImageSaveResult] where:
   ///

@@ -94,10 +94,9 @@ protocol QuillNativeBridgeApi {
   func getClipboardGif() throws -> FlutterStandardTypedData?
   func getClipboardFiles() throws -> [String]
   func openGalleryApp() throws
-  /// Supports macOS 10.15 and later
+  /// Supports macOS 10.15 and later.
   func supportsGallerySave() throws -> Bool
   func saveImageToGallery(imageBytes: FlutterStandardTypedData, name: String, albumName: String?, completion: @escaping (Result<Void, Error>) -> Void)
-  /// The [fileExtension] is only required for macOS versions before 11.0.
   func saveImage(imageBytes: FlutterStandardTypedData, name: String, fileExtension: String, completion: @escaping (Result<String?, Error>) -> Void)
 }
 
@@ -202,7 +201,7 @@ class QuillNativeBridgeApiSetup {
     } else {
       openGalleryAppChannel.setMessageHandler(nil)
     }
-    /// Supports macOS 10.15 and later
+    /// Supports macOS 10.15 and later.
     let supportsGallerySaveChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.quill_native_bridge_macos.QuillNativeBridgeApi.supportsGallerySave\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       supportsGallerySaveChannel.setMessageHandler { _, reply in
@@ -235,7 +234,6 @@ class QuillNativeBridgeApiSetup {
     } else {
       saveImageToGalleryChannel.setMessageHandler(nil)
     }
-    /// The [fileExtension] is only required for macOS versions before 11.0.
     let saveImageChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.quill_native_bridge_macos.QuillNativeBridgeApi.saveImage\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       saveImageChannel.setMessageHandler { message, reply in

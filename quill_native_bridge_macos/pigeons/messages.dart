@@ -23,7 +23,7 @@ abstract class QuillNativeBridgeApi {
 
   void openGalleryApp();
 
-  /// Supports macOS 10.15 and later
+  /// Supports macOS 10.15 and later.
   bool supportsGallerySave();
 
   @async
@@ -33,7 +33,6 @@ abstract class QuillNativeBridgeApi {
     required String? albumName,
   });
 
-  /// The [fileExtension] is only required for macOS versions before 11.0.
   @async
   String? saveImage(
     Uint8List imageBytes, {

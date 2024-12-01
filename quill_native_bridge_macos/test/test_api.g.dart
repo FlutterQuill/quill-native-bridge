@@ -50,7 +50,7 @@ abstract class TestQuillNativeBridgeApi {
 
   void openGalleryApp();
 
-  /// Supports macOS 10.15 and later
+  /// Supports macOS 10.15 and later.
   bool supportsGallerySave();
 
   Future<void> saveImageToGallery(
@@ -59,7 +59,6 @@ abstract class TestQuillNativeBridgeApi {
     required String? albumName,
   });
 
-  /// The [fileExtension] is only required for macOS versions before 11.0.
   Future<String?> saveImage(
     Uint8List imageBytes, {
     required String name,
