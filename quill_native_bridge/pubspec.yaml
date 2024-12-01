@@ -14,13 +14,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  quill_native_bridge_android: ^0.0.1-dev.5
+  quill_native_bridge_android: ^0.0.1
   quill_native_bridge_platform_interface: ^0.0.1
-  quill_native_bridge_web: ^0.0.1-dev.6
-  quill_native_bridge_windows: ^0.0.1-dev.4
-  quill_native_bridge_linux: ^0.0.1-dev.4
-  quill_native_bridge_ios: ^0.0.1-dev.6
-  quill_native_bridge_macos: ^0.0.1-dev.5
+  quill_native_bridge_web: ^0.0.1
+  quill_native_bridge_windows: ^0.0.1
+  quill_native_bridge_linux: ^0.0.1
+  quill_native_bridge_ios: ^0.0.1
+  quill_native_bridge_macos: ^0.0.1
 
 dev_dependencies:
   flutter_test:
