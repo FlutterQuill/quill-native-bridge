@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.0.1
+
+- Improves doc comments.
+- Adds `saveImage` and `saveImageToGallery`.
+
 ## 0.0.1-dev.5
 
 - Removes the default method channel implementation (`MethodChannelQuillNativeBridge`) since it's no longer needed; platform packages have different implementations.

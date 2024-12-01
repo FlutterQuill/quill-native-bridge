@@ -1,6 +1,6 @@
 name: quill_native_bridge_platform_interface
 description: "A common platform interface for the quill_native_bridge plugin."
-version: 0.0.1-dev.5
+version: 0.0.1
 homepage: https://github.com/FlutterQuill/quill-native-bridge/tree/main/quill_native_bridge_platform_interface
 repository: https://github.com/FlutterQuill/quill-native-bridge/tree/main/quill_native_bridge_platform_interface
 issue_tracker: https://github.com/FlutterQuill/quill-native-bridge/issues
