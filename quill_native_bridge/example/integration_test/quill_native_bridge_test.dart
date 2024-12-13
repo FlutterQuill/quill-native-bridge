@@ -15,6 +15,7 @@ void main() {
 
   // TODO: Fix the integration tests failing on Windows: https://github.com/FlutterQuill/quill-native-bridge/actions/runs/12323723239/job/34399916127?pr=10
   if (defaultTargetPlatform == TargetPlatform.windows) {
+    test('no op', () {});
     return;
   }
 
