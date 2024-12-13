@@ -40,7 +40,7 @@ Future<void> _copyAssetTo({
       (await rootBundle.load(assetFilePath)).buffer.asUint8List();
 
   final parentDirectory = destinationFile.parent;
-  if (!(await parentDirectory.exists())) {
+  if (!parentDirectory.existsSync()) {
     await parentDirectory.create(recursive: true);
   }
 
