@@ -4,21 +4,21 @@
 import PackageDescription
 
 let package = Package(
-    name: "quill_native_bridge_ios",
-    platforms: [
-        .iOS("12.0"),
-    ],
-    products: [
-        .library(name: "quill-native-bridge-ios", targets: ["quill_native_bridge_ios"])
-    ],
-    dependencies: [],
-    targets: [
-        .target(
-            name: "quill_native_bridge_ios",
-            dependencies: [],
-            resources: [
-                .process("Resources"),
-            ]
-        )
-    ]
+  name: "quill_native_bridge_ios",
+  platforms: [
+    .iOS("12.0")
+  ],
+  products: [
+    .library(name: "quill-native-bridge-ios", targets: ["quill_native_bridge_ios"])
+  ],
+  dependencies: [],
+  targets: [
+    .target(
+      name: "quill_native_bridge_ios",
+      dependencies: [],
+      resources: [
+        .process("Resources")
+      ]
+    )
+  ]
 )

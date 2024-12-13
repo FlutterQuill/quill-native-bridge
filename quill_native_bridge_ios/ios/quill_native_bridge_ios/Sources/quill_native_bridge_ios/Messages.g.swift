@@ -26,7 +26,7 @@ final class PigeonError: Error {
   var localizedDescription: String {
     return
       "PigeonError(code: \(code), message: \(message ?? "<nil>"), details: \(details ?? "<nil>")"
-      }
+  }
 }
 
 private func wrapResult(_ result: Any?) -> [Any?] {
@@ -84,7 +84,6 @@ class MessagesPigeonCodec: FlutterStandardMessageCodec, @unchecked Sendable {
   static let shared = MessagesPigeonCodec(readerWriter: MessagesPigeonCodecReaderWriter())
 }
 
-
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol QuillNativeBridgeApi {
   func isIosSimulator() throws -> Bool
@@ -94,16 +93,24 @@ protocol QuillNativeBridgeApi {
   func copyImageToClipboard(imageBytes: FlutterStandardTypedData) throws
   func getClipboardGif() throws -> FlutterStandardTypedData?
   func openGalleryApp(completion: @escaping (Result<Void, Error>) -> Void)
-  func saveImageToGallery(imageBytes: FlutterStandardTypedData, name: String, albumName: String?, completion: @escaping (Result<Void, Error>) -> Void)
+  func saveImageToGallery(
+    imageBytes: FlutterStandardTypedData, name: String, albumName: String?,
+    completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class QuillNativeBridgeApiSetup {
   static var codec: FlutterStandardMessageCodec { MessagesPigeonCodec.shared }
   /// Sets up an instance of `QuillNativeBridgeApi` to handle messages through the `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: QuillNativeBridgeApi?, messageChannelSuffix: String = "") {
+  static func setUp(
+    binaryMessenger: FlutterBinaryMessenger, api: QuillNativeBridgeApi?,
+    messageChannelSuffix: String = ""
+  ) {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
-    let isIosSimulatorChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.quill_native_bridge_ios.QuillNativeBridgeApi.isIosSimulator\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let isIosSimulatorChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.quill_native_bridge_ios.QuillNativeBridgeApi.isIosSimulator\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       isIosSimulatorChannel.setMessageHandler { _, reply in
         do {
@@ -116,7 +123,10 @@ class QuillNativeBridgeApiSetup {
     } else {
       isIosSimulatorChannel.setMessageHandler(nil)
     }
-    let getClipboardHtmlChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.quill_native_bridge_ios.QuillNativeBridgeApi.getClipboardHtml\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let getClipboardHtmlChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.quill_native_bridge_ios.QuillNativeBridgeApi.getClipboardHtml\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       getClipboardHtmlChannel.setMessageHandler { _, reply in
         do {
@@ -129,7 +139,10 @@ class QuillNativeBridgeApiSetup {
     } else {
       getClipboardHtmlChannel.setMessageHandler(nil)
     }
-    let copyHtmlToClipboardChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.quill_native_bridge_ios.QuillNativeBridgeApi.copyHtmlToClipboard\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let copyHtmlToClipboardChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.quill_native_bridge_ios.QuillNativeBridgeApi.copyHtmlToClipboard\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       copyHtmlToClipboardChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -144,7 +157,10 @@ class QuillNativeBridgeApiSetup {
     } else {
       copyHtmlToClipboardChannel.setMessageHandler(nil)
     }
-    let getClipboardImageChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.quill_native_bridge_ios.QuillNativeBridgeApi.getClipboardImage\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let getClipboardImageChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.quill_native_bridge_ios.QuillNativeBridgeApi.getClipboardImage\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       getClipboardImageChannel.setMessageHandler { _, reply in
         do {
@@ -157,7 +173,10 @@ class QuillNativeBridgeApiSetup {
     } else {
       getClipboardImageChannel.setMessageHandler(nil)
     }
-    let copyImageToClipboardChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.quill_native_bridge_ios.QuillNativeBridgeApi.copyImageToClipboard\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let copyImageToClipboardChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.quill_native_bridge_ios.QuillNativeBridgeApi.copyImageToClipboard\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       copyImageToClipboardChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -172,7 +191,10 @@ class QuillNativeBridgeApiSetup {
     } else {
       copyImageToClipboardChannel.setMessageHandler(nil)
     }
-    let getClipboardGifChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.quill_native_bridge_ios.QuillNativeBridgeApi.getClipboardGif\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let getClipboardGifChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.quill_native_bridge_ios.QuillNativeBridgeApi.getClipboardGif\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       getClipboardGifChannel.setMessageHandler { _, reply in
         do {
@@ -185,7 +207,10 @@ class QuillNativeBridgeApiSetup {
     } else {
       getClipboardGifChannel.setMessageHandler(nil)
     }
-    let openGalleryAppChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.quill_native_bridge_ios.QuillNativeBridgeApi.openGalleryApp\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let openGalleryAppChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.quill_native_bridge_ios.QuillNativeBridgeApi.openGalleryApp\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       openGalleryAppChannel.setMessageHandler { _, reply in
         api.openGalleryApp { result in
@@ -200,14 +225,18 @@ class QuillNativeBridgeApiSetup {
     } else {
       openGalleryAppChannel.setMessageHandler(nil)
     }
-    let saveImageToGalleryChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.quill_native_bridge_ios.QuillNativeBridgeApi.saveImageToGallery\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let saveImageToGalleryChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.quill_native_bridge_ios.QuillNativeBridgeApi.saveImageToGallery\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       saveImageToGalleryChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let imageBytesArg = args[0] as! FlutterStandardTypedData
         let nameArg = args[1] as! String
         let albumNameArg: String? = nilOrValue(args[2])
-        api.saveImageToGallery(imageBytes: imageBytesArg, name: nameArg, albumName: albumNameArg) { result in
+        api.saveImageToGallery(imageBytes: imageBytesArg, name: nameArg, albumName: albumNameArg) {
+          result in
           switch result {
           case .success:
             reply(wrapResult(nil))
