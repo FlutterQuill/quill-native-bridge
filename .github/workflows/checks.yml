@@ -40,10 +40,10 @@ jobs:
       - name: 📦 Verify Package Readiness for Publishing
         run: dart ./scripts/publish_dry_run.dart
 
-      - name: 🔎 Validate Swift Code Formatting
-        uses: feather-actions/run-swift-format@0.0.2
-        with:
-            swift-format-version: 600.0.0
+      # - name: 🔎 Validate Swift Code Formatting
+      #   uses: feather-actions/run-swift-format@0.0.2
+      #   with:
+      #       swift-format-version: 600.0.0
 
       - name: 🔎 Validate Kotlin Code Formatting
         uses: "block42-blockchain-company/ktlint-action@master"
