@@ -52,11 +52,16 @@ jobs:
       - name: 📦 Install Example Project Dependencies
         run: flutter pub get -C quill_native_bridge/example
 
-      - name: 🧪 Run Flutter Integration tests
+      - name: 🧪 Run Flutter Integration tests on Linux
+        if: runner.os == 'Linux'
         run: |
-          if [ "${{ matrix.os }}" == "ubuntu" ]; then
-            flutter test integration_test -d linux
-          else
-            flutter test integration_test -d ${{ matrix.os }}
-          fi
+          sudo apt-get update -y
+          sudo apt-get install -y curl git unzip xz-utils zip libglu1-mesa
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev
+          flutter test integration_test -d linux
+        working-directory: quill_native_bridge/example
+
+      - name: 🧪 Run Flutter Integration tests
+        if: runner.os != 'Linux'
+        run: flutter test integration_test -d ${{ runner.os }}
         working-directory: quill_native_bridge/example
