@@ -83,7 +83,7 @@ String _formatPosition(int position) {
   return position.toString().padLeft(4, '0');
 }
 
-/// Extracts the content within <body>...</body> tags from the provided [html].
+/// Extracts the content within `<body>`...`</body>` tags from the provided [html].
 ///
 /// If `<body>` and `</body>` tags are found, the content between them is returned.
 /// If `<body>` and `</body>` tags are not present, the entire HTML string is returned,

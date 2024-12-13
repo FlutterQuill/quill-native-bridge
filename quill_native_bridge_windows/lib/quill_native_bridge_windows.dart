@@ -8,12 +8,12 @@ import 'package:ffi/ffi.dart';
 import 'package:file_selector_platform_interface/file_selector_platform_interface.dart';
 import 'package:flutter/foundation.dart';
 import 'package:quill_native_bridge_platform_interface/quill_native_bridge_platform_interface.dart';
-import 'package:quill_native_bridge_windows/src/image_saver.dart';
 import 'package:win32/win32.dart';
 
 import 'src/clipboard_html_format.dart';
 import 'src/html_cleaner.dart';
 import 'src/html_formatter.dart';
+import 'src/image_saver.dart';
 
 /// A Windows implementation of the [QuillNativeBridgePlatform].
 ///

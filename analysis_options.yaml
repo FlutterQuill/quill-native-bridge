@@ -1,0 +1,26 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    # Ignore generated files
+    - '**/*.g.dart'
+    - '**/*.mocks.dart' # Mockito @GenerateMocks (https://pub.dev/packages/mockito)
+
+linter:
+  rules:
+    - always_declare_return_types
+    - avoid_escaping_inner_quotes
+    - avoid_print
+    - avoid_void_async
+    - directives_ordering
+    - prefer_final_fields
+    - prefer_final_in_for_each
+    - prefer_final_locals
+    - prefer_relative_imports
+    - prefer_single_quotes
+    - unnecessary_parenthesis
+    - avoid_web_libraries_in_flutter
+    - prefer_const_constructors
+    - prefer_const_constructors_in_immutables
+    - prefer_const_declarations
+    - avoid_slow_async_io

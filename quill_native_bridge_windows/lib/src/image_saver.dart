@@ -1,6 +1,6 @@
 import 'package:file_selector_platform_interface/file_selector_platform_interface.dart';
 import 'package:file_selector_windows/file_selector_windows.dart';
-import 'package:quill_native_bridge_windows/src/environment_provider.dart';
+import 'environment_provider.dart';
 
 class ImageSaver {
   /// The file selector that's used to prompt the user to choose a directory
@@ -18,6 +18,6 @@ class ImageSaver {
     final userHome = this.userHome;
     if (userHome == null) return null;
     if (userHome.isEmpty) return null;
-    return '${userHome}\\${picturesDirectoryName}';
+    return '$userHome\\$picturesDirectoryName';
   }
 }

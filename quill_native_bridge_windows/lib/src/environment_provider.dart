@@ -10,7 +10,7 @@ abstract class EnvironmentProvider {
   static EnvironmentProvider get instance => _instance;
 
   @visibleForTesting
-  static void set instance(value) => _instance = value;
+  static set instance(value) => _instance = value;
 
   static void setToDefault() => _instance = DefaultEnvironmentProvider();
 }

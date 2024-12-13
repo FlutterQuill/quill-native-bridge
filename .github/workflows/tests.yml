@@ -1,0 +1,57 @@
+name: 🧪 Run Tests
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  unit-tests:
+    name: 🧪 Unit Tests (Ubuntu)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🛠️ Setup Flutter (Stable)
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: 📦 Install All Package Dependencies
+        run: dart ./scripts/pub_get.dart
+  
+      - name: 📦 Install Example Project Dependencies
+        run: flutter pub get -C quill_native_bridge/example
+
+      - name: 🧪 Run Flutter tests
+        run: dart ./scripts/test.dart
+    
+  desktop-e2e-tests:
+    name: 🖥️ Desktop E2E Tests (${\{ matrix.os }} Latest)
+    strategy:
+      # This prevents one failure from stopping the entire run.
+      fail-fast: false
+      matrix:
+        os: [ubuntu, macos, windows]
+    runs-on: ${{ matrix.os }}-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🛠️ Setup Flutter (Stable)
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: 📦 Install Example Project Dependencies
+        run: flutter pub get -C quill_native_bridge/example
+
+      - name: 🧪 Run Flutter Integration tests
+        run: flutter test integration_test -d ${{ matrix.os }}
+        working-directory: quill_native_bridge/example

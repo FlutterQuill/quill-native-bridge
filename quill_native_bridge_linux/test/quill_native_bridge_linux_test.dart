@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:file_selector_platform_interface/file_selector_platform_interface.dart';
 import 'package:file_selector_linux/file_selector_linux.dart';
+import 'package:file_selector_platform_interface/file_selector_platform_interface.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -15,7 +15,7 @@ import 'package:quill_native_bridge_platform_interface/src/image_mime_utils.dart
 @GenerateMocks([FileSelectorPlatform, EnvironmentProvider])
 import 'quill_native_bridge_linux_test.mocks.dart';
 
-final _fakeLinuxUserHomeDir = '/home/foo-bar/Pictures';
+const _fakeLinuxUserHomeDir = '/home/foo-bar/Pictures';
 
 void main() {
   late QuillNativeBridgeLinux plugin;
@@ -81,7 +81,7 @@ void main() {
       'saveImage should return null for file path when user cancels save dialog',
       () async {
         final filePath = (await plugin.saveImage(Uint8List.fromList([1, 0, 1]),
-                options: ImageSaveOptions(
+                options: const ImageSaveOptions(
                   name: 'ExampleImage',
                   fileExtension: 'png',
                 )))
@@ -151,8 +151,7 @@ void main() {
             {ImageSaver.linuxUserHomeEnvKey: _fakeLinuxUserHomeDir});
         expect(
           imageSaver.picturesDirectoryPath,
-          equals(
-              '${_fakeLinuxUserHomeDir}/${ImageSaver.picturesDirectoryName}'),
+          equals('$_fakeLinuxUserHomeDir/${ImageSaver.picturesDirectoryName}'),
         );
       },
     );
@@ -168,7 +167,7 @@ void main() {
         )).thenAnswer((_) async => saveLocation);
 
         final filePath = (await plugin.saveImage(Uint8List.fromList([1, 0, 1]),
-                options: ImageSaveOptions(
+                options: const ImageSaveOptions(
                   name: 'ExampleImage',
                   fileExtension: 'png',
                 )))
@@ -181,7 +180,7 @@ void main() {
       'saveImage passes the arguments correctly to fileSelector.getSaveLocation',
       () async {
         final imageBytes = Uint8List.fromList([1, 0, 1]);
-        final options = ImageSaveOptions(
+        const options = ImageSaveOptions(
           name: 'ExampleImage',
           fileExtension: 'jpg',
         );
@@ -199,9 +198,9 @@ void main() {
           acceptedTypeGroups: captureAnyNamed('acceptedTypeGroups'),
         )).captured;
 
-        SaveDialogOptions? passedOptions =
+        final SaveDialogOptions passedOptions =
             capturedOptions[0] as SaveDialogOptions;
-        List<XTypeGroup> passedAcceptedTypeGroups =
+        final List<XTypeGroup> passedAcceptedTypeGroups =
             capturedOptions[1] as List<XTypeGroup>;
 
         expect(passedOptions.suggestedName,
@@ -220,7 +219,7 @@ void main() {
 
     test('saveImage calls fileSelector.getSaveLocation only once', () async {
       await plugin.saveImage(Uint8List.fromList([1, 0, 1]),
-          options: ImageSaveOptions(
+          options: const ImageSaveOptions(
             name: 'ExampleImage',
             fileExtension: 'png',
           ));
@@ -240,7 +239,7 @@ void main() {
 
         final imageFilePath =
             (await plugin.saveImage(Uint8List.fromList([1, 0, 1]),
-                    options: ImageSaveOptions(
+                    options: const ImageSaveOptions(
                       name: 'ExampleImage',
                       fileExtension: 'png',
                     )))
@@ -258,7 +257,7 @@ void main() {
           options: anyNamed('options'),
         )).thenAnswer((_) async => null);
 
-        final options = ImageSaveOptions(
+        const options = ImageSaveOptions(
           name: 'ImageName',
           // IMPORTANT: Use jpg specifically instead of jpeg or png
           // since the "image/jpg" is invalid and it will verify behavior,
@@ -290,7 +289,7 @@ void main() {
             reason: 'The $setUp should create the test file');
 
         final filePath = (await plugin.saveImage(imageBytes,
-                options: ImageSaveOptions(
+                options: const ImageSaveOptions(
                   name: 'ExampleImage',
                   fileExtension: 'png',
                 )))
@@ -312,7 +311,7 @@ void main() {
           options: anyNamed('acceptedTypeGroups'),
         )).thenAnswer((_) async => null);
         final result = await plugin.saveImage(Uint8List.fromList([1, 0, 1]),
-            options: ImageSaveOptions(
+            options: const ImageSaveOptions(
               name: 'ExampleImage',
               fileExtension: 'png',
             ));
@@ -324,7 +323,7 @@ void main() {
         )).thenAnswer((_) async => FileSaveLocation(imageTestFile.path));
 
         final result2 = await plugin.saveImage(Uint8List.fromList([1, 0, 1]),
-            options: ImageSaveOptions(
+            options: const ImageSaveOptions(
               name: 'ExampleImage',
               fileExtension: 'png',
             ));

@@ -6,12 +6,12 @@ import 'dart:io' show Process, File hide exitCode;
 
 import 'package:file_selector_platform_interface/file_selector_platform_interface.dart';
 import 'package:flutter/foundation.dart';
-import 'package:quill_native_bridge_linux/src/image_saver.dart';
+import 'package:quill_native_bridge_platform_interface/internal.dart';
 import 'package:quill_native_bridge_platform_interface/quill_native_bridge_platform_interface.dart';
-import 'package:quill_native_bridge_platform_interface/src/image_mime_utils.dart';
 
 import 'src/binary_runner.dart';
 import 'src/constants.dart';
+import 'src/image_saver.dart';
 import 'src/mime_types_constants.dart';
 import 'src/temp_file_utils.dart';
 

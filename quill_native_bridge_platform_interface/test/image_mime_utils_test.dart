@@ -38,7 +38,7 @@ void main() {
 
     test('throws ArgumentError with correct message for unsupported extension',
         () {
-      final unsupportedExtension = 'unsupported';
+      const unsupportedExtension = 'unsupported';
 
       expect(
         () => getImageMimeType(unsupportedExtension),

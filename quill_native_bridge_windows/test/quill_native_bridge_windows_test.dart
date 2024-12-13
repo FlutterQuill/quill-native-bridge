@@ -81,7 +81,7 @@ void main() {
       () async {
         final result = (await plugin.saveImage(
           Uint8List.fromList([1, 0, 1]),
-          options: ImageSaveOptions(
+          options: const ImageSaveOptions(
             name: 'ExampleImage',
             fileExtension: 'png',
           ),
@@ -153,7 +153,7 @@ void main() {
         expect(
           imageSaver.picturesDirectoryPath,
           equals(
-              '${_fakeWindowsUserHomeDir}\\${ImageSaver.picturesDirectoryName}'),
+              '$_fakeWindowsUserHomeDir\\${ImageSaver.picturesDirectoryName}'),
         );
       },
     );
@@ -170,7 +170,7 @@ void main() {
 
         final filePath = (await plugin.saveImage(
           Uint8List.fromList([1, 0, 1]),
-          options: ImageSaveOptions(
+          options: const ImageSaveOptions(
             name: 'ExampleImage',
             fileExtension: 'png',
           ),
@@ -184,7 +184,7 @@ void main() {
       'saveImage passes the arguments correctly to fileSelector.getSaveLocation',
       () async {
         final imageBytes = Uint8List.fromList([1, 0, 1]);
-        final options = ImageSaveOptions(
+        const options = ImageSaveOptions(
           name: 'ExampleImage',
           fileExtension: 'jpg',
         );
@@ -205,9 +205,9 @@ void main() {
           acceptedTypeGroups: captureAnyNamed('acceptedTypeGroups'),
         )).captured;
 
-        SaveDialogOptions? passedOptions =
+        final SaveDialogOptions passedOptions =
             capturedOptions[0] as SaveDialogOptions;
-        List<XTypeGroup> passedAcceptedTypeGroups =
+        final List<XTypeGroup> passedAcceptedTypeGroups =
             capturedOptions[1] as List<XTypeGroup>;
 
         expect(passedOptions.suggestedName,
@@ -226,7 +226,7 @@ void main() {
     test('saveImage calls fileSelector.getSaveLocation only once', () async {
       await plugin.saveImage(
         Uint8List.fromList([1, 0, 1]),
-        options: ImageSaveOptions(
+        options: const ImageSaveOptions(
           name: 'ExampleImage',
           fileExtension: 'png',
         ),
@@ -247,7 +247,7 @@ void main() {
 
         final imageFilePath = (await plugin.saveImage(
           Uint8List.fromList([1, 0, 1]),
-          options: ImageSaveOptions(
+          options: const ImageSaveOptions(
             name: 'ExampleImage',
             fileExtension: 'png',
           ),
@@ -273,7 +273,7 @@ void main() {
 
         final filePath = (await plugin.saveImage(
           imageBytes,
-          options: ImageSaveOptions(
+          options: const ImageSaveOptions(
             name: 'ExampleImage',
             fileExtension: 'png',
           ),
@@ -296,7 +296,7 @@ void main() {
           options: anyNamed('acceptedTypeGroups'),
         )).thenAnswer((_) async => null);
         final result = await plugin.saveImage(Uint8List.fromList([1, 0, 1]),
-            options: ImageSaveOptions(
+            options: const ImageSaveOptions(
               name: 'ExampleImage',
               fileExtension: 'png',
             ));
@@ -308,7 +308,7 @@ void main() {
         )).thenAnswer((_) async => FileSaveLocation(imageTestFile.path));
 
         final result2 = await plugin.saveImage(Uint8List.fromList([1, 0, 1]),
-            options: ImageSaveOptions(
+            options: const ImageSaveOptions(
               name: 'ExampleImage',
               fileExtension: 'png',
             ));

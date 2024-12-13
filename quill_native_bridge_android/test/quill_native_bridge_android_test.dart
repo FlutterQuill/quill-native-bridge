@@ -6,10 +6,9 @@ import 'package:quill_native_bridge_android/quill_native_bridge_android.dart';
 import 'package:quill_native_bridge_platform_interface/quill_native_bridge_platform_interface.dart';
 import 'package:quill_native_bridge_platform_interface/src/image_mime_utils.dart';
 
-import 'test_api.g.dart';
-
 @GenerateMocks([TestQuillNativeBridgeApi])
 import 'quill_native_bridge_android_test.mocks.dart';
+import 'test_api.g.dart';
 
 void main() {
   // Required when calling TestQuillNativeBridgeApi.setUp()
@@ -49,7 +48,7 @@ void main() {
           verify(mockHostApi.getClipboardHtml()).called(1);
           expect(nullHtml, isNull);
 
-          final exampleHtml = 'An HTML';
+          const exampleHtml = 'An HTML';
 
           when(mockHostApi.getClipboardHtml()).thenReturn(exampleHtml);
           final nonNullHtml = await plugin.getClipboardHtml();
@@ -61,7 +60,7 @@ void main() {
       test(
         'copyHtmlToClipboard delegates to _hostApi.copyHtmlToClipboard',
         () async {
-          final input = 'Example HTML';
+          const input = 'Example HTML';
           when(mockHostApi.copyHtmlToClipboard(input)).thenReturn(null);
           await plugin.copyHtmlToClipboard(input);
           verify(mockHostApi.copyHtmlToClipboard(input)).called(1);
@@ -175,7 +174,7 @@ void main() {
         'delegates to _hostApi.saveImageToGallery',
         () async {
           await plugin.saveImageToGallery(Uint8List.fromList([1, 0, 1]),
-              options: GalleryImageSaveOptions(
+              options: const GalleryImageSaveOptions(
                 name: 'ExampleImage',
                 fileExtension: 'png',
                 albumName: null,
@@ -195,7 +194,7 @@ void main() {
         () async {
           final imageBytes = Uint8List.fromList([1, 0, 1]);
 
-          final options = GalleryImageSaveOptions(
+          const options = GalleryImageSaveOptions(
             name: 'ExampleImage',
             fileExtension: 'jpg',
             albumName: 'ExampleAlbum',
@@ -207,7 +206,7 @@ void main() {
             albumName: anyNamed('albumName'),
             fileExtension: anyNamed('fileExtension'),
             mimeType: anyNamed('mimeType'),
-          )).thenAnswer((_) async => null);
+          )).thenAnswer((_) async {});
 
           await plugin.saveImageToGallery(imageBytes, options: options);
 
@@ -231,7 +230,7 @@ void main() {
       test(
         'passes the mime type correctly to the platform host API',
         () async {
-          final options = GalleryImageSaveOptions(
+          const options = GalleryImageSaveOptions(
             name: 'ImageName',
             // IMPORTANT: Use jpg specifically instead of jpeg or png
             // since the "image/jpg" is invalid and it will verify behavior,
@@ -270,7 +269,7 @@ void main() {
             )).thenThrow(PlatformException(code: errorCode));
             expect(
               plugin.saveImageToGallery(Uint8List.fromList([1, 0, 1]),
-                  options: GalleryImageSaveOptions(
+                  options: const GalleryImageSaveOptions(
                     name: 'ExampleImage',
                     fileExtension: 'png',
                     albumName: null,
@@ -306,7 +305,7 @@ void main() {
         expect(
           plugin.saveImageToGallery(
             Uint8List.fromList([1, 0, 1]),
-            options: GalleryImageSaveOptions(
+            options: const GalleryImageSaveOptions(
               name: 'ExampleImage',
               fileExtension: 'png',
               albumName: null,
@@ -325,7 +324,7 @@ void main() {
         )).thenAnswer((_) async {});
         await expectLater(
           plugin.saveImageToGallery(Uint8List.fromList([1, 0, 1]),
-              options: GalleryImageSaveOptions(
+              options: const GalleryImageSaveOptions(
                 name: 'ExampleImage',
                 fileExtension: 'png',
                 albumName: null,

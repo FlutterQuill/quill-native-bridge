@@ -71,7 +71,7 @@ class MockQuillNativeBridgePlatform
   }) async {
     savedImageBytes = imageBytes;
     imageSaveOptions = options;
-    return ImageSaveResult(
+    return const ImageSaveResult(
       filePath: '/path/to/file',
       blobUrl:
           'blob:http://localhost:64030/e58f63d4-2890-469c-9c8e-69e839da6a93',
@@ -156,7 +156,7 @@ void main() {
   test(
     'saveImage',
     () async {
-      final options =
+      const options =
           ImageSaveOptions(name: 'image name', fileExtension: 'png');
       final result = await QuillNativeBridgePlatform.instance.saveImage(
         Uint8List.fromList([9, 3, 5]),
@@ -164,7 +164,7 @@ void main() {
       );
       expect(
         result,
-        ImageSaveResult(
+        const ImageSaveResult(
           filePath: '/path/to/file',
           blobUrl:
               'blob:http://localhost:64030/e58f63d4-2890-469c-9c8e-69e839da6a93',
@@ -177,7 +177,7 @@ void main() {
   test(
     'saveImageToGallery',
     () async {
-      final galleryImageSaveOptions = GalleryImageSaveOptions(
+      const galleryImageSaveOptions = GalleryImageSaveOptions(
         name: 'image name',
         fileExtension: 'png',
         albumName: 'example album',
