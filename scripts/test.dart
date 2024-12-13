@@ -6,8 +6,8 @@ import 'packages.dart';
 
 void main(List<String> args) {
   for (final package in packages) {
-    final result = Process.runSync('flutter', ['test', '--reporter', 'github'],
-        workingDirectory: package);
+    final result =
+        Process.runSync('flutter', ['test'], workingDirectory: package);
     print(result.stdout);
   }
 }
