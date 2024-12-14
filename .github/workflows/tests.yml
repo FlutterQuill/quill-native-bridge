@@ -4,33 +4,9 @@ on:
   pull_request:
     branches: [main]
 
-jobs:
-  unit-tests:
-    name: 🧩 Unit Tests (Ubuntu)
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-
-    steps:
-      - name: 📥 Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: 🛠️ Setup Flutter (Stable)
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          cache: true
-
-      - name: 📦 Install All Package Dependencies
-        run: dart ./scripts/pub_get.dart
-  
-      - name: 📦 Install Example Project Dependencies
-        run: flutter pub get -C quill_native_bridge/example
-
-      - name: 🧪 Run Flutter tests
-        run: dart ./scripts/test.dart
-    
-  desktop-e2e-tests:
-    name: 🖥️ Desktop E2E Tests (${{ matrix.os }} Latest)
+jobs:    
+  desktop-tests:
+    name: 🖥️ Desktop Tests (${{ matrix.os }} Latest)
     strategy:
       # This prevents one failure from stopping the entire run.
       fail-fast: false
@@ -48,11 +24,18 @@ jobs:
         with:
           channel: 'stable'
           cache: true
+      
+      - name: 📦 Install all package dependencies
+        run: dart ./scripts/pub_get.dart
 
-      - name: 📦 Install Example Project Dependencies
+      - name: 📦 Install example dependencies
         run: flutter pub get -C quill_native_bridge/example
 
-      - name: 📦 Install Linux Dependencies
+      - name: 🧩 Run Flutter unit tests
+        run: dart ./scripts/test.dart
+        timeout-minutes: 5
+
+      - name: 📦 Install Linux dependencies
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update -y
@@ -61,14 +44,14 @@ jobs:
 
       # For more details: https://docs.flutter.dev/testing/integration-tests#test-on-a-desktop-platform
 
-      - name: 🧪 Run Flutter Integration tests on Linux
+      - name: 🧪 Run Flutter integration tests on Linux
         if: runner.os == 'Linux'
         uses: smithki/xvfb-action@v1.1.2
         with:
           run: flutter test integration_test -d linux -r github
           working-directory: quill_native_bridge/example
 
-      - name: 🧪 Run Flutter Integration tests on Non-Linux Platforms
+      - name: 🧪 Run Flutter integration tests on Non-Linux platforms
         if: runner.os != 'Linux'
         run: flutter test integration_test -d ${{ runner.os }}
         working-directory: quill_native_bridge/example
