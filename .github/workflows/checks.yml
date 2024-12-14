@@ -46,24 +46,30 @@ jobs:
       - name: 📦 Verify Package Readiness for Publishing
         run: dart ./scripts/publish_dry_run.dart
 
-      # - name: 🔎 Validate Swift Code Formatting
-      #   uses: feather-actions/run-swift-format@0.0.2
-      #   with:
-      #       swift-format-version: 600.0.0
-
-      - name: 🎨 Verify Swift Code Style with SwiftLint for quill_native_bridge_ios
-        uses: norio-nomura/action-swiftlint@3.2.1
-        env:
-          WORKING_DIRECTORY: quill_native_bridge_ios/ios/quill_native_bridge_ios
-
-      - name: 🎨 Verify Swift Code Style with SwiftLint for quill_native_bridge_macos
-        uses: norio-nomura/action-swiftlint@3.2.1
-        env:
-          WORKING_DIRECTORY: quill_native_bridge_macos/macos/quill_native_bridge_macos
-
+      # Ktlint: https://github.com/pinterest/ktlint
       - name: 🎨 Verify Kotlin Code Style with Ktlint
         uses: ScaCap/action-ktlint@master
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
           fail_on_error: true
+
+      - name: 🛠️ Setup Swift
+        uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: "6"
+
+      - name: 🔎 Validate Swift Code Formatting
+        run: |
+          VERSION=600.0.0
+          git clone --branch $VERSION --depth 1 https://github.com/swiftlang/swift-format.git
+          cd swift-format
+          swift build -c release
+          sudo mv .build/release/swift-format /usr/local/bin/
+          swift-format --version
+          swift-format lint -r quill_native_bridge_ios/ios/quill_native_bridge_ios
+          swift-format lint -r quill_native_bridge_macos/macos/quill_native_bridge_macos
+    
+      # SwiftLint: https://github.com/realm/SwiftLint
+      # - name: 🎨 Verify Swift Code Style with SwiftLint
+      #   uses: norio-nomura/action-swiftlint@3.2.1
