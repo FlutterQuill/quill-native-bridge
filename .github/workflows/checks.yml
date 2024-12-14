@@ -29,10 +29,13 @@ jobs:
         run: flutter pub get -C quill_native_bridge/example
 
       - name: 🎨 Perform Flutter Analysis
-        uses: zgosalvez/github-actions-analyze-dart@v2
+        run: flutter analyze --write=flutter_analyze.log
+
+      - if: ${{ !cancelled() }}
+        uses: yorifuji/flutter-analyze-commenter@v1
         with:
-          fail-on-warnings: true
-          fail-on-infos: true
+          analyze-log: flutter_analyze.log
+          verbose: false 
 
       - name: 🔎 Validate Dart Code Formatting
         run: dart format --set-exit-if-changed .
