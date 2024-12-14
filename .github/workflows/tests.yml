@@ -26,7 +26,13 @@ jobs:
           cache: true
       
       - name: 📦 Install all package dependencies
+        if: runner.os != 'Windows'
         run: dart ./scripts/pub_get.dart
+
+      - name: 📦 Install all package dependencies on Windows
+        if: runner.os == 'Windows'
+        run: dart ./scripts/pub_get.dart
+        shell: pwsh
 
       - name: 📦 Install example dependencies
         run: flutter pub get -C quill_native_bridge/example
