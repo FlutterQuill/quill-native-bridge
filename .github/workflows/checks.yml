@@ -51,6 +51,9 @@ jobs:
       #   with:
       #       swift-format-version: 600.0.0
 
+      - name: 🎨 Verify Swift Code Style with SwiftLint
+        uses: norio-nomura/action-swiftlint@3.2.1
+
       - name: 🎨 Verify Kotlin Code Style with Ktlint
         uses: ScaCap/action-ktlint@master
         with:
