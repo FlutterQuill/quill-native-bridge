@@ -1,0 +1,45 @@
+name: ✅ Swift Formatting Check
+
+# Separated from checks.yml since it takes longer to build swift-format from source
+on:
+  push:
+    paths:
+      - '**/*.swift'
+  pull_request:
+    paths:
+      - '**/*.swift'
+
+jobs:
+  format-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🛠️ Setup Swift
+        uses: swift-actions/setup-swift@v2
+
+      - name: 📦 Install Swift Format (swift-format)
+        run: |
+          VERSION=600.0.0
+          git clone --branch $VERSION --depth 1 https://github.com/swiftlang/swift-format.git
+          cd swift-format
+          swift build -c release
+          sudo mv .build/release/swift-format /usr/local/bin/
+          
+      - name: 🔍 Verify Swift Format installation
+        run: swift-format --version
+
+      - name: ℹ️ Print the default configuration
+        run: swift-format dump-configuration
+
+      - name: 🔎 Validate Swift Code Formatting
+        run: |
+          swift-format lint -r quill_native_bridge_ios/ios/quill_native_bridge_ios
+          swift-format lint -r quill_native_bridge_macos/macos/quill_native_bridge_macos
+
+        # SwiftLint: https://github.com/realm/SwiftLint
+    #   - name: 🎨 Verify Swift Code Style with SwiftLint
+    #     uses: norio-nomura/action-swiftlint@3.2.1

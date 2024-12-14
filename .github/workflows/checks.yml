@@ -53,24 +53,3 @@ jobs:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
           fail_on_error: true
-
-      - name: 🛠️ Setup Swift
-        uses: swift-actions/setup-swift@v2
-        # https://github.com/swift-actions/setup-swift/issues/683
-        # with:
-        #   swift-version: "6.0.0"
-
-      - name: 🔎 Validate Swift Code Formatting
-        run: |
-          VERSION=600.0.0
-          git clone --branch $VERSION --depth 1 https://github.com/swiftlang/swift-format.git
-          cd swift-format
-          swift build -c release
-          sudo mv .build/release/swift-format /usr/local/bin/
-          swift-format --version
-          swift-format lint -r quill_native_bridge_ios/ios/quill_native_bridge_ios
-          swift-format lint -r quill_native_bridge_macos/macos/quill_native_bridge_macos
-    
-      # SwiftLint: https://github.com/realm/SwiftLint
-      # - name: 🎨 Verify Swift Code Style with SwiftLint
-      #   uses: norio-nomura/action-swiftlint@3.2.1
