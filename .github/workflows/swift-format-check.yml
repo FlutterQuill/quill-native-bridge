@@ -33,16 +33,18 @@ jobs:
         id: swift-format-cache
         uses: actions/cache@v4
         with:
-          path: .build/release/swift-format
-          key: swift-format-${{ runner.os }}-v${{ env.SWIFT_FORMAT_VERSION }}
+          path: .build
+          key: swift-format-${{ runner.os }}-v${{ env.SWIFT_FORMAT_VERSION }}-${{ hashFiles('**/Package.resolved') }}
           restore-keys: |
-            swift-format-${{ runner.os }}-
+            swift-format-${{ runner.os }}-v
 
       - name: 📦 Restore Cached Swift Format
         if: steps.swift-format-cache.outputs.cache-hit == 'true'
         run: |
-          if [ -f ".build/release/swift-format" ]; then
-            sudo cp .build/release/swift-format /usr/local/bin/swift-format
+          if [ -d ".build" ]; then
+            if ! [ -x "$(command -v swift-format)" ]; then
+              sudo cp -f .build/release/swift-format /usr/local/bin/swift-format
+            fi
           else
             echo "The cached swift-format was not found in the .build directory." >&2
             exit 1
@@ -54,7 +56,8 @@ jobs:
           git clone --branch $SWIFT_FORMAT_VERSION --depth 1 https://github.com/swiftlang/swift-format.git
           cd swift-format
           swift build -c release
-          sudo cp .build/release/swift-format /usr/local/bin/swift-format
+          mv .build .. && cd ..
+          sudo cp -f .build/release/swift-format /usr/local/bin/swift-format
           
       - name: 🔍 Verify Swift Format installation
         run: swift-format --version
