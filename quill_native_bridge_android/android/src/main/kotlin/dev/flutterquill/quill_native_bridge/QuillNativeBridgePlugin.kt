@@ -21,9 +21,9 @@ class QuillNativeBridgePlugin :
     internal var activityPluginBinding: ActivityPluginBinding? = null
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        val pluginApi = QuillNativeBridgeImpl(binding.applicationContext)
-        this.pluginApi = pluginApi
-        QuillNativeBridgeApi.setUp(binding.binaryMessenger, pluginApi)
+            val pluginApi = QuillNativeBridgeImpl(binding.applicationContext)
+                            this.pluginApi = pluginApi
+QuillNativeBridgeApi.setUp(binding.binaryMessenger, pluginApi)
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
