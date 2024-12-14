@@ -45,5 +45,8 @@ jobs:
       #   with:
       #       swift-format-version: 600.0.0
 
-      - name: 🔎 Validate Kotlin Code Formatting
-        uses: "block42-blockchain-company/ktlint-action@master"
+      - name: 🎨 Verify Kotlin Code Style with Ktlint
+        uses: ScaCap/action-ktlint@master
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
