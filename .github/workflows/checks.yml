@@ -56,8 +56,9 @@ jobs:
 
       - name: 🛠️ Setup Swift
         uses: swift-actions/setup-swift@v2
-        with:
-          swift-version: "6"
+        # https://github.com/swift-actions/setup-swift/issues/683
+        # with:
+        #   swift-version: "6.0.0"
 
       - name: 🔎 Validate Swift Code Formatting
         run: |
