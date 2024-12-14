@@ -18,6 +18,7 @@ void main() {
     test('no op', () {});
     return;
   }
+  print('The GitHub workflow should fail.');
 
   group('getClipboardImage and copyImageToClipboard', () {
     test('copying images to the clipboard should make them accessible',
