@@ -19,6 +19,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
+    env:
+      SWIFT_FORMAT_VERSION: 600.0.0
+
     steps:
       - name: 📥 Checkout Repository
         uses: actions/checkout@v4
@@ -26,10 +29,19 @@ jobs:
       - name: 🛠️ Setup Swift
         uses: swift-actions/setup-swift@v2
 
-      - name: 📦 Install Swift Format (swift-format)
+      - name: 📦 Cache Swift Format (swift-format)
+        id: swift-format-cache
+        uses: actions/cache@v4
+        with:
+          path: /usr/local/bin/swift-format
+          key: swift-format-${{ runner.os }}-v${{ env.SWIFT_FORMAT_VERSION }}
+          restore-keys: |
+            swift-format-${{ runner.os }}-
+
+      - name: 📦 Install Swift Format (swift-format) if not cached
+        if: steps.swift-format-cache.outputs.cache-hit != 'true'
         run: |
-          VERSION=600.0.0
-          git clone --branch $VERSION --depth 1 https://github.com/swiftlang/swift-format.git
+          git clone --branch $SWIFT_FORMAT_VERSION --depth 1 https://github.com/swiftlang/swift-format.git
           cd swift-format
           swift build -c release
           sudo mv .build/release/swift-format /usr/local/bin/
