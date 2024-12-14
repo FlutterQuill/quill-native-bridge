@@ -10,27 +10,29 @@ import dev.flutterquill.quill_native_bridge.generated.QuillNativeBridgeApi
 import dev.flutterquill.quill_native_bridge.saveImage.SaveImageHandler
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 
-class QuillNativeBridgeImpl(private val context: Context) : QuillNativeBridgeApi {
+class QuillNativeBridgeImpl(
+    private val context: Context,
+) : QuillNativeBridgeApi {
     private var activityPluginBinding: ActivityPluginBinding? = null
 
     override fun getClipboardHtml(): String? = ClipboardRichTextHandler.getClipboardHtml(context)
 
-    override fun copyHtmlToClipboard(html: String) =
-        ClipboardRichTextHandler.copyHtmlToClipboard(context, html)
+    override fun copyHtmlToClipboard(html: String) = ClipboardRichTextHandler.copyHtmlToClipboard(context, html)
 
-    override fun getClipboardImage(): ByteArray? = ClipboardReadImageHandler.getClipboardImage(
-        context,
-        // Will convert the image to PNG
-        imageType = ClipboardReadImageHandler.ImageType.AnyExceptGif,
-    )
+    override fun getClipboardImage(): ByteArray? =
+        ClipboardReadImageHandler.getClipboardImage(
+            context,
+            // Will convert the image to PNG
+            imageType = ClipboardReadImageHandler.ImageType.AnyExceptGif,
+        )
 
-    override fun copyImageToClipboard(imageBytes: ByteArray) =
-        ClipboardWriteImageHandler.copyImageToClipboard(context, imageBytes)
+    override fun copyImageToClipboard(imageBytes: ByteArray) = ClipboardWriteImageHandler.copyImageToClipboard(context, imageBytes)
 
-    override fun getClipboardGif(): ByteArray? = ClipboardReadImageHandler.getClipboardImage(
-        context,
-        imageType = ClipboardReadImageHandler.ImageType.Gif,
-    )
+    override fun getClipboardGif(): ByteArray? =
+        ClipboardReadImageHandler.getClipboardImage(
+            context,
+            imageType = ClipboardReadImageHandler.ImageType.Gif,
+        )
 
     override fun openGalleryApp() {
         // TODO(save-image): Test on Android marshmallow (API 23)
@@ -47,7 +49,7 @@ class QuillNativeBridgeImpl(private val context: Context) : QuillNativeBridgeApi
         fileExtension: String,
         mimeType: String,
         albumName: String?,
-        callback: (Result<Unit>) -> Unit
+        callback: (Result<Unit>) -> Unit,
     ) = SaveImageHandler.saveImageToGallery(
         context,
         getActivityPluginBindingOrThrow(),
@@ -56,13 +58,14 @@ class QuillNativeBridgeImpl(private val context: Context) : QuillNativeBridgeApi
         fileExtension = fileExtension,
         mimeType = mimeType,
         albumName = albumName,
-        callback = callback
+        callback = callback,
     )
 
-    private fun getActivityPluginBindingOrThrow(): ActivityPluginBinding {
-        return activityPluginBinding
-            ?: throw IllegalStateException("The Flutter activity binding was not set. This indicates a bug in `${QuillNativeBridgePlugin::class.simpleName}`.")
-    }
+    private fun getActivityPluginBindingOrThrow(): ActivityPluginBinding =
+        activityPluginBinding
+            ?: throw IllegalStateException(
+                "The Flutter activity binding was not set. This indicates a bug in `${QuillNativeBridgePlugin::class.simpleName}`.",
+            )
 
     fun setActivityPluginBinding(activityPluginBinding: ActivityPluginBinding?) {
         this.activityPluginBinding = activityPluginBinding

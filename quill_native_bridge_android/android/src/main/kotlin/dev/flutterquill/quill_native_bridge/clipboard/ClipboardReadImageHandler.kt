@@ -66,14 +66,16 @@ object ClipboardReadImageHandler {
         val clipboardItem = clipData.getItemAt(0)
 
         val imageUri = clipboardItem.uri
-        val matchMimeType: Boolean = when (imageType) {
-            ImageType.Png -> clipData.description.hasMimeType(MIME_TYPE_IMAGE_PNG)
-            ImageType.Jpeg -> clipData.description.hasMimeType(MIME_TYPE_IMAGE_JPEG)
-            ImageType.AnyExceptGif -> clipData.description.hasMimeType(MIME_TYPE_IMAGE_ALL) &&
-                    !clipData.description.hasMimeType(MIME_TYPE_IMAGE_GIF)
+        val matchMimeType: Boolean =
+            when (imageType) {
+                ImageType.Png -> clipData.description.hasMimeType(MIME_TYPE_IMAGE_PNG)
+                ImageType.Jpeg -> clipData.description.hasMimeType(MIME_TYPE_IMAGE_JPEG)
+                ImageType.AnyExceptGif ->
+                    clipData.description.hasMimeType(MIME_TYPE_IMAGE_ALL) &&
+                        !clipData.description.hasMimeType(MIME_TYPE_IMAGE_GIF)
 
-            ImageType.Gif -> clipData.description.hasMimeType(MIME_TYPE_IMAGE_GIF)
-        }
+                ImageType.Gif -> clipData.description.hasMimeType(MIME_TYPE_IMAGE_GIF)
+            }
         if (imageUri == null || !matchMimeType) {
             // Image URI is null or the mime type doesn't match.
             // This is not widely supported but some apps do store images as file paths in a text
@@ -105,13 +107,12 @@ object ClipboardReadImageHandler {
      * @throws FileNotFoundException Could be thrown when the [Uri] is no longer on the clipboard.
      * */
     @Throws(Exception::class)
-    private fun Uri.readOrThrow(
-        context: Context,
-    ) = try {
-        context.contentResolver.openInputStream(this)?.close()
-    } catch (e: Exception) {
-        throw e
-    }
+    private fun Uri.readOrThrow(context: Context) =
+        try {
+            context.contentResolver.openInputStream(this)?.close()
+        } catch (e: Exception) {
+            throw e
+        }
 
     /**
      * Get the clipboard Image.
@@ -122,10 +123,11 @@ object ClipboardReadImageHandler {
     ): ByteArray? {
         val primaryClipData = getPrimaryClip(context) ?: return null
 
-        val imageUri = getImageUri(
-            clipData = primaryClipData,
-            imageType = imageType,
-        ) ?: return null
+        val imageUri =
+            getImageUri(
+                clipData = primaryClipData,
+                imageType = imageType,
+            ) ?: return null
 
         try {
             imageUri.readOrThrow(context)
@@ -134,30 +136,32 @@ object ClipboardReadImageHandler {
                 is SecurityException -> throw FlutterError(
                     "FILE_READ_PERMISSION_DENIED",
                     "An image exists on the clipboard, but the app no longer " +
-                            "has permission to access it. This may be due to the app's " +
-                            "lifecycle or a recent app restart: ${e.message}",
+                        "has permission to access it. This may be due to the app's " +
+                        "lifecycle or a recent app restart: ${e.message}",
                     e.toString(),
                 )
 
                 is FileNotFoundException -> throw FlutterError(
                     "FILE_NOT_FOUND",
                     "The image file can't be found, the provided URI could not be opened: ${e.message}",
-                    e.toString()
+                    e.toString(),
                 )
 
                 else -> throw FlutterError(
                     "UNKNOWN_ERROR_READING_FILE",
                     "An unknown occurred while reading the image file URI: ${e.message}",
-                    e.toString()
+                    e.toString(),
                 )
             }
         }
-        val imageBytes = when (imageType) {
-            ImageType.Png, ImageType.Jpeg,
-            ImageType.AnyExceptGif -> getClipboardImageAsPng(context, imageUri)
+        val imageBytes =
+            when (imageType) {
+                ImageType.Png, ImageType.Jpeg,
+                ImageType.AnyExceptGif,
+                -> getClipboardImageAsPng(context, imageUri)
 
-            ImageType.Gif -> getClipboardGif(context, imageUri)
-        }
+                ImageType.Gif -> getClipboardGif(context, imageUri)
+            }
         return imageBytes
     }
 
@@ -167,43 +171,45 @@ object ClipboardReadImageHandler {
      * */
     private fun getClipboardImageAsPng(
         context: Context,
-        imageUri: Uri
+        imageUri: Uri,
     ): ByteArray {
-        val bitmap: Bitmap = try {
-            ImageDecoderCompat.decodeBitmapFromUri(context.contentResolver, imageUri)
-        } catch (e: IOException) {
-            throw FlutterError(
-                "COULD_NOT_DECODE_IMAGE",
-                "Could not decode bitmap from Uri: ${e.message}",
-                e.toString(),
-            )
-        }
-
-        val imageBytes = ByteArrayOutputStream().use { outputStream ->
-            val compressedSuccessfully =
-                bitmap.compress(
-                    Bitmap.CompressFormat.PNG,
-                    /**
-                     * Quality will be ignored for png images. See [Bitmap.CompressFormat.PNG] docs
-                     * */
-                    100,
-                    outputStream
-                )
-            if (!compressedSuccessfully) {
+        val bitmap: Bitmap =
+            try {
+                ImageDecoderCompat.decodeBitmapFromUri(context.contentResolver, imageUri)
+            } catch (e: IOException) {
                 throw FlutterError(
-                    "COULD_NOT_COMPRESS_IMAGE",
-                    "Unknown error while compressing the image",
-                    null,
+                    "COULD_NOT_DECODE_IMAGE",
+                    "Could not decode bitmap from Uri: ${e.message}",
+                    e.toString(),
                 )
             }
-            outputStream.toByteArray()
-        }
+
+        val imageBytes =
+            ByteArrayOutputStream().use { outputStream ->
+                val compressedSuccessfully =
+                    bitmap.compress(
+                        Bitmap.CompressFormat.PNG,
+                        /**
+                         * Quality will be ignored for png images. See [Bitmap.CompressFormat.PNG] docs
+                         * */
+                        100,
+                        outputStream,
+                    )
+                if (!compressedSuccessfully) {
+                    throw FlutterError(
+                        "COULD_NOT_COMPRESS_IMAGE",
+                        "Unknown error while compressing the image",
+                        null,
+                    )
+                }
+                outputStream.toByteArray()
+            }
         return imageBytes
     }
 
     private fun getClipboardGif(
         context: Context,
-        imageUri: Uri
+        imageUri: Uri,
     ): ByteArray {
         try {
             val imageBytes = uriToByteArray(context, imageUri)
@@ -217,11 +223,13 @@ object ClipboardReadImageHandler {
         }
     }
 
-    private fun uriToByteArray(context: Context, uri: Uri): ByteArray {
-        return checkNotNull(context.contentResolver.openInputStream(uri)) {
+    private fun uriToByteArray(
+        context: Context,
+        uri: Uri,
+    ): ByteArray =
+        checkNotNull(context.contentResolver.openInputStream(uri)) {
             "Input stream is null, the provider might have recently crashed."
         }.use { inputStream ->
             inputStream.readBytes()
         }
-    }
 }

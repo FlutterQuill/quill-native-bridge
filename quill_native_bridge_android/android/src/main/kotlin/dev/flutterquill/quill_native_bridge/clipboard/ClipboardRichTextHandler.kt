@@ -27,10 +27,11 @@ object ClipboardRichTextHandler {
 
         val clipboardItem = primaryClipData.getItemAt(0)
 
-        val htmlText = clipboardItem.htmlText ?: throw FlutterError(
-            "HTML_TEXT_NULL",
-            "Expected the HTML Text from the Clipboard to be not null"
-        )
+        val htmlText =
+            clipboardItem.htmlText ?: throw FlutterError(
+                "HTML_TEXT_NULL",
+                "Expected the HTML Text from the Clipboard to be not null",
+            )
         return htmlText
     }
 

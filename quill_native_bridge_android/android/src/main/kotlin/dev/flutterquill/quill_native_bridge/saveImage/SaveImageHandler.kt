@@ -24,7 +24,6 @@ import java.nio.file.Paths
 import java.util.UUID
 
 object SaveImageHandler {
-
     /**
      * @return `true` if running on API 29 or newer version.
      * */
@@ -38,10 +37,11 @@ object SaveImageHandler {
 
     private fun isWriteExternalStoragePermissionDeclared(context: Context): Boolean {
         return try {
-            val packageInfo = context.packageManager.getPackageInfo(
-                context.packageName,
-                PackageManager.GET_PERMISSIONS
-            )
+            val packageInfo =
+                context.packageManager.getPackageInfo(
+                    context.packageName,
+                    PackageManager.GET_PERMISSIONS,
+                )
             val permissions = packageInfo.requestedPermissions
 
             if (permissions.isNullOrEmpty()) {
@@ -65,14 +65,15 @@ object SaveImageHandler {
         mimeType: String,
         context: Context,
     ) {
-        val imageSaveDirectory = if (albumName != null) {
-            File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                albumName
-            )
-        } else {
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        }
+        val imageSaveDirectory =
+            if (albumName != null) {
+                File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                    albumName,
+                )
+            } else {
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+            }
 
         if (!imageSaveDirectory.exists() && !imageSaveDirectory.mkdirs()) {
             callback.respondFlutterPigeonError(
@@ -86,12 +87,12 @@ object SaveImageHandler {
         val imageFile =
             File(
                 imageSaveDirectory,
-                "${name}-${System.currentTimeMillis()}-${UUID.randomUUID()}.${fileExtension}"
+                "$name-${System.currentTimeMillis()}-${UUID.randomUUID()}.$fileExtension",
             )
         if (imageFile.exists()) {
             callback.respondFlutterPigeonError(
                 "FILE_EXISTS",
-                "A file with the name `${imageFile}` already exists.",
+                "A file with the name `$imageFile` already exists.",
                 null,
             )
             return
@@ -104,7 +105,7 @@ object SaveImageHandler {
                 callback.respondFlutterPigeonError(
                     "SAVE_FAILED",
                     "Failed to save the image to the gallery: ${e.message}",
-                    e.toString()
+                    e.toString(),
                 )
                 return
             }
@@ -128,7 +129,7 @@ object SaveImageHandler {
         fileExtension: String,
         mimeType: String,
         albumName: String?,
-        callback: (Result<Unit>) -> Unit
+        callback: (Result<Unit>) -> Unit,
     ) {
         if (!ImageDecoderCompat.isValidImage(imageBytes)) {
             callback.respondFlutterPigeonError(
@@ -144,69 +145,73 @@ object SaveImageHandler {
                     "ANDROID_MANIFEST_NOT_CONFIGURED",
                     "The uses-permission '${WRITE_EXTERNAL_STORAGE_PERMISSION_NAME}' is not declared in AndroidManifest.xml",
                     "The app is running on Android API ${Build.VERSION.SDK_INT}. Scoped storage" +
-                            " was introduced in ${Build.VERSION_CODES.Q} and is not available on this version.\n" +
-                            "Write to external storage permission is required to save an image to the gallery."
+                        " was introduced in ${Build.VERSION_CODES.Q} and is not available on this version.\n" +
+                        "Write to external storage permission is required to save an image to the gallery.",
                 )
                 return
             }
             // Need to request runtime permission for API 28 and older versions
-            val hasNecessaryPermission = ContextCompat.checkSelfPermission(
-                context,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED
+            val hasNecessaryPermission =
+                ContextCompat.checkSelfPermission(
+                    context,
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                ) == PackageManager.PERMISSION_GRANTED
             if (!hasNecessaryPermission) {
                 ActivityCompat.requestPermissions(
                     activityPluginBinding.activity,
                     arrayOf(WRITE_EXTERNAL_STORAGE_PERMISSION_NAME),
-                    WRITE_TO_EXTERNAL_STORAGE_REQUEST_CODE
+                    WRITE_TO_EXTERNAL_STORAGE_REQUEST_CODE,
                 )
 
-                activityPluginBinding.addRequestPermissionsResultListener(object :
-                    PluginRegistry.RequestPermissionsResultListener {
-                    override fun onRequestPermissionsResult(
-                        requestCode: Int,
-                        permissions: Array<out String>,
-                        grantResults: IntArray
-                    ): Boolean {
-                        try {
-                            if (requestCode != WRITE_TO_EXTERNAL_STORAGE_REQUEST_CODE) {
-                                return false
-                            }
-                            val isWriteExternalStoragePermissionRequested = permissions.contentEquals(
-                                arrayOf(WRITE_EXTERNAL_STORAGE_PERMISSION_NAME)
-                            )
-                            if (!isWriteExternalStoragePermissionRequested) {
-                                Log.w(
-                                    QuillNativeBridgePlugin.TAG,
-                                    "Unexpected permissions requested. Expected only [$WRITE_EXTERNAL_STORAGE_PERMISSION_NAME], but received: ${permissions.joinToString()}."
-                                )
-                            }
-                            val isGranted =
-                                grantResults.isNotEmpty() && grantResults.first() == PackageManager.PERMISSION_GRANTED
-                            if (!isGranted) {
-                                callback.respondFlutterPigeonError(
-                                    "PERMISSION_DENIED",
-                                    "Write to external storage permission request has been denied."
+                activityPluginBinding.addRequestPermissionsResultListener(
+                    object :
+                        PluginRegistry.RequestPermissionsResultListener {
+                        override fun onRequestPermissionsResult(
+                            requestCode: Int,
+                            permissions: Array<out String>,
+                            grantResults: IntArray,
+                        ): Boolean {
+                            try {
+                                if (requestCode != WRITE_TO_EXTERNAL_STORAGE_REQUEST_CODE) {
+                                    return false
+                                }
+                                val isWriteExternalStoragePermissionRequested =
+                                    permissions.contentEquals(
+                                        arrayOf(WRITE_EXTERNAL_STORAGE_PERMISSION_NAME),
+                                    )
+                                if (!isWriteExternalStoragePermissionRequested) {
+                                    Log.w(
+                                        QuillNativeBridgePlugin.TAG,
+                                        "Unexpected permissions requested. Expected only [$WRITE_EXTERNAL_STORAGE_PERMISSION_NAME], but received: ${permissions.joinToString()}.",
+                                    )
+                                }
+                                val isGranted =
+                                    grantResults.isNotEmpty() && grantResults.first() == PackageManager.PERMISSION_GRANTED
+                                if (!isGranted) {
+                                    callback.respondFlutterPigeonError(
+                                        "PERMISSION_DENIED",
+                                        "Write to external storage permission request has been denied.",
+                                    )
+                                    return true
+                                }
+                                saveImageToGalleryLegacy(
+                                    imageBytes = imageBytes,
+                                    name = name,
+                                    albumName = albumName,
+                                    fileExtension = fileExtension,
+                                    callback = callback,
+                                    mimeType = mimeType,
+                                    context = context,
                                 )
                                 return true
-                            }
-                            saveImageToGalleryLegacy(
-                                imageBytes = imageBytes,
-                                name = name,
-                                albumName = albumName,
-                                fileExtension = fileExtension,
-                                callback = callback,
-                                mimeType = mimeType,
-                                context = context,
-                            )
-                            return true
-                        } finally {
-                            Handler(Looper.getMainLooper()).post {
-                                activityPluginBinding.removeRequestPermissionsResultListener(this)
+                            } finally {
+                                Handler(Looper.getMainLooper()).post {
+                                    activityPluginBinding.removeRequestPermissionsResultListener(this)
+                                }
                             }
                         }
-                    }
-                })
+                    },
+                )
                 return
             }
 
@@ -226,18 +231,19 @@ object SaveImageHandler {
 
         val contentResolver = context.contentResolver
 
-        val contentValues = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, name)
-            put(MediaStore.Images.Media.MIME_TYPE, mimeType)
-            put(MediaStore.Images.Media.IS_PENDING, 1)
+        val contentValues =
+            ContentValues().apply {
+                put(MediaStore.Images.Media.DISPLAY_NAME, name)
+                put(MediaStore.Images.Media.MIME_TYPE, mimeType)
+                put(MediaStore.Images.Media.IS_PENDING, 1)
 
-            albumName?.let {
-                put(
-                    MediaStore.Images.Media.RELATIVE_PATH,
-                    Paths.get(Environment.DIRECTORY_PICTURES, it).toString()
-                )
+                albumName?.let {
+                    put(
+                        MediaStore.Images.Media.RELATIVE_PATH,
+                        Paths.get(Environment.DIRECTORY_PICTURES, it).toString(),
+                    )
+                }
             }
-        }
 
         val imageUri =
             contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
@@ -256,19 +262,20 @@ object SaveImageHandler {
             if (rowsUpdated == 0) {
                 Log.e(
                     QuillNativeBridgePlugin.TAG,
-                    "Failed to update image state for URI: $imageUri"
+                    "Failed to update image state for URI: $imageUri",
                 )
             }
         }
 
-        val outputStream = contentResolver.openOutputStream(imageUri) ?: run {
-            callback.respondFlutterPigeonError(
-                "SAVE_FAILED",
-                "Could not open the output stream. The provider might have recently crashed."
-            )
-            notifyImageUpdate()
-            return
-        }
+        val outputStream =
+            contentResolver.openOutputStream(imageUri) ?: run {
+                callback.respondFlutterPigeonError(
+                    "SAVE_FAILED",
+                    "Could not open the output stream. The provider might have recently crashed.",
+                )
+                notifyImageUpdate()
+                return
+            }
 
         try {
             outputStream.use { stream -> stream.write(imageBytes) }
@@ -278,7 +285,7 @@ object SaveImageHandler {
             callback.respondFlutterPigeonError(
                 "SAVE_FAILED",
                 "Failed to save the image to the gallery: ${e.message}",
-                e.toString()
+                e.toString(),
             )
             notifyImageUpdate()
         }

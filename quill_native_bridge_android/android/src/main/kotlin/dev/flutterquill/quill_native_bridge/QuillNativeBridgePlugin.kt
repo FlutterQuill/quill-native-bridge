@@ -7,8 +7,9 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 
-class QuillNativeBridgePlugin : FlutterPlugin, ActivityAware {
-
+class QuillNativeBridgePlugin :
+    FlutterPlugin,
+    ActivityAware {
     companion object {
         const val TAG = "QuillNativeBridgePlugin"
     }
@@ -55,12 +56,15 @@ class QuillNativeBridgePlugin : FlutterPlugin, ActivityAware {
         Log.wtf(
             TAG,
             "The `${::pluginApi.name}` is not initialized. Failed to update Flutter activity binding " +
-                    "reference for `${QuillNativeBridgeImpl::class.simpleName}` in `$methodName`."
+                "reference for `${QuillNativeBridgeImpl::class.simpleName}` in `$methodName`.",
         )
     }
 
     @VisibleForTesting
-    internal fun setActivityPluginBinding(binding: ActivityPluginBinding, methodName: String) {
+    internal fun setActivityPluginBinding(
+        binding: ActivityPluginBinding,
+        methodName: String,
+    ) {
         activityPluginBinding = binding
         pluginApi?.setActivityPluginBinding(binding) ?: logApiNotSetError(methodName)
     }

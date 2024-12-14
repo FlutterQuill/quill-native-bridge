@@ -21,8 +21,8 @@ object ImageDecoderCompat {
      * @see decodeBitmapFromUri
      * */
     @Throws(IOException::class)
-    fun decodeBitmapFromBytes(imageBytes: ByteArray): Bitmap {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+    fun decodeBitmapFromBytes(imageBytes: ByteArray): Bitmap =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             // API 31 and above (use a newer API)
             val source = ImageDecoder.createSource(imageBytes)
             ImageDecoder.decodeBitmap(source)
@@ -31,7 +31,6 @@ object ImageDecoderCompat {
             BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
                 ?: throw IOException("Image could not be decoded using the `BitmapFactory.decodeByteArray`.")
         }
-    }
 
     /**
      * Uses [ImageDecoder.decodeBitmap] on Android API 28 and newer, fallback to [BitmapFactory.decodeStream]
@@ -41,8 +40,11 @@ object ImageDecoderCompat {
      * @see decodeBitmapFromBytes
      * */
     @Throws(IOException::class)
-    fun decodeBitmapFromUri(contentResolver: ContentResolver, imageUri: Uri): Bitmap {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+    fun decodeBitmapFromUri(
+        contentResolver: ContentResolver,
+        imageUri: Uri,
+    ): Bitmap =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             // API 28 and above (use a newer API)
             val source = ImageDecoder.createSource(contentResolver, imageUri)
             ImageDecoder.decodeBitmap(source)
@@ -51,12 +53,12 @@ object ImageDecoderCompat {
             checkNotNull(contentResolver.openInputStream(imageUri)) {
                 "Input stream is null, the provider might have recently crashed."
             }.use { inputStream ->
-                val bitmap: Bitmap = BitmapFactory.decodeStream(inputStream)
-                    ?: throw IOException("The image could not be decoded using the `BitmapFactory.decodeStream`.")
+                val bitmap: Bitmap =
+                    BitmapFactory.decodeStream(inputStream)
+                        ?: throw IOException("The image could not be decoded using the `BitmapFactory.decodeStream`.")
                 bitmap
             }
         }
-    }
 
     fun isValidImage(imageBytes: ByteArray) = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size) != null
 }

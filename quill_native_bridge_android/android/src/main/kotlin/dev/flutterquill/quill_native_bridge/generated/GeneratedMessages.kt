@@ -12,25 +12,22 @@ import io.flutter.plugin.common.StandardMessageCodec
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 
-private fun wrapResult(result: Any?): List<Any?> {
-  return listOf(result)
-}
+private fun wrapResult(result: Any?): List<Any?> = listOf(result)
 
-private fun wrapError(exception: Throwable): List<Any?> {
-  return if (exception is FlutterError) {
-    listOf(
-      exception.code,
-      exception.message,
-      exception.details
-    )
-  } else {
-    listOf(
-      exception.javaClass.simpleName,
-      exception.toString(),
-      "Cause: " + exception.cause + ", Stacktrace: " + Log.getStackTraceString(exception)
-    )
-  }
-}
+private fun wrapError(exception: Throwable): List<Any?> =
+    if (exception is FlutterError) {
+        listOf(
+            exception.code,
+            exception.message,
+            exception.details,
+        )
+    } else {
+        listOf(
+            exception.javaClass.simpleName,
+            exception.toString(),
+            "Cause: " + exception.cause + ", Stacktrace: " + Log.getStackTraceString(exception),
+        )
+    }
 
 /**
  * Error class for passing custom error details to Flutter via a thrown PlatformException.
@@ -38,161 +35,231 @@ private fun wrapError(exception: Throwable): List<Any?> {
  * @property message The error message.
  * @property details The error details. Must be a datatype supported by the api codec.
  */
-class FlutterError (
-  val code: String,
-  override val message: String? = null,
-  val details: Any? = null
+class FlutterError(
+    val code: String,
+    override val message: String? = null,
+    val details: Any? = null,
 ) : Throwable()
-private open class GeneratedMessagesPigeonCodec : StandardMessageCodec() {
-  override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
-    return     super.readValueOfType(type, buffer)
-  }
-  override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
-    super.writeValue(stream, value)
-  }
-}
 
+private open class GeneratedMessagesPigeonCodec : StandardMessageCodec() {
+    override fun readValueOfType(
+        type: Byte,
+        buffer: ByteBuffer,
+    ): Any? = super.readValueOfType(type, buffer)
+
+    override fun writeValue(
+        stream: ByteArrayOutputStream,
+        value: Any?,
+    ) {
+        super.writeValue(stream, value)
+    }
+}
 
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface QuillNativeBridgeApi {
-  fun getClipboardHtml(): String?
-  fun copyHtmlToClipboard(html: String)
-  fun getClipboardImage(): ByteArray?
-  fun copyImageToClipboard(imageBytes: ByteArray)
-  fun getClipboardGif(): ByteArray?
-  fun openGalleryApp()
-  /** The [fileExtension] is only required for Android APIs before 29. */
-  fun saveImageToGallery(imageBytes: ByteArray, name: String, fileExtension: String, mimeType: String, albumName: String?, callback: (Result<Unit>) -> Unit)
+    fun getClipboardHtml(): String?
 
-  companion object {
-    /** The codec used by QuillNativeBridgeApi. */
-    val codec: MessageCodec<Any?> by lazy {
-      GeneratedMessagesPigeonCodec()
+    fun copyHtmlToClipboard(html: String)
+
+    fun getClipboardImage(): ByteArray?
+
+    fun copyImageToClipboard(imageBytes: ByteArray)
+
+    fun getClipboardGif(): ByteArray?
+
+    fun openGalleryApp()
+
+    /** The [fileExtension] is only required for Android APIs before 29. */
+    fun saveImageToGallery(
+        imageBytes: ByteArray,
+        name: String,
+        fileExtension: String,
+        mimeType: String,
+        albumName: String?,
+        callback: (Result<Unit>) -> Unit,
+    )
+
+    companion object {
+        /** The codec used by QuillNativeBridgeApi. */
+        val codec: MessageCodec<Any?> by lazy {
+            GeneratedMessagesPigeonCodec()
+        }
+
+        /** Sets up an instance of `QuillNativeBridgeApi` to handle messages through the `binaryMessenger`. */
+        @JvmOverloads
+        fun setUp(
+            binaryMessenger: BinaryMessenger,
+            api: QuillNativeBridgeApi?,
+            messageChannelSuffix: String = "",
+        ) {
+            val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+            run {
+                val channel =
+                    BasicMessageChannel<Any?>(
+                        binaryMessenger,
+                        "dev.flutter.pigeon.quill_native_bridge_android.QuillNativeBridgeApi.getClipboardHtml$separatedMessageChannelSuffix",
+                        codec,
+                    )
+                if (api != null) {
+                    channel.setMessageHandler { _, reply ->
+                        val wrapped: List<Any?> =
+                            try {
+                                listOf(api.getClipboardHtml())
+                            } catch (exception: Throwable) {
+                                wrapError(exception)
+                            }
+                        reply.reply(wrapped)
+                    }
+                } else {
+                    channel.setMessageHandler(null)
+                }
+            }
+            run {
+                val channel =
+                    BasicMessageChannel<Any?>(
+                        binaryMessenger,
+                        "dev.flutter.pigeon.quill_native_bridge_android.QuillNativeBridgeApi.copyHtmlToClipboard$separatedMessageChannelSuffix",
+                        codec,
+                    )
+                if (api != null) {
+                    channel.setMessageHandler { message, reply ->
+                        val args = message as List<Any?>
+                        val htmlArg = args[0] as String
+                        val wrapped: List<Any?> =
+                            try {
+                                api.copyHtmlToClipboard(htmlArg)
+                                listOf(null)
+                            } catch (exception: Throwable) {
+                                wrapError(exception)
+                            }
+                        reply.reply(wrapped)
+                    }
+                } else {
+                    channel.setMessageHandler(null)
+                }
+            }
+            run {
+                val channel =
+                    BasicMessageChannel<Any?>(
+                        binaryMessenger,
+                        "dev.flutter.pigeon.quill_native_bridge_android.QuillNativeBridgeApi.getClipboardImage$separatedMessageChannelSuffix",
+                        codec,
+                    )
+                if (api != null) {
+                    channel.setMessageHandler { _, reply ->
+                        val wrapped: List<Any?> =
+                            try {
+                                listOf(api.getClipboardImage())
+                            } catch (exception: Throwable) {
+                                wrapError(exception)
+                            }
+                        reply.reply(wrapped)
+                    }
+                } else {
+                    channel.setMessageHandler(null)
+                }
+            }
+            run {
+                val channel =
+                    BasicMessageChannel<Any?>(
+                        binaryMessenger,
+                        "dev.flutter.pigeon.quill_native_bridge_android.QuillNativeBridgeApi.copyImageToClipboard$separatedMessageChannelSuffix",
+                        codec,
+                    )
+                if (api != null) {
+                    channel.setMessageHandler { message, reply ->
+                        val args = message as List<Any?>
+                        val imageBytesArg = args[0] as ByteArray
+                        val wrapped: List<Any?> =
+                            try {
+                                api.copyImageToClipboard(imageBytesArg)
+                                listOf(null)
+                            } catch (exception: Throwable) {
+                                wrapError(exception)
+                            }
+                        reply.reply(wrapped)
+                    }
+                } else {
+                    channel.setMessageHandler(null)
+                }
+            }
+            run {
+                val channel =
+                    BasicMessageChannel<Any?>(
+                        binaryMessenger,
+                        "dev.flutter.pigeon.quill_native_bridge_android.QuillNativeBridgeApi.getClipboardGif$separatedMessageChannelSuffix",
+                        codec,
+                    )
+                if (api != null) {
+                    channel.setMessageHandler { _, reply ->
+                        val wrapped: List<Any?> =
+                            try {
+                                listOf(api.getClipboardGif())
+                            } catch (exception: Throwable) {
+                                wrapError(exception)
+                            }
+                        reply.reply(wrapped)
+                    }
+                } else {
+                    channel.setMessageHandler(null)
+                }
+            }
+            run {
+                val channel =
+                    BasicMessageChannel<Any?>(
+                        binaryMessenger,
+                        "dev.flutter.pigeon.quill_native_bridge_android.QuillNativeBridgeApi.openGalleryApp$separatedMessageChannelSuffix",
+                        codec,
+                    )
+                if (api != null) {
+                    channel.setMessageHandler { _, reply ->
+                        val wrapped: List<Any?> =
+                            try {
+                                api.openGalleryApp()
+                                listOf(null)
+                            } catch (exception: Throwable) {
+                                wrapError(exception)
+                            }
+                        reply.reply(wrapped)
+                    }
+                } else {
+                    channel.setMessageHandler(null)
+                }
+            }
+            run {
+                val channel =
+                    BasicMessageChannel<Any?>(
+                        binaryMessenger,
+                        "dev.flutter.pigeon.quill_native_bridge_android.QuillNativeBridgeApi.saveImageToGallery$separatedMessageChannelSuffix",
+                        codec,
+                    )
+                if (api != null) {
+                    channel.setMessageHandler { message, reply ->
+                        val args = message as List<Any?>
+                        val imageBytesArg = args[0] as ByteArray
+                        val nameArg = args[1] as String
+                        val fileExtensionArg = args[2] as String
+                        val mimeTypeArg = args[3] as String
+                        val albumNameArg = args[4] as String?
+                        api.saveImageToGallery(
+                            imageBytesArg,
+                            nameArg,
+                            fileExtensionArg,
+                            mimeTypeArg,
+                            albumNameArg,
+                        ) { result: Result<Unit> ->
+                            val error = result.exceptionOrNull()
+                            if (error != null) {
+                                reply.reply(wrapError(error))
+                            } else {
+                                reply.reply(wrapResult(null))
+                            }
+                        }
+                    }
+                } else {
+                    channel.setMessageHandler(null)
+                }
+            }
+        }
     }
-    /** Sets up an instance of `QuillNativeBridgeApi` to handle messages through the `binaryMessenger`. */
-    @JvmOverloads
-    fun setUp(binaryMessenger: BinaryMessenger, api: QuillNativeBridgeApi?, messageChannelSuffix: String = "") {
-      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.quill_native_bridge_android.QuillNativeBridgeApi.getClipboardHtml$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { _, reply ->
-            val wrapped: List<Any?> = try {
-              listOf(api.getClipboardHtml())
-            } catch (exception: Throwable) {
-              wrapError(exception)
-            }
-            reply.reply(wrapped)
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.quill_native_bridge_android.QuillNativeBridgeApi.copyHtmlToClipboard$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val htmlArg = args[0] as String
-            val wrapped: List<Any?> = try {
-              api.copyHtmlToClipboard(htmlArg)
-              listOf(null)
-            } catch (exception: Throwable) {
-              wrapError(exception)
-            }
-            reply.reply(wrapped)
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.quill_native_bridge_android.QuillNativeBridgeApi.getClipboardImage$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { _, reply ->
-            val wrapped: List<Any?> = try {
-              listOf(api.getClipboardImage())
-            } catch (exception: Throwable) {
-              wrapError(exception)
-            }
-            reply.reply(wrapped)
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.quill_native_bridge_android.QuillNativeBridgeApi.copyImageToClipboard$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val imageBytesArg = args[0] as ByteArray
-            val wrapped: List<Any?> = try {
-              api.copyImageToClipboard(imageBytesArg)
-              listOf(null)
-            } catch (exception: Throwable) {
-              wrapError(exception)
-            }
-            reply.reply(wrapped)
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.quill_native_bridge_android.QuillNativeBridgeApi.getClipboardGif$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { _, reply ->
-            val wrapped: List<Any?> = try {
-              listOf(api.getClipboardGif())
-            } catch (exception: Throwable) {
-              wrapError(exception)
-            }
-            reply.reply(wrapped)
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.quill_native_bridge_android.QuillNativeBridgeApi.openGalleryApp$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { _, reply ->
-            val wrapped: List<Any?> = try {
-              api.openGalleryApp()
-              listOf(null)
-            } catch (exception: Throwable) {
-              wrapError(exception)
-            }
-            reply.reply(wrapped)
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.quill_native_bridge_android.QuillNativeBridgeApi.saveImageToGallery$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val imageBytesArg = args[0] as ByteArray
-            val nameArg = args[1] as String
-            val fileExtensionArg = args[2] as String
-            val mimeTypeArg = args[3] as String
-            val albumNameArg = args[4] as String?
-            api.saveImageToGallery(imageBytesArg, nameArg, fileExtensionArg, mimeTypeArg, albumNameArg) { result: Result<Unit> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(wrapError(error))
-              } else {
-                reply.reply(wrapResult(null))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-    }
-  }
 }

@@ -7,7 +7,7 @@ import dev.flutterquill.quill_native_bridge.generated.FlutterError
 fun <T> ((Result<T>) -> Unit).respondFlutterPigeonError(
     code: String,
     message: String? = null,
-    details: Any? = null
+    details: Any? = null,
 ) {
     this(
         Result.failure(
@@ -15,8 +15,8 @@ fun <T> ((Result<T>) -> Unit).respondFlutterPigeonError(
                 code = code,
                 message = message,
                 details = details,
-            )
-        )
+            ),
+        ),
     )
 }
 

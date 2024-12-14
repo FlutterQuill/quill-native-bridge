@@ -17,7 +17,6 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 class QuillNativeBridgePluginTest {
-
     private lateinit var mockPluginApi: QuillNativeBridgeImpl
     private lateinit var mockApplication: Application
     private lateinit var mockActivity: Activity
@@ -34,10 +33,11 @@ class QuillNativeBridgePluginTest {
         mockApplication = mock()
         mockActivity = mock()
         mockBinaryMessenger = mock()
-        mockFlutterPluginBinding = mock {
-            on { applicationContext }.thenReturn(mockApplication)
-            on { binaryMessenger }.thenReturn(mockBinaryMessenger)
-        }
+        mockFlutterPluginBinding =
+            mock {
+                on { applicationContext }.thenReturn(mockApplication)
+                on { binaryMessenger }.thenReturn(mockBinaryMessenger)
+            }
         mockActivityBinding = mock { on { activity }.thenReturn(mockActivity) }
 
         plugin = QuillNativeBridgePlugin()

@@ -15,15 +15,16 @@ object ClipboardWriteImageHandler {
         context: Context,
         imageBytes: ByteArray,
     ) {
-        val bitmap: Bitmap = try {
-            ImageDecoderCompat.decodeBitmapFromBytes(imageBytes)
-        } catch (e: IOException) {
-            throw FlutterError(
-                "INVALID_IMAGE",
-                "The provided image bytes are invalid, image could not be decoded: ${e.message}",
-                e.toString(),
-            )
-        }
+        val bitmap: Bitmap =
+            try {
+                ImageDecoderCompat.decodeBitmapFromBytes(imageBytes)
+            } catch (e: IOException) {
+                throw FlutterError(
+                    "INVALID_IMAGE",
+                    "The provided image bytes are invalid, image could not be decoded: ${e.message}",
+                    e.toString(),
+                )
+            }
 
         val tempImageFile = File(context.cacheDir, "temp_clipboard_image.png")
 
@@ -57,21 +58,22 @@ object ClipboardWriteImageHandler {
 
         val authority = "${context.packageName}.fileprovider"
 
-        val imageUri = try {
-            FileProvider.getUriForFile(
-                context,
-                authority,
-                tempImageFile,
-            )
-        } catch (e: IllegalArgumentException) {
-            throw FlutterError(
-                "ANDROID_MANIFEST_NOT_CONFIGURED",
-                "You need to configure your AndroidManifest.xml file " +
+        val imageUri =
+            try {
+                FileProvider.getUriForFile(
+                    context,
+                    authority,
+                    tempImageFile,
+                )
+            } catch (e: IllegalArgumentException) {
+                throw FlutterError(
+                    "ANDROID_MANIFEST_NOT_CONFIGURED",
+                    "You need to configure your AndroidManifest.xml file " +
                         "to register the provider with the meta-data with authority " +
                         authority,
-                e.toString(),
-            )
-        }
+                    e.toString(),
+                )
+            }
 
         try {
             val clipboard =
