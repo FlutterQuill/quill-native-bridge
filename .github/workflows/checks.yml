@@ -51,8 +51,15 @@ jobs:
       #   with:
       #       swift-format-version: 600.0.0
 
-      - name: 🎨 Verify Swift Code Style with SwiftLint
+      - name: 🎨 Verify Swift Code Style with SwiftLint for quill_native_bridge_ios
         uses: norio-nomura/action-swiftlint@3.2.1
+        env:
+          WORKING_DIRECTORY: quill_native_bridge_ios/ios/quill_native_bridge_ios
+
+      - name: 🎨 Verify Swift Code Style with SwiftLint for quill_native_bridge_macos
+        uses: norio-nomura/action-swiftlint@3.2.1
+        env:
+          WORKING_DIRECTORY: quill_native_bridge_macos/macos/quill_native_bridge_macos
 
       - name: 🎨 Verify Kotlin Code Style with Ktlint
         uses: ScaCap/action-ktlint@master
