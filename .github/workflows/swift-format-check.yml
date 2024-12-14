@@ -3,11 +3,16 @@ name: ✅ Swift Formatting Check
 # Separated from checks.yml since it takes longer to build swift-format from source
 on:
   push:
+    branches: [main]
     paths:
-      - '**/*.swift'
+      - quill_native_bridge_ios/ios/quill_native_bridge_ios/**/*.swift
+      - quill_native_bridge_macos/macos/quill_native_bridge_macos/**/*.swift
+      - .github/workflows/swift-format-check.yml
   pull_request:
     paths:
-      - '**/*.swift'
+      - quill_native_bridge_ios/ios/quill_native_bridge_ios/**/*.swift
+      - quill_native_bridge_macos/macos/quill_native_bridge_macos/**/*.swift
+      - .github/workflows/swift-format-check.yml
 
 jobs:
   format-check:
