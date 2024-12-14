@@ -42,8 +42,8 @@ jobs:
 
       - name: 🔎 Validate Swift Code Formatting
         run: |
-          swift-format lint -r quill_native_bridge_ios/ios/quill_native_bridge_ios
-          swift-format lint -r quill_native_bridge_macos/macos/quill_native_bridge_macos
+          swift-format lint -r quill_native_bridge_ios/ios/quill_native_bridge_ios --strict
+          swift-format lint -r quill_native_bridge_macos/macos/quill_native_bridge_macos --strict
 
         # SwiftLint: https://github.com/realm/SwiftLint
     #   - name: 🎨 Verify Swift Code Style with SwiftLint

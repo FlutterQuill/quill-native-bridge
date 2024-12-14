@@ -68,7 +68,7 @@ jobs:
           run: flutter test integration_test -d linux -r github
           working-directory: quill_native_bridge/example
 
-      - name: 🧪 Run Flutter Integration tests
+      - name: 🧪 Run Flutter Integration tests on Non-Linux Platforms
         if: runner.os != 'Linux'
         run: flutter test integration_test -d ${{ runner.os }}
         working-directory: quill_native_bridge/example
