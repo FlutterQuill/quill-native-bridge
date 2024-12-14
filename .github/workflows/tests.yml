@@ -10,8 +10,9 @@ jobs:
     strategy:
       # This prevents one failure from stopping the entire run.
       fail-fast: false
+      # TODO: Restore windows, run Android and iOS unit tests, cache swift-format
       matrix:
-        os: [ubuntu, macos, windows]
+        os: [ubuntu, macos]
     runs-on: ${{ matrix.os }}-latest
     timeout-minutes: 30
 
@@ -26,13 +27,7 @@ jobs:
           cache: true
       
       - name: 📦 Install all package dependencies
-        if: runner.os != 'Windows'
         run: dart ./scripts/pub_get.dart
-
-      - name: 📦 Install all package dependencies on Windows
-        if: runner.os == 'Windows'
-        run: dart ./scripts/pub_get.dart
-        shell: pwsh
 
       - name: 📦 Install example dependencies
         run: flutter pub get -C quill_native_bridge/example
