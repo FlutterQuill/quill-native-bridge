@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 11.0.1
+
+- Adds `isAppleSafari` method to check whether the current web app is running on Safari browser.
+
 ## 11.0.0
 
 - Improves `README.md`. Adds more details to `README.md`.

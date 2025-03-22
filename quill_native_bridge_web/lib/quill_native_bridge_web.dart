@@ -37,6 +37,8 @@ class QuillNativeBridgeWeb extends QuillNativeBridgePlatform {
         return false;
       case QuillNativeBridgeFeature.saveImage:
         return true;
+      case QuillNativeBridgeFeature.isAppleSafari:
+        return true;
     }
     // Without this default, adding a new item to the enum will be a breaking change.
     // ignore: dead_code
@@ -159,4 +161,8 @@ class QuillNativeBridgeWeb extends QuillNativeBridgePlatform {
 
     return ImageSaveResult.web(blobUrl: url);
   }
+
+  // https://github.com/flutter/packages/blob/main/packages/cross_file/lib/src/web_helpers/web_helpers.dart#L35-L37
+  @override
+  bool isAppleSafari() => window.navigator.vendor == 'Apple Computer, Inc.';
 }

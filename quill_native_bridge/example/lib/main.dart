@@ -123,6 +123,14 @@ class Buttons extends StatelessWidget {
           label: const Text('Save image'),
           icon: const Icon(Icons.image),
         ),
+        ElevatedButton.icon(
+          onPressed: () => _onButtonPressed(
+            QuillNativeBridgeFeature.isAppleSafari,
+            context: context,
+          ),
+          label: const Text('Is Safari'),
+          icon: const Icon(Icons.apple),
+        ),
       ],
     );
   }
@@ -370,6 +378,18 @@ Future<void> _onButtonPressed(
       }
       scaffoldMessenger.showText('The image has been saved at: $imagePath.');
       break;
+    case QuillNativeBridgeFeature.isAppleSafari:
+      if (!kIsWeb) {
+        scaffoldMessenger.showText(
+            'Checking whether the browser is Safari is only supported on the web.');
+        return;
+      }
+      if (quillNativeBridge.isAppleSafari()) {
+        scaffoldMessenger.showText("You're running this app on Safari browser");
+      } else {
+        scaffoldMessenger
+            .showText("You're not running this app on Safari browser");
+      }
   }
 }
 

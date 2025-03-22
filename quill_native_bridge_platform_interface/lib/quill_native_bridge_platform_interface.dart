@@ -122,4 +122,7 @@ abstract class QuillNativeBridgePlatform extends PlatformInterface {
       throw UnimplementedError(
         'saveImage() has not been implemented.',
       );
+
+  /// Returns whether the current browser is Safari on the web.
+  bool isAppleSafari() => false;
 }

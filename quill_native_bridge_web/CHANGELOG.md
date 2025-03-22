@@ -2,9 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## NEXT
+## 0.0.2
 
 - Creates the anchor element (`<a>`) in a type-safe way using `HTMLAnchorElement` without casting in `saveImage`.
+- Adds support for `isAppleSafari`.
 
 ## 0.0.1
 

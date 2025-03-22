@@ -1,6 +1,6 @@
 name: quill_native_bridge_web
 description: "Web platform implementation of quill_native_bridge"
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/FlutterQuill/quill-native-bridge/tree/main/quill_native_bridge_web
 repository: https://github.com/FlutterQuill/quill-native-bridge/tree/main/quill_native_bridge_web
 issue_tracker: https://github.com/FlutterQuill/quill-native-bridge/issues?q=is%3Aissue+is%3Aopen+label%3A%22platform-web%22
@@ -17,7 +17,7 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   web: ^1.0.0
-  quill_native_bridge_platform_interface: ^0.0.1+1
+  quill_native_bridge_platform_interface: ^0.0.2+1
 
 dev_dependencies:
   flutter_test:

@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.0.2+1
+
+- Adds missing `isAppleSafari` enum item to `QuillNativeBridgeFeature`.
+
+## 0.0.2
+
+- Adds `isAppleSafari` to check whether the current platform is Apple Safari.
+
 ## 0.0.1+1
 
 - Adds `internal.dart`.

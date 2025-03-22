@@ -84,6 +84,11 @@ class MockQuillNativeBridgePlatform
   Future<void> openGalleryApp() async {
     _galleryAppOpened = true;
   }
+
+  var isSafari = false;
+
+  @override
+  bool isAppleSafari() => isSafari;
 }
 
 void main() {
@@ -197,6 +202,16 @@ void main() {
       await QuillNativeBridgePlatform.instance.openGalleryApp();
 
       expect(fakePlatform._galleryAppOpened, true);
+    },
+  );
+  test(
+    'isAppleSafari',
+    () async {
+      fakePlatform.isSafari = true;
+      expect(fakePlatform.isAppleSafari(), true);
+
+      fakePlatform.isSafari = false;
+      expect(fakePlatform.isAppleSafari(), false);
     },
   );
 }

@@ -18,6 +18,7 @@ For details about the plugin architecture, refer to the [README of the repo](../
 | **openGalleryApp**        | ✅   | ✅      | ✅    | ✅      | ⚪    | ⚪    |
 | **saveImageToGallery**    | ✅   | ✅      | ✅    | ❌      | ⚪    | ⚪    |
 | **saveImage**             | ⚪   | ⚪      | ✅    | ✅      | ✅    | ✅    |
+| **isAppleSafari**         | ⚪   | ⚪      | ⚪    | ⚪      | ⚪    | ✅    |
 
 - `⚪`: Not applicable, not expected, or unsupported on this platform (e.g., checking **iOS simulator** on **Android**, saving images to the gallery on the web, or retrieving GIFs on desktop/web).
 - `❌`: The plugin doesn't currently implement it.
@@ -108,6 +109,12 @@ await QuillNativeBridge().saveImageToGallery(imageBytes, options: GalleryImageSa
 final Uint8List imageBytes = ...; // Load the image bytes
 
 await QuillNativeBridge().saveImage(imageBytes, options: ImageSaveOptions(name: 'ExampleImageName', fileExtension: 'png')); // Doesn't work on mobile platforms
+```
+
+**To check whether the current web app is running on a browser**:
+
+```dart
+await QuillNativeBridge().isAppleBrowser(); // Returns false on non-web platforms.
 ```
 
 ## 🔧 Setup

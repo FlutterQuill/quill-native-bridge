@@ -9,5 +9,6 @@ enum QuillNativeBridgeFeature {
   getClipboardFiles,
   openGalleryApp,
   saveImageToGallery,
-  saveImage;
+  saveImage,
+  isAppleSafari;
 }

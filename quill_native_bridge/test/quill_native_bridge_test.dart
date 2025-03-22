@@ -245,4 +245,21 @@ void main() {
       });
     },
   );
+
+  group('isAppleSafari', () {
+    test('calls isAppleSafari from the platform API', () {
+      when(mockQuillNativeBridgePlatform.isAppleSafari()).thenReturn(false);
+      plugin.isAppleSafari();
+      verify(mockQuillNativeBridgePlatform.isAppleSafari()).called(1);
+      verifyNoMoreInteractions(mockQuillNativeBridgePlatform);
+    });
+
+    test('delegates to isAppleSafari from the platform API', () {
+      for (final bool isAppleSafariValue in {true, false}) {
+        when(mockQuillNativeBridgePlatform.isAppleSafari())
+            .thenReturn(isAppleSafariValue);
+        expect(plugin.isAppleSafari(), isAppleSafariValue);
+      }
+    });
+  });
 }

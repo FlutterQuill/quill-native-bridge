@@ -207,4 +207,7 @@ class QuillNativeBridge {
     required ImageSaveOptions options,
   }) =>
       _platform.saveImage(imageBytes, options: options);
+
+  /// Returns whether the current browser is Safari on the web.
+  bool isAppleSafari() => _platform.isAppleSafari();
 }
