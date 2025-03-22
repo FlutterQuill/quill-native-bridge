@@ -33,7 +33,7 @@ import 'package:quill_native_bridge_platform_interface/src/types/image_save_resu
 class _FakeImageSaveResult_0 extends _i1.SmartFake
     implements _i2.ImageSaveResult {
   _FakeImageSaveResult_0(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
+      : super(parent, parentInvocation);
 }
 
 /// A class which mocks [QuillNativeBridgePlatform].
@@ -48,77 +48,61 @@ class MockQuillNativeBridgePlatform extends _i1.Mock
   @override
   _i4.Future<bool> isSupported(_i5.QuillNativeBridgeFeature? feature) =>
       (super.noSuchMethod(
-            Invocation.method(#isSupported, [feature]),
-            returnValue: _i4.Future<bool>.value(false),
-          )
-          as _i4.Future<bool>);
+        Invocation.method(#isSupported, [feature]),
+        returnValue: _i4.Future<bool>.value(false),
+      ) as _i4.Future<bool>);
 
   @override
-  _i4.Future<bool> isIOSSimulator() =>
-      (super.noSuchMethod(
-            Invocation.method(#isIOSSimulator, []),
-            returnValue: _i4.Future<bool>.value(false),
-          )
-          as _i4.Future<bool>);
+  _i4.Future<bool> isIOSSimulator() => (super.noSuchMethod(
+        Invocation.method(#isIOSSimulator, []),
+        returnValue: _i4.Future<bool>.value(false),
+      ) as _i4.Future<bool>);
 
   @override
-  _i4.Future<String?> getClipboardHtml() =>
-      (super.noSuchMethod(
-            Invocation.method(#getClipboardHtml, []),
-            returnValue: _i4.Future<String?>.value(),
-          )
-          as _i4.Future<String?>);
+  _i4.Future<String?> getClipboardHtml() => (super.noSuchMethod(
+        Invocation.method(#getClipboardHtml, []),
+        returnValue: _i4.Future<String?>.value(),
+      ) as _i4.Future<String?>);
 
   @override
-  _i4.Future<void> copyHtmlToClipboard(String? html) =>
-      (super.noSuchMethod(
-            Invocation.method(#copyHtmlToClipboard, [html]),
-            returnValue: _i4.Future<void>.value(),
-            returnValueForMissingStub: _i4.Future<void>.value(),
-          )
-          as _i4.Future<void>);
+  _i4.Future<void> copyHtmlToClipboard(String? html) => (super.noSuchMethod(
+        Invocation.method(#copyHtmlToClipboard, [html]),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 
   @override
   _i4.Future<void> copyImageToClipboard(_i6.Uint8List? imageBytes) =>
       (super.noSuchMethod(
-            Invocation.method(#copyImageToClipboard, [imageBytes]),
-            returnValue: _i4.Future<void>.value(),
-            returnValueForMissingStub: _i4.Future<void>.value(),
-          )
-          as _i4.Future<void>);
+        Invocation.method(#copyImageToClipboard, [imageBytes]),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 
   @override
-  _i4.Future<_i6.Uint8List?> getClipboardImage() =>
-      (super.noSuchMethod(
-            Invocation.method(#getClipboardImage, []),
-            returnValue: _i4.Future<_i6.Uint8List?>.value(),
-          )
-          as _i4.Future<_i6.Uint8List?>);
+  _i4.Future<_i6.Uint8List?> getClipboardImage() => (super.noSuchMethod(
+        Invocation.method(#getClipboardImage, []),
+        returnValue: _i4.Future<_i6.Uint8List?>.value(),
+      ) as _i4.Future<_i6.Uint8List?>);
 
   @override
-  _i4.Future<_i6.Uint8List?> getClipboardGif() =>
-      (super.noSuchMethod(
-            Invocation.method(#getClipboardGif, []),
-            returnValue: _i4.Future<_i6.Uint8List?>.value(),
-          )
-          as _i4.Future<_i6.Uint8List?>);
+  _i4.Future<_i6.Uint8List?> getClipboardGif() => (super.noSuchMethod(
+        Invocation.method(#getClipboardGif, []),
+        returnValue: _i4.Future<_i6.Uint8List?>.value(),
+      ) as _i4.Future<_i6.Uint8List?>);
 
   @override
-  _i4.Future<List<String>> getClipboardFiles() =>
-      (super.noSuchMethod(
-            Invocation.method(#getClipboardFiles, []),
-            returnValue: _i4.Future<List<String>>.value(<String>[]),
-          )
-          as _i4.Future<List<String>>);
+  _i4.Future<List<String>> getClipboardFiles() => (super.noSuchMethod(
+        Invocation.method(#getClipboardFiles, []),
+        returnValue: _i4.Future<List<String>>.value(<String>[]),
+      ) as _i4.Future<List<String>>);
 
   @override
-  _i4.Future<void> openGalleryApp() =>
-      (super.noSuchMethod(
-            Invocation.method(#openGalleryApp, []),
-            returnValue: _i4.Future<void>.value(),
-            returnValueForMissingStub: _i4.Future<void>.value(),
-          )
-          as _i4.Future<void>);
+  _i4.Future<void> openGalleryApp() => (super.noSuchMethod(
+        Invocation.method(#openGalleryApp, []),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 
   @override
   _i4.Future<void> saveImageToGallery(
@@ -126,15 +110,14 @@ class MockQuillNativeBridgePlatform extends _i1.Mock
     required _i7.GalleryImageSaveOptions? options,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(
-              #saveImageToGallery,
-              [imageBytes],
-              {#options: options},
-            ),
-            returnValue: _i4.Future<void>.value(),
-            returnValueForMissingStub: _i4.Future<void>.value(),
-          )
-          as _i4.Future<void>);
+        Invocation.method(
+          #saveImageToGallery,
+          [imageBytes],
+          {#options: options},
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 
   @override
   _i4.Future<_i2.ImageSaveResult> saveImage(
@@ -142,25 +125,22 @@ class MockQuillNativeBridgePlatform extends _i1.Mock
     required _i7.ImageSaveOptions? options,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#saveImage, [imageBytes], {#options: options}),
-            returnValue: _i4.Future<_i2.ImageSaveResult>.value(
-              _FakeImageSaveResult_0(
-                this,
-                Invocation.method(
-                  #saveImage,
-                  [imageBytes],
-                  {#options: options},
-                ),
-              ),
+        Invocation.method(#saveImage, [imageBytes], {#options: options}),
+        returnValue: _i4.Future<_i2.ImageSaveResult>.value(
+          _FakeImageSaveResult_0(
+            this,
+            Invocation.method(
+              #saveImage,
+              [imageBytes],
+              {#options: options},
             ),
-          )
-          as _i4.Future<_i2.ImageSaveResult>);
+          ),
+        ),
+      ) as _i4.Future<_i2.ImageSaveResult>);
 
   @override
-  bool isAppleSafari() =>
-      (super.noSuchMethod(
-            Invocation.method(#isAppleSafari, []),
-            returnValue: false,
-          )
-          as bool);
+  bool isAppleSafari() => (super.noSuchMethod(
+        Invocation.method(#isAppleSafari, []),
+        returnValue: false,
+      ) as bool);
 }
