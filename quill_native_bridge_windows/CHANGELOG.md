@@ -2,9 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## NEXT
+## 0.0.2
 
 - Migrates from deprecated APIs of [win32](https://pub.dev/packages/win32/) package.
+- Removes the deprecated entry `pluginClass: none` in `pubspec.yaml` [#13](https://github.com/FlutterQuill/quill-native-bridge/issues/13).
 
 ## 0.0.1
 

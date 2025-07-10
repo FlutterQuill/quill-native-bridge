@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.0.2
+
+- Removes the deprecated entry `pluginClass: none` in `pubspec.yaml` [#13](https://github.com/FlutterQuill/quill-native-bridge/issues/13).
+
 ## 0.0.1
 
 - Adds support for saving images.
