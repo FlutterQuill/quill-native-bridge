@@ -33,6 +33,5 @@ flutter:
     implements: quill_native_bridge
     platforms:
       linux:
-        pluginClass: none
         dartPluginClass: QuillNativeBridgeLinux
         fileName: quill_native_bridge_linux.dart

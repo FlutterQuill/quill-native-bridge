@@ -31,6 +31,5 @@ flutter:
     implements: quill_native_bridge
     platforms:
       windows:
-        pluginClass: none
         dartPluginClass: QuillNativeBridgeWindows
         fileName: quill_native_bridge_windows.dart
