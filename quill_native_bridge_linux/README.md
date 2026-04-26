@@ -1,8 +1,5 @@
 # 🪶 Quill Native Bridge
 
-> [!WARNING]
-> This platform implementation is no longer maintained.
-
 The Linux implementation of [`quill_native_bridge`](https://pub.dev/packages/quill_native_bridge).
 
 ## ⚙️ Usage

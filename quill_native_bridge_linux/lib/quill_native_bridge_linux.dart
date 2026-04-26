@@ -2,7 +2,8 @@
 // Make sure to update pubspec.yaml to the new location.
 
 import 'dart:convert' show utf8;
-import 'dart:io' show Process, File hide exitCode;
+import 'dart:io'
+    hide exitCode; // Avoids name conflict with local "exitCode" variable
 
 import 'package:file_selector_platform_interface/file_selector_platform_interface.dart';
 import 'package:flutter/foundation.dart';
@@ -23,13 +24,13 @@ class QuillNativeBridgeLinux extends QuillNativeBridgePlatform {
 
   @override
   Future<bool> isSupported(QuillNativeBridgeFeature feature) async => {
-        QuillNativeBridgeFeature.getClipboardHtml,
-        QuillNativeBridgeFeature.copyHtmlToClipboard,
-        QuillNativeBridgeFeature.copyImageToClipboard,
-        QuillNativeBridgeFeature.getClipboardImage,
-        QuillNativeBridgeFeature.getClipboardFiles,
-        QuillNativeBridgeFeature.saveImage,
-      }.contains(feature);
+    QuillNativeBridgeFeature.getClipboardHtml,
+    QuillNativeBridgeFeature.copyHtmlToClipboard,
+    QuillNativeBridgeFeature.copyImageToClipboard,
+    QuillNativeBridgeFeature.getClipboardImage,
+    QuillNativeBridgeFeature.getClipboardFiles,
+    QuillNativeBridgeFeature.saveImage,
+  }.contains(feature);
 
   // TODO: Improve error handling
 
@@ -54,11 +55,13 @@ class QuillNativeBridgeLinux extends QuillNativeBridgePlatform {
     required String mimeType,
     required String xclipFilePath,
   }) async {
-    return (await Process.run(
-            xclipFilePath, ['-selection', 'clipboard', '-t', 'TARGETS', '-o']))
-        .stdout
-        .toString()
-        .contains(mimeType);
+    return (await Process.run(xclipFilePath, [
+      '-selection',
+      'clipboard',
+      '-t',
+      'TARGETS',
+      '-o',
+    ])).stdout.toString().contains(mimeType);
   }
 
   @override
@@ -78,16 +81,20 @@ class QuillNativeBridgeLinux extends QuillNativeBridgePlatform {
       if (!hasHtmlInClipboard) {
         return null;
       }
-      final result = await Process.run(
-        xclipFile.path,
-        ['-selection', 'clipboard', '-o', '-t', kHtmlMimeType],
-      );
+      final result = await Process.run(xclipFile.path, [
+        '-selection',
+        'clipboard',
+        '-o',
+        '-t',
+        kHtmlMimeType,
+      ]);
       if (result.exitCode == 0) {
         return (result.stdout as String?)?.trim();
       }
       final processErrorOutput = result.stderr.toString().trim();
-      if (processErrorOutput
-          .startsWith('Error: target $kHtmlMimeType not available')) {
+      if (processErrorOutput.startsWith(
+        'Error: target $kHtmlMimeType not available',
+      )) {
         return null;
       }
       assert(
@@ -105,21 +112,19 @@ class QuillNativeBridgeLinux extends QuillNativeBridgePlatform {
     final xclipFile = await extractBinaryFromAsset(kXclipAssetFile);
 
     try {
-      final process = await Process.start(
-        xclipFile.path,
-        [
-          '-selection',
-          'clipboard',
-          '-t',
-          kHtmlMimeType,
-        ],
-      );
+      final process = await Process.start(xclipFile.path, [
+        '-selection',
+        'clipboard',
+        '-t',
+        kHtmlMimeType,
+      ]);
       process.stdin.writeln(html);
       await process.stdin.close();
       final exitCode = await process.exitCode;
       if (exitCode != 0) {
-        final processErrorOutput =
-            await process.stderr.transform(utf8.decoder).join();
+        final processErrorOutput = await process.stderr
+            .transform(utf8.decoder)
+            .join();
         assert(
           false,
           'Error copying the HTML to clipboard. Exit code: $exitCode\nError output: $processErrorOutput',
@@ -135,23 +140,21 @@ class QuillNativeBridgeLinux extends QuillNativeBridgePlatform {
     final xclipFile = await extractBinaryFromAsset(kXclipAssetFile);
     final tempClipboardImageFileName =
         'tempClipboardImage-${DateTime.now().millisecondsSinceEpoch}.png';
-    final tempClipboardImage =
-        File(generateTempFilePath(tempClipboardImageFileName));
+    final tempClipboardImage = File(
+      generateTempFilePath(tempClipboardImageFileName),
+    );
 
     try {
       await tempClipboardImage.writeAsBytes(imageBytes);
 
-      final process = await Process.start(
-        xclipFile.path,
-        [
-          '-selection',
-          'clipboard',
-          '-t',
-          kImagePngMimeType,
-          '-i',
-          tempClipboardImage.path,
-        ],
-      );
+      final process = await Process.start(xclipFile.path, [
+        '-selection',
+        'clipboard',
+        '-t',
+        kImagePngMimeType,
+        '-i',
+        tempClipboardImage.path,
+      ]);
       final exitCode = await process.exitCode;
       if (exitCode != 0) {
         final errorOutput = await process.stderr.transform(utf8.decoder).join();
@@ -187,8 +190,9 @@ class QuillNativeBridgeLinux extends QuillNativeBridgePlatform {
         return result.stdout as Uint8List?;
       }
       final processErrorOutput = result.stderr.toString().trim();
-      if (processErrorOutput
-          .startsWith('Error: target $kImagePngMimeType not available')) {
+      if (processErrorOutput.startsWith(
+        'Error: target $kImagePngMimeType not available',
+      )) {
         return null;
       }
       assert(
@@ -212,10 +216,13 @@ class QuillNativeBridgeLinux extends QuillNativeBridgePlatform {
       if (!hasFilesInClipboard) {
         return [];
       }
-      final result = await Process.run(
-        xclipFile.path,
-        ['-selection', 'clipboard', '-t', kUriListMimeType, '-o'],
-      );
+      final result = await Process.run(xclipFile.path, [
+        '-selection',
+        'clipboard',
+        '-t',
+        kUriListMimeType,
+        '-o',
+      ]);
       if (result.exitCode == 0) {
         final output = result.stdout as String?;
         if (output == null) return [];
@@ -225,8 +232,9 @@ class QuillNativeBridgeLinux extends QuillNativeBridgePlatform {
         }).toList();
       }
       final processErrorOutput = result.stderr.toString().trim();
-      if (processErrorOutput
-          .startsWith('Error: target $kUriListMimeType not available')) {
+      if (processErrorOutput.startsWith(
+        'Error: target $kUriListMimeType not available',
+      )) {
         return [];
       }
       assert(

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+### 11.2.0
+
+- Restores the default Linux platform implementation (uses bundled `xclip` binary, x11 only)
+- Updates minimum supported SDK version to Flutter 3.41/Dart 3.9.
+
 ## 11.1.0
 
 - **BREAKING CHANGE**: Removes the experimental Linux implementation to fix [#17](https://github.com/FlutterQuill/quill-native-bridge/issues/17). To add it back, add [quill_native_bridge_linux](https://pub.dev/packages/quill_native_bridge_linux) to your `pubspec.yaml`.

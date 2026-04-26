@@ -8,8 +8,8 @@ documentation: https://github.com/FlutterQuill/quill-native-bridge/tree/main/qui
 topics: [clipboard, os-integration, quill-native-bridge, quill, flutter-quill]
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
-  flutter: '>=3.0.0'
+  sdk: ^3.9.0
+  flutter: ">=3.41.0"
 
 dependencies:
   flutter:
@@ -42,4 +42,4 @@ flutter:
       windows:
         default_package: quill_native_bridge_windows
       linux:
-        dartPluginClass: QuillNativeBridgeStub
+        default_package: quill_native_bridge_linux
