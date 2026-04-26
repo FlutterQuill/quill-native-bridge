@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.0.3
+
+- Excludes `xclip` binary asset file from non-Linux platforms
+
 ## 0.0.2
 
 - Removes the deprecated entry `pluginClass: none` in `pubspec.yaml` [#13](https://github.com/FlutterQuill/quill-native-bridge/issues/13).
