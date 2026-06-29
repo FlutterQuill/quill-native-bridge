@@ -18,14 +18,14 @@ extension ClipboardHtmlFormatExt on QuillNativeBridgeWindows {
   }
 
   int? _registerHtmlFormat() {
-    final htmlFormatPointer = TEXT(_kHtmlFormatName);
+    final htmlFormatPointer = _kHtmlFormatName.toPcwstr();
     final htmlFormatId = RegisterClipboardFormat(htmlFormatPointer);
     free(htmlFormatPointer);
 
-    if (htmlFormatId == NULL) {
+    if (htmlFormatId == NULL || !htmlFormatId.error.isOk) {
       // When error occurs
       return null;
     }
-    return htmlFormatId;
+    return htmlFormatId.value;
   }
 }
