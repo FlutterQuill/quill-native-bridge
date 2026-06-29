@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.1.0-beta.1
+
+- Upgrades `win32` from 5 to 6 (Credit [Vito0912](https://github.com/Vito0912)).
+
 ## 0.0.2
 
 - Migrates from deprecated APIs of [win32](https://pub.dev/packages/win32/) package.
