@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.0.2
+
+- Updates the minimum supported SDK version to Flutter 3.44/Dart 3.12.
+- Migrates to built-in Kotlin.
+
 ## 0.0.1+2
 
 - Setup [native unit tests](https://docs.flutter.dev/testing/testing-plugins#native-unit-tests) to test plugin platform functionality.

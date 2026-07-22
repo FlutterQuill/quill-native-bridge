@@ -4,8 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ### 11.2.0
 
-- Restores the default Linux platform implementation (uses bundled `xclip` binary, x11 only)
-- Updates minimum supported SDK version to Flutter 3.41/Dart 3.9.
+- Updates the minimum supported SDK version to Flutter 3.44/Dart 3.12.
+- Migrates to built-in Kotlin.
+- Restores the default Linux platform implementation (uses bundled `xclip` binary, excluded on non-Linux platforms)
 
 ## 11.1.0
 
