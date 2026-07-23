@@ -3,13 +3,6 @@ import Foundation
 import Photos
 
 class QuillNativeBridgeImpl: QuillNativeBridgeApi {
-  func isIosSimulator() throws -> Bool {
-    #if targetEnvironment(simulator)
-      return true
-    #else
-      return false
-    #endif
-  }
   // TODO: Should not hardcode public.html and instead use UTType.html.identifier
 
   func getClipboardHtml(completion: @escaping (Result<String?, any Error>) -> Void) {

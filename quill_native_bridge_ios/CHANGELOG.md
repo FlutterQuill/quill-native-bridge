@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.0.3
+
+- Depends on [`package:is_ios_simulator`](https://pub.dev/packages/is_ios_simulator) for iOS Simulator detection while preserving the existing API, avoiding duplication of the native implementation across packages.
+- Updates generated Pigeon code after updating the Pigeon dev dependency.
+
 ## 0.0.2
 
 - Reads the clipboard (`getClipboardHtml()`, `getClipboardImage()` and `getClipboardGif()`) asynchronously with `NSItemProvider` instead of `UIPasteboard.data(forPasteboardType:)`, fixing app hangs (ANR) on paste when the pasteboard item has to be fetched first (for example a Universal Clipboard item coming from another Apple device). [#22](https://github.com/FlutterQuill/quill-native-bridge/issues/22)

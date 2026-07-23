@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -24,6 +26,33 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Used to demonstrate quill_native_bridge plugin</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Used to demonstrate quill_native_bridge plugin on iOS 13 and earlier or if the album was specified</string>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneClassName</key>
+					<string>UIWindowScene</string>
+					<key>UISceneConfigurationName</key>
+					<string>flutter</string>
+					<key>UISceneDelegateClassName</key>
+					<string>FlutterSceneDelegate</string>
+					<key>UISceneStoryboardFile</key>
+					<string>Main</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -41,21 +70,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
-
-	<!-- START: Add-only permission: Required on iOS 14 and later if the album name is not specified -->
-	<!-- More details: https://pub.dev/packages/quill_native_bridge#-setup -->
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Used to demonstrate quill_native_bridge plugin</string>
-	<!-- END: Add-only permission: Required on iOS 14 and later if the album name is not specified -->
-
-	<!-- START: Read-write permission: Always required on iOS 13 and earlier, and also required on iOS 14 and later if the album name is specified -->
-	<!-- More details: https://pub.dev/packages/quill_native_bridge#-setup -->
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Used to demonstrate quill_native_bridge plugin on iOS 13 and earlier or if the album was specified</string>
-	<!-- END: Read-write permission: Always required on iOS 13 and earlier, and also required on iOS 14 and later if the album name is specified -->
 </dict>
 </plist>

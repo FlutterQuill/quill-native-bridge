@@ -2,6 +2,7 @@
 // Make sure to update pubspec.yaml to the new location.
 
 import 'package:flutter/services.dart';
+import 'package:is_ios_simulator/is_ios_simulator.dart';
 import 'package:quill_native_bridge_platform_interface/quill_native_bridge_platform_interface.dart';
 
 import 'src/messages.g.dart';
@@ -28,7 +29,7 @@ class QuillNativeBridgeIos extends QuillNativeBridgePlatform {
       }.contains(feature);
 
   @override
-  Future<bool> isIOSSimulator() => _hostApi.isIosSimulator();
+  Future<bool> isIOSSimulator() => isIosSimulator();
 
   @override
   Future<String?> getClipboardHtml() => _hostApi.getClipboardHtml();

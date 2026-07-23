@@ -9,8 +9,6 @@ import 'package:pigeon/pigeon.dart';
 ))
 @HostApi(dartHostTestHandler: 'TestQuillNativeBridgeApi')
 abstract class QuillNativeBridgeApi {
-  bool isIosSimulator();
-
   // HTML
   @async
   String? getClipboardHtml();
