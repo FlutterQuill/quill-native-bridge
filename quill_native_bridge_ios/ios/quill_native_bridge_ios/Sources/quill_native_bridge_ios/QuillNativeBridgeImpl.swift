@@ -87,6 +87,8 @@ class QuillNativeBridgeImpl: QuillNativeBridgeApi {
       return
     }
     provider.loadDataRepresentation(forTypeIdentifier: typeIdentifier) { data, _ in
+      // Intentionally ignores load errors. Consumers distinguish only whether
+      // a representation was obtained.
       completion(data)
     }
   }
