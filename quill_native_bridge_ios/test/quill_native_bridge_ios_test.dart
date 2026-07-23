@@ -55,14 +55,15 @@ void main() {
       test(
         'getClipboardHtml delegates to _hostApi.getClipboardHtml',
         () async {
-          when(mockHostApi.getClipboardHtml()).thenReturn(null);
+          when(mockHostApi.getClipboardHtml()).thenAnswer((_) async => null);
           final nullHtml = await plugin.getClipboardHtml();
           verify(mockHostApi.getClipboardHtml()).called(1);
           expect(nullHtml, isNull);
 
           const exampleHtml = 'An HTML';
 
-          when(mockHostApi.getClipboardHtml()).thenReturn(exampleHtml);
+          when(mockHostApi.getClipboardHtml())
+              .thenAnswer((_) async => exampleHtml);
           final nonNullHtml = await plugin.getClipboardHtml();
           verify(mockHostApi.getClipboardHtml()).called(1);
           expect(nonNullHtml, equals(exampleHtml));
@@ -82,14 +83,15 @@ void main() {
       test(
         'getClipboardImage delegates to _hostApi.getClipboardImage',
         () async {
-          when(mockHostApi.getClipboardImage()).thenReturn(null);
+          when(mockHostApi.getClipboardImage()).thenAnswer((_) async => null);
           final nullImage = await plugin.getClipboardImage();
           verify(mockHostApi.getClipboardImage()).called(1);
           expect(nullImage, isNull);
 
           final exampleImage = Uint8List.fromList([1, 0, 1]);
 
-          when(mockHostApi.getClipboardImage()).thenReturn(exampleImage);
+          when(mockHostApi.getClipboardImage())
+              .thenAnswer((_) async => exampleImage);
           final nonNullImage = await plugin.getClipboardImage();
           verify(mockHostApi.getClipboardImage()).called(1);
           expect(nonNullImage, equals(exampleImage));
@@ -109,14 +111,15 @@ void main() {
       test(
         'getClipboardGif delegates to _hostApi.getClipboardGif',
         () async {
-          when(mockHostApi.getClipboardGif()).thenReturn(null);
+          when(mockHostApi.getClipboardGif()).thenAnswer((_) async => null);
           final nullImage = await plugin.getClipboardGif();
           verify(mockHostApi.getClipboardGif()).called(1);
           expect(nullImage, isNull);
 
           final exampleImage = Uint8List.fromList([1, 0, 1]);
 
-          when(mockHostApi.getClipboardGif()).thenReturn(exampleImage);
+          when(mockHostApi.getClipboardGif())
+              .thenAnswer((_) async => exampleImage);
           final nonNullImage = await plugin.getClipboardGif();
           verify(mockHostApi.getClipboardGif()).called(1);
           expect(nonNullImage, equals(exampleImage));

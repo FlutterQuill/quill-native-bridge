@@ -87,11 +87,11 @@ class MessagesPigeonCodec: FlutterStandardMessageCodec, @unchecked Sendable {
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol QuillNativeBridgeApi {
   func isIosSimulator() throws -> Bool
-  func getClipboardHtml() throws -> String?
+  func getClipboardHtml(completion: @escaping (Result<String?, Error>) -> Void)
   func copyHtmlToClipboard(html: String) throws
-  func getClipboardImage() throws -> FlutterStandardTypedData?
+  func getClipboardImage(completion: @escaping (Result<FlutterStandardTypedData?, Error>) -> Void)
   func copyImageToClipboard(imageBytes: FlutterStandardTypedData) throws
-  func getClipboardGif() throws -> FlutterStandardTypedData?
+  func getClipboardGif(completion: @escaping (Result<FlutterStandardTypedData?, Error>) -> Void)
   func openGalleryApp(completion: @escaping (Result<Void, Error>) -> Void)
   func saveImageToGallery(
     imageBytes: FlutterStandardTypedData, name: String, albumName: String?,
@@ -129,11 +129,13 @@ class QuillNativeBridgeApiSetup {
       binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       getClipboardHtmlChannel.setMessageHandler { _, reply in
-        do {
-          let result = try api.getClipboardHtml()
-          reply(wrapResult(result))
-        } catch {
-          reply(wrapError(error))
+        api.getClipboardHtml { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
         }
       }
     } else {
@@ -163,11 +165,13 @@ class QuillNativeBridgeApiSetup {
       binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       getClipboardImageChannel.setMessageHandler { _, reply in
-        do {
-          let result = try api.getClipboardImage()
-          reply(wrapResult(result))
-        } catch {
-          reply(wrapError(error))
+        api.getClipboardImage { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
         }
       }
     } else {
@@ -197,11 +201,13 @@ class QuillNativeBridgeApiSetup {
       binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       getClipboardGifChannel.setMessageHandler { _, reply in
-        do {
-          let result = try api.getClipboardGif()
-          reply(wrapResult(result))
-        } catch {
-          reply(wrapError(error))
+        api.getClipboardGif { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
         }
       }
     } else {

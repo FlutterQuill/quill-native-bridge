@@ -12,12 +12,15 @@ abstract class QuillNativeBridgeApi {
   bool isIosSimulator();
 
   // HTML
+  @async
   String? getClipboardHtml();
   void copyHtmlToClipboard(String html);
 
   // Image
+  @async
   Uint8List? getClipboardImage();
   void copyImageToClipboard(Uint8List imageBytes);
+  @async
   Uint8List? getClipboardGif();
 
   @async
