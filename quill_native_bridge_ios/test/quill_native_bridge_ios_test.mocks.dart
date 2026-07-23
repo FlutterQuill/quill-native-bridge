@@ -3,8 +3,8 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
-import 'dart:typed_data' as _i3;
+import 'dart:async' as _i3;
+import 'dart:typed_data' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
 
@@ -42,6 +42,15 @@ class MockTestQuillNativeBridgeApi extends _i1.Mock
       ) as bool);
 
   @override
+  _i3.Future<String?> getClipboardHtml() => (super.noSuchMethod(
+        Invocation.method(
+          #getClipboardHtml,
+          [],
+        ),
+        returnValue: _i3.Future<String?>.value(),
+      ) as _i3.Future<String?>);
+
+  @override
   void copyHtmlToClipboard(String? html) => super.noSuchMethod(
         Invocation.method(
           #copyHtmlToClipboard,
@@ -51,7 +60,16 @@ class MockTestQuillNativeBridgeApi extends _i1.Mock
       );
 
   @override
-  void copyImageToClipboard(_i3.Uint8List? imageBytes) => super.noSuchMethod(
+  _i3.Future<_i4.Uint8List?> getClipboardImage() => (super.noSuchMethod(
+        Invocation.method(
+          #getClipboardImage,
+          [],
+        ),
+        returnValue: _i3.Future<_i4.Uint8List?>.value(),
+      ) as _i3.Future<_i4.Uint8List?>);
+
+  @override
+  void copyImageToClipboard(_i4.Uint8List? imageBytes) => super.noSuchMethod(
         Invocation.method(
           #copyImageToClipboard,
           [imageBytes],
@@ -60,18 +78,27 @@ class MockTestQuillNativeBridgeApi extends _i1.Mock
       );
 
   @override
-  _i4.Future<void> openGalleryApp() => (super.noSuchMethod(
+  _i3.Future<_i4.Uint8List?> getClipboardGif() => (super.noSuchMethod(
+        Invocation.method(
+          #getClipboardGif,
+          [],
+        ),
+        returnValue: _i3.Future<_i4.Uint8List?>.value(),
+      ) as _i3.Future<_i4.Uint8List?>);
+
+  @override
+  _i3.Future<void> openGalleryApp() => (super.noSuchMethod(
         Invocation.method(
           #openGalleryApp,
           [],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i4.Future<void> saveImageToGallery(
-    _i3.Uint8List? imageBytes, {
+  _i3.Future<void> saveImageToGallery(
+    _i4.Uint8List? imageBytes, {
     required String? name,
     required String? albumName,
   }) =>
@@ -84,7 +111,7 @@ class MockTestQuillNativeBridgeApi extends _i1.Mock
             #albumName: albumName,
           },
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 }

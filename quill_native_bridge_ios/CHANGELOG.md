@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.0.2
+
+- Reads the clipboard (`getClipboardHtml()`, `getClipboardImage()` and `getClipboardGif()`) asynchronously with `NSItemProvider` instead of `UIPasteboard.data(forPasteboardType:)`, fixing app hangs (ANR) on paste when the pasteboard item has to be fetched first (for example a Universal Clipboard item coming from another Apple device). [#22](https://github.com/FlutterQuill/quill-native-bridge/issues/22)
+
 ## 0.0.1
 
 - Adds support for saving images.

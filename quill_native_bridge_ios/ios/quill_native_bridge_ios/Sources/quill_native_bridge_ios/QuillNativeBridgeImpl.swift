@@ -12,12 +12,10 @@ class QuillNativeBridgeImpl: QuillNativeBridgeApi {
   }
   // TODO: Should not hardcode public.html and instead use UTType.html.identifier
 
-  func getClipboardHtml() throws -> String? {
-    guard let htmlData = UIPasteboard.general.data(forPasteboardType: "public.html") else {
-      return nil
+  func getClipboardHtml(completion: @escaping (Result<String?, any Error>) -> Void) {
+    loadClipboardData(typeIdentifier: "public.html") { data in
+      completion(.success(data.flatMap { String(data: $0, encoding: .utf8) }))
     }
-    let html = String(data: htmlData, encoding: .utf8)
-    return html
   }
 
   func copyHtmlToClipboard(html: String) throws {
@@ -32,26 +30,67 @@ class QuillNativeBridgeImpl: QuillNativeBridgeApi {
     UIPasteboard.general.image = image
   }
 
-  func getClipboardImage() throws -> FlutterStandardTypedData? {
-    let pasteboard = UIPasteboard.general
-    if pasteboard.hasImages {
-      let image = pasteboard.image
-      if let imagePngData = image?.pngData() {
-        return FlutterStandardTypedData(bytes: imagePngData)
+  func getClipboardImage(
+    completion: @escaping (Result<FlutterStandardTypedData?, any Error>) -> Void
+  ) {
+    let itemProviders = UIPasteboard.general.itemProviders
+    guard
+      let imageProvider = itemProviders.first(where: { $0.canLoadObject(ofClass: UIImage.self) })
+    else {
+      loadWebpImage(from: itemProviders, completion: completion)
+      return
+    }
+    imageProvider.loadObject(ofClass: UIImage.self) { image, _ in
+      guard let imagePngData = (image as? UIImage)?.pngData() else {
+        self.loadWebpImage(from: itemProviders, completion: completion)
+        return
       }
+      completion(.success(FlutterStandardTypedData(bytes: imagePngData)))
     }
-    if let imageWebpData = pasteboard.data(forPasteboardType: "org.webmproject.webp") {
-      return FlutterStandardTypedData(bytes: imageWebpData)
-    }
-    return nil
   }
 
-  func getClipboardGif() throws -> FlutterStandardTypedData? {
-    guard let data = UIPasteboard.general.data(forPasteboardType: "com.compuserve.gif") else {
-      return nil
+  func getClipboardGif(
+    completion: @escaping (Result<FlutterStandardTypedData?, any Error>) -> Void
+  ) {
+    loadClipboardData(typeIdentifier: "com.compuserve.gif") { data in
+      completion(.success(data.map { FlutterStandardTypedData(bytes: $0) }))
     }
-    return FlutterStandardTypedData(bytes: data)
+  }
 
+  private func loadWebpImage(
+    from itemProviders: [NSItemProvider],
+    completion: @escaping (Result<FlutterStandardTypedData?, any Error>) -> Void
+  ) {
+    loadData(from: itemProviders, typeIdentifier: "org.webmproject.webp") { data in
+      completion(.success(data.map { FlutterStandardTypedData(bytes: $0) }))
+    }
+  }
+
+  private func loadClipboardData(
+    typeIdentifier: String, completion: @escaping (Data?) -> Void
+  ) {
+    loadData(
+      from: UIPasteboard.general.itemProviders, typeIdentifier: typeIdentifier,
+      completion: completion)
+  }
+
+  private func loadData(
+    from itemProviders: [NSItemProvider], typeIdentifier: String,
+    completion: @escaping (Data?) -> Void
+  ) {
+    guard
+      let provider = itemProviders.first(where: {
+        $0.hasItemConformingToTypeIdentifier(typeIdentifier)
+      })
+    else {
+      completion(nil)
+      return
+    }
+    provider.loadDataRepresentation(forTypeIdentifier: typeIdentifier) { data, _ in
+      // Intentionally ignores load errors. Consumers distinguish only whether
+      // a representation was obtained.
+      completion(data)
+    }
   }
 
   func openGalleryApp(completion: @escaping (Result<Void, any Error>) -> Void) {
