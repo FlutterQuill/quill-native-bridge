@@ -76,7 +76,7 @@ class QuillNativeBridgeWindows extends QuillNativeBridgePlatform {
       final clipboardDataPointer =
           Pointer.fromAddress(clipboardDataHandle.value.address);
       final lockedMemoryPointer = GlobalLock(HGLOBAL(clipboardDataPointer));
-      if (lockedMemoryPointer == nullptr) {
+      if (lockedMemoryPointer.value == nullptr) {
         assert(
           false,
           'Failed to lock global memory. Error code: ${GetLastError()}',
@@ -147,7 +147,7 @@ class QuillNativeBridgeWindows extends QuillNativeBridgePlatform {
       }
 
       final lockedMemoryPointer = GlobalLock(clipboardMemoryHandle.value);
-      if (lockedMemoryPointer == nullptr) {
+      if (lockedMemoryPointer.value == nullptr) {
         GlobalFree(clipboardMemoryHandle.value);
         assert(
           false,
