@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.1.1
+
+- Fixes a crash due to incorrect nullptr check (Credit [vargab95](https://github.com/vargab95)).
+
 ## 0.1.0
 
 - Promotes the existing beta release to stable.
